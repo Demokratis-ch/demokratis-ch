@@ -1,0 +1,64 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Organisationsprofile{% endblock %}
+
+{% block body %}
+    <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class=" pt-12 md:pt-16 pb-6">
+
+            {# Breadcrumbs #}
+            <nav class="flex py-4 sm:pt-6 lg:pt-8" aria-label="Breadcrumb">
+                <ol role="list" class="flex items-center space-x-4">
+                    <li>
+                        <div>
+                            <a href="{{ path('app_index') }}" class="text-gray-400 hover:text-gray-500">
+                                <i class="fa-solid fa-house"></i>
+                                <span class="sr-only">Home</span>
+                            </a>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                            <a href="{{ path('app_organisation_index') }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Organisationen</a>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                            <a href="{{ path('app_organisation_details', { 'slug': organisation.slug }) }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">{{ organisation.name }}</a>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                            <a href="{{ path('app_invite_add', { 'slug': organisation.slug }) }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Einladung</a>
+                        </div>
+                    </li>
+
+                </ol>
+            </nav>
+
+            <h1 class="text-2xl sm:text-3xl md:text-4xl xl:text-6xl font-bold tracking-tight text-gray-700">Organisationen</h1>
+            <div class="mt-12 bg-gray-100 py-4 px-12">
+                <h3 class="mt-2 text-xl text-gray-400 font-medium">Einladen</h3>
+                <div class="mt-4 text-gray-700">
+
+                    {{ form_start(form) }}
+                    {{ form_row(form.email) }}
+
+                    <div class="flex gap-2">
+                        <a href="{{ path('app_organisation_details', { 'slug': organisation.slug }) }}" class="items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Abbrechen</a>
+                        {{ form_row(form.submit) }}
+                    </div>
+
+                    {{ form_end(form) }}
+
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

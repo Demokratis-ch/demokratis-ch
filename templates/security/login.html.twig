@@ -1,0 +1,86 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Anmelden{% endblock %}
+
+{% block body %}
+    <div class="bg-gray-50 flex flex-col justify-center py-12 lg:py-24 sm:px-6 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-md">
+            <h2 class="text-center text-3xl font-extrabold text-gray-900">
+                Melden Sie sich an
+            </h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                Noch kein Zugang? Melden Sie sich gerne für einen <a href="mailto:fabian@demokratis.ch" class="text-blue-600 hover:text-blue-500">Testzugang</a>
+            </p>
+        </div>
+
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                <form class="space-y-6" action="{{ path('app_login') }}" method="POST">
+
+                    <!-- Login Error -->
+                    {% if error is defined %}
+                        {% if error %}
+                            <div class="rounded-md bg-red-50 p-4">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <!-- Heroicon name: solid/x-circle -->
+                                        <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h3 class="text-sm font-medium text-red-800">
+                                            Anmeldung fehlgeschlagen
+                                        </h3>
+                                        <div class="text-sm text-red-700">
+                                            <p>
+                                                {{ error.messageKey|trans(error.messageData, 'security') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+
+                    <div>
+                        <label for="inputEmail" class="block text-sm text-gray-700">Email</label>
+                        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm -mr-2" autocomplete="email" required autofocus>
+                    </div>
+
+                    <div>
+                        <label for="inputPassword" class="block text-sm text-gray-700">Password</label>
+                        <input type="password" name="password" id="inputPassword" class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" autocomplete="current-password" required>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            {# Remember me functionality, see https://symfony.com/doc/6.0/security/remember_me.html #}
+                            <input type="checkbox" id="remember_me" name="_remember_me" checked class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"/>
+                            <label for="remember_me" class="ml-2 block text-sm text-gray-700">Angemeldet bleiben</label>
+                        </div>
+
+                        <div class="text-sm">
+                            <a href="{{ path('app_forgot_password_request') }}" class="text-blue-600 hover:text-blue-500">
+                                Passwort vergessen?
+                            </a>
+                        </div>
+                    </div>
+
+                    <div>
+                        {# Redirect to index after login #}
+                        <input type="hidden" name="_target_path" value="{{ path('app_index') }}"/>
+                        {# Enable CSRF protection #}
+                        <input type="hidden" name="_csrf_token"
+                               value="{{ csrf_token('authenticate') }}"
+                        >
+                        <button type="submit"  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Anmelden</button>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

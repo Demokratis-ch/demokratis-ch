@@ -1,0 +1,29 @@
+<div{{ attributes }}>
+
+    {% include 'comment/show.html.twig' with { thread: this.thread, comments: this.comments(this.thread), more: this.more } %}
+
+    {% if this.comments(this.thread)|length > 2 and this.more == false  %}
+        <button class="-mt-2 text-gray-400 text-sm underline hover:no-underline" data-action="live#action" data-action-name="showMore(more=1)">Mehr anzeigen</button>
+    {% else %}
+
+        {% if commenting %}
+            <div class="alert alert-success">
+                {{ form_start(form) }}
+                {{ form_row(form.text) }}
+                <div class="flex gap-2">
+                    <button type="button" class="items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" data-action="live#action" data-action-name="comment(show=form)">Abbrechen</button>
+                    {{ form_row(form.submit) }}
+                </div>
+                {{ form_end(form) }}
+            </div>
+        {% else %}
+            <button type="button" class="-mt-2 text-gray-400 text-sm underline hover:no-underline" data-action="live#action" data-action-name="comment(show=comments)">Kommentar verfassen</button>
+        {% endif %}
+
+        {% if this.more == true %}
+            <button class="-mt-2 text-gray-400 text-sm underline hover:no-underline" data-action="live#action" data-action-name="showMore(more=0)">Weniger anzeigen</button>
+        {% endif %}
+
+    {% endif %}
+
+</div>

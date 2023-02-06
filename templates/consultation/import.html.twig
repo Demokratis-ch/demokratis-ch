@@ -1,0 +1,104 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}
+    {% if consultation.humantitle is defined and consultation.humantitle is not null %}
+        {{ consultation.humantitle }}
+    {% else %}
+        {{ consultation.title }}
+    {% endif %}
+{% endblock %}
+{% block body %}
+    <div class="bg-white">
+        <div>
+
+            {% include 'consultation/__header.html.twig' %}
+
+            <section class="bg-gray-50 mt-8 pt-4 pb-6">
+
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-6 md:pb-12 my-4">
+                    <div class="">
+                        <h2 class="mt-4 text-xl text-gray-400 font-medium">{{ 'consultation.description'|trans }}</h2>
+                        <div class="mt-2 p-4 bg-white text-gray-700 shadow">
+                            {{ consultation.description }}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-4">
+                        <div class="mt-4 md:mt-12 xl:mt-14 flex gap-4 md:gap-8 col-span-4 md:col-span-1">
+                            <div>
+                                {% if proposals|length > 1
+                                    or (
+                                    (consultation.status == 'done'
+                                    or
+                                    consultation.status == 'pending_report'
+                                    or
+                                    consultation.status == 'pending_statements_report')
+                                    )
+                                %}
+                                    <h2 class="mt-4 text-xl text-gray-400 font-medium">Vernehmlassungsvorlage</h2>
+                                    <div class="mt-2 p-4 bg-white text-gray-700 shadow">
+
+                                        {% for proposal in proposals %}
+                                            <p class="mt-2">
+                                                <a href="{{ proposal.fedlexFilePath }}"
+                                                   target="_blank"
+                                                   class="text-gray-600 hover:text-gray-500 underline hover:no-underline"
+                                                >{{ proposal.title }}</a> {% if proposal.imported == 'paragraphed' %}<i class="text-green-600 fa-solid fa-check"></i>{% else %} <a href="{{ path('app_consultation_import_legal', { 'uuid': proposal.uuid  }) }}"><i class="text-gray-500 fa-solid
+                                                {% if (consultation.status == 'done'
+                                                        or
+                                                        consultation.status == 'pending_report'
+                                                        or
+                                                        consultation.status == 'pending_statements_report')
+                                                %}
+                                                    fa-arrow-up-right-from-square
+                                                {% else %}
+                                                    fa-file-import
+                                                {% endif %}
+                                                "></i></a>{% endif %}
+                                            </p>
+                                        {% endfor %}
+
+                                    </div>
+                                {% endif %}
+                                <h2 class="mt-4 text-xl text-gray-400 font-medium">{{ 'consultation.documents'|trans }}</h2>
+                                <div class="mt-2 p-4 bg-white text-gray-700 shadow">
+                                    {% for document in documents %}
+                                        <p class="mt-2">
+                                            <a href="{{ document.fedlexFilePath }}"
+                                               target="_blank"
+                                               class="text-gray-600 hover:text-gray-500 underline hover:no-underline"
+                                            >{{ document.title }}</a>
+                                            <i class="fa-regular fa-arrow-up-right-from-square"></i>
+                                        </p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% if not
+                            (consultation.status == 'done'
+                            or
+                            consultation.status == 'pending_report'
+                            or
+                            consultation.status == 'pending_statements_report')
+                        %}
+                            <div class="mt-4 md:mt-12 xl:mt-14 flex gap-4 md:gap-8 col-span-4 md:col-span-3">
+                                <div>
+                                    <h2 class="mt-4 text-xl text-gray-400 font-medium">Aktionen</h2>
+                                    <div class="mt-2 space-y-4">
+
+                                    {% for proposal in proposals|filter(proposal => proposal.imported != 'paragraphed') %}
+                                        <a href="{{ path('app_consultation_import_legal', { 'uuid': proposal.uuid }) }}" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{{ proposal.title }} importieren</a>
+                                    {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+{% endblock %}

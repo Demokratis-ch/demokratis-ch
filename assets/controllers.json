@@ -1,0 +1,68 @@
+{
+    "controllers": {
+        "@symfony/ux-autocomplete": {
+            "autocomplete": {
+                "enabled": true,
+                "fetch": "eager",
+                "autoimport": {
+                    "tom-select/dist/css/tom-select.bootstrap5.min.css": true
+                }
+            }
+        },
+        "@symfony/ux-dropzone": {
+            "dropzone": {
+                "enabled": true,
+                "fetch": "eager",
+                "autoimport": {
+                    "@symfony/ux-dropzone/src/style.css": true
+                }
+            }
+        },
+        "@symfony/ux-live-component": {
+            "live": {
+                "enabled": true,
+                "fetch": "eager",
+                "autoimport": {
+                    "@symfony/ux-live-component/styles/live.css": true
+                }
+            }
+        },
+        "@symfony/ux-turbo": {
+            "turbo-core": {
+                "enabled": true,
+                "fetch": "eager"
+            },
+            "mercure-turbo-stream": {
+                "enabled": false,
+                "fetch": "eager"
+            }
+        },
+        "@whatwedo/core-bundle": {
+            "select": {
+                "enabled": true,
+                "fetch": "eager"
+            },
+            "datetime": {
+                "enabled": true,
+                "fetch": "eager"
+            },
+            "dropdown": {
+                "enabled": true,
+                "fetch": "eager"
+            },
+            "modal-form": {
+                "enabled": true,
+                "fetch": "eager"
+            },
+            "reload-content": {
+                "enabled": true,
+                "fetch": "eager"
+            },
+            "modal": {
+                "enabled": true,
+                "fetch": "eager"
+            }
+        }
+    },
+    "entrypoints": []
+}

@@ -1,0 +1,33 @@
+{
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "@hotwired/turbo": "^7.0.1",
+        "@symfony/stimulus-bridge": "^3.0.0",
+        "@symfony/ux-autocomplete": "file:vendor/symfony/ux-autocomplete/assets",
+        "@symfony/ux-dropzone": "file:vendor/symfony/ux-dropzone/assets",
+        "@symfony/ux-live-component": "file:vendor/symfony/ux-live-component/assets",
+        "@symfony/ux-turbo": "file:vendor/symfony/ux-turbo/assets",
+        "@symfony/webpack-encore": "^2.0.0",
+        "@tailwindcss/forms": "^0.5.2",
+        "@tailwindcss/typography": "^0.5.7",
+        "@whatwedo/core-bundle": "file:vendor/whatwedo/core-bundle/src/Resources/assets",
+        "autoprefixer": "^10.4.7",
+        "core-js": "^3.0.0",
+        "postcss-loader": "^6.0.0",
+        "regenerator-runtime": "^0.13.2",
+        "tailwindcss": "^3.1.4",
+        "tom-select": "^2.2.2",
+        "webpack-notifier": "^1.6.0"
+    },
+    "license": "UNLICENSED",
+    "private": true,
+    "scripts": {
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress"
+    },
+    "dependencies": {
+        "postcss": "^8.4.14"
+    }
+}

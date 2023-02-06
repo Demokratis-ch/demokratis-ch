@@ -1,0 +1,38 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Bestätigungsemail{% endblock %}
+
+{% block body %}
+
+    <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-md">
+            <h2 class="mt-8 text-center text-3xl font-extrabold text-gray-900">
+                Passwort zurücksetzen
+            </h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                Zurück zum
+                Jetzt <a href="{{ path('app_login') }}" class="text-blue-600 hover:text-blue-500">
+                    Login
+                </a>
+            </p>
+        </div>
+
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+
+                <div class="text-center text-sm text-gray-600">
+                    <p>
+                        Falls ein Konto mit der eingegebenen E-Mail-Adresse existiert, wurde eine Bestätigungsmail gesendet.
+                    </p>
+                    <br>
+                    <p>
+                        Der Link wird in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }} ablaufen.
+                    </p>
+                    <p class="mt-4">Falls die Mail nicht ankommt bitte den Spam-Ordner prüfen oder <a class="text-blue-600 hover:text-blue-500" href="{{ path('app_forgot_password_request') }}">erneut versuchen</a>.</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

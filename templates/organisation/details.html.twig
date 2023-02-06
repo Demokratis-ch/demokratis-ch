@@ -1,0 +1,217 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Organisationsprofil {{ organisation.name }}{% endblock %}
+
+{% block body %}
+<main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class=" pt-12 md:pt-16 pb-6">
+
+        {# Breadcrumbs #}
+        <nav class="flex py-4 sm:pt-6 lg:pt-8" aria-label="Breadcrumb">
+            <ol role="list" class="flex items-center space-x-4">
+                <li>
+                    <div>
+                        <a href="{{ path('app_index') }}" class="text-gray-400 hover:text-gray-500">
+                            <i class="fa-solid fa-house"></i>
+                            <span class="sr-only">Home</span>
+                        </a>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        <a href="{{ path('app_organisation_index') }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Organisationen</a>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        <a href="{{ path('app_organisation_details', { 'slug': organisation.slug }) }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">{{ organisation.name }}</a>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <h1 class="text-2xl sm:text-3xl md:text-4xl xl:text-6xl font-bold tracking-tight text-gray-700">
+            {{ organisation.name }}
+            {% if app.user and is_granted('own', organisation) %}
+                <a href="{{ path('app_organisation_edit', { 'slug': organisation.slug }) }}" class="align-middle font-normal text-base text-gray-400 hover:text-gray-500"> <i class="fas fa-pencil"></i></a>
+            {% endif %}
+        </h1>
+
+        {% if organisation.url %}
+            <span class="text-sm text-gray-500 hover:text-gray-400 mr-2"><a href="{{ organisation.url }}" class="underline hover:no-underline" target="_blank">{{ organisation.domain }}</a></span>
+        {% endif %}
+        {% if organisation.tags|length > 0 %}
+            {% for tag in organisation.tags %}
+                <span class="rounded-full bg-gray-200 px-2 py-1 text-xs font-medium text-gray-600">{{ tag.name }}</span>
+            {% endfor %}
+        {% endif %}
+
+        <p class="mt-2 text-sm text-gray-500">
+            {{ organisation.description }}
+        </p>
+
+        {# Admin Features #}
+        {% if app.user and is_granted('own', organisation) %}
+            <h3 class="mt-8 text-xl text-gray-400 font-medium">Mitglieder</h3>
+            <div class="mt-4 text-gray-700 text-center">
+                {% for message in app.flashes('invite-user-exists') %}
+                    <div class="mt-4 rounded-md bg-yellow-50 p-3 max-w-sm">
+                        <div class="flex">
+                            <i class="mt-0.5 fa-solid fa-circle-check text-yellow-400"></i>
+                            <p class="ml-3 text-sm font-medium text-yellow-700">{{ message }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+                    <li class="md:h-4/5 md:mt-1 col-span-1 border border-dashed hover:border-solid border-2 divide-y divide-gray-200 rounded-lg bg-gray-50 hover:bg-white">
+                        <a href="{{ path('app_invite_add', { 'slug': organisation.slug }) }}" class="flex h-full w-full items-center justify-between space-x-6 p-6">
+                            <div class="mx-auto">
+                                <h3 class="truncate text-sm text-gray-900">Mitglied hinzufügen</h3>
+                                <p class="mt-1 truncate text-sm text-gray-500">Per Email einladen</p>
+                            </div>
+                        </a>
+                    </li>
+
+
+                    {% for member in organisation.users %}
+                        <li class="">
+                            <div class="mb-1 col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">
+                                <div class="flex w-full items-center justify-between space-x-6 p-6">
+                                    <div class="truncate">
+                                        <div class="flex items-center space-x-3">
+                                            <h3 class="truncate text-sm {% if member.user.person is defined and member.user.person is not null %}font-medium{% endif %} text-gray-900">{{ member.user }}</h3>
+                                            {% if member.isAdmin %}
+                                                <span class="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">Owner</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="flex">
+                                        {% if member.user.person is defined and member.user.person is not null %}
+                                            <p class="mt-1 truncate text-sm text-gray-500">{{ member.user.email }}</p>
+                                        {% else %}
+                                            <p class="mt-1 truncate text-sm text-gray-300">
+                                                Name unbekannt
+                                            </p>
+                                        {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="mx-auto h-12 w-12 bg-gray-50 group-hover:bg-gray-100 flex items-center justify-center h-screen rounded-full border border-solid">
+                                    <span class="text-sm text-gray-300">
+                                        {% if member.user.person is defined and member.user.person is not null %}
+                                            {{ member.user.person.firstname|default('')|u.truncate(1) }}
+                                            {{ member.user.person.lastname|default('')|u.truncate(1) }}
+                                        {% else %}
+                                            {{ member.user|u.truncate(1)|upper }}
+                                        {% endif %}
+                                    </span>
+                                    </div>
+                                </div>
+
+                                {% if is_granted('own', organisation) %}
+                                    <div>
+                                        <div class="-mt-px flex divide-x divide-gray-200">
+                                            <div class="flex w-0 flex-1">
+                                                <a href="{{ path('app_organisation_member', { 'slug': organisation.slug, 'id': member.id }) }}" class="relative -mr-px inline-flex w-0 flex-1 items-center justify-center rounded-bl-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500">
+                                                    <i class="fas fa-pencil text-gray-400"></i>
+                                                    <span class="ml-3">Details</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            {% if invites|length > 0 %}
+                <div class="mt-4 md:mt-12">
+                    <h2 class="text-sm font-medium text-gray-500">Offene Einladungen</h2>
+                    {# Alert #}
+                    {% for message in app.flashes('send-invite-success') %}
+                        <div class="flex mt-2 rounded-md border border-green-200 bg-green-50 p-4 max-w-sm">
+                            <i class="mt-0.5 fas fa-check-circle text-green-500"></i>
+                            <p class="ml-3 text-sm font-medium text-green-600">{{ message }}</p>
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('send-invite-error') %}
+                        <div class="flex mt-2 rounded-md border border-yellow-200 bg-yellow-50 p-4 max-w-sm">
+                            <i class="mt-0.5 fas fa-triangle-exclamation text-yellow-500"></i>
+                            <p class="ml-3 text-sm font-medium text-yellow-600">{{ message }}</p>
+                        </div>
+                    {% endfor %}
+
+                    <ul role="list" class="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+
+                        {% for invite in invites %}
+                            <li class="col-span-1 ">
+                                <div class="flex rounded-md shadow-sm">
+                                    <div class="flex flex-1 items-center justify-between truncate rounded-l-md border border-gray-200 bg-white">
+                                        <div class="flex-1 truncate px-4 py-2 text-sm">
+                                            <p class="font-medium text-gray-700">{{ invite.email }}</p>
+                                            <p class="text-gray-500">{{ invite.invitedAt|ago }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex-shrink-0 flex text-center bg-white hover:bg-gray-50 border-t border-r rounded-r-md border-b border-gray-200">
+                                        <a href="{{ path('app_invite_resend', { 'token': invite.token }) }}" class="p-2 items-center justify-center w-16 text-gray-500 hover:text-gray-600 text-sm rounded-r-md">
+                                            <p><i class="fa-solid fa-envelope"></i></p>
+                                            <p class="text-xs">Erneut einladen</p>
+                                        </a>
+
+                                    </div>
+                                </div>
+                                <div class="pb-6 text-center">
+                                    {% if is_granted('own', organisation) %}
+                                        <a href="{{ path('app_invite_delete', { 'id': invite.id }) }}" class="text-xs text-gray-400 opacity-50 hover:opacity-100">
+                                            <i class="fas fa-trash-alt mt-1"></i>
+                                            <span class="">Einladung löschen</span>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        {% else %}
+                        {% endfor %}
+
+                    </ul>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {# Public features #}
+        <h3 class="mt-8 text-xl text-gray-400 font-medium">Stellungnahmen</h3>
+        <div class="mt-4 text-gray-700 text-center">
+            <div class="grid grid-cols-3 gap-4">
+                {% for statement in statements %}
+                    <a href="{{ path('app_statement_show', { 'uuid': statement.uuid }) }}" class="bg-white col-span-3 hover:bg-gray-100 md:col-span-1 relative block w-full rounded-lg border-2 border-solid border-gray-300 p-4 text-center hover:border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        <p class="mt-2 block text-sm text-gray-700">
+                            {% if statement.isPublic %}
+                                <i class="fa-solid fa-lock-open"></i>
+                            {% else %}
+                                <i class="fa-solid fa-lock"></i>
+                            {% endif %}
+                            {{ statement.name }}
+                        </p>
+                        <p class="mt-1 block text-xs text-gray-400">
+                            {% if statement.consultation.humanTitle is defined and statement.consultation.humanTitle is not null %}
+                                {{ statement.consultation.humanTitle }}
+                            {% else %}
+                                {{ statement.consultation.title }}
+                            {% endif %}
+                        </p>
+                    </a>
+                {% else %}
+                    <p class="bg-gray-50 text-gray-300 col-span-3 md:col-span-1 relative block w-full rounded-lg p-4 text-center">Es gibt noch keine veröffentlichten Stellungnahmen</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</main>
+{% endblock %}

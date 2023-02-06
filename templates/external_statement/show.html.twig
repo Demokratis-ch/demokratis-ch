@@ -1,0 +1,66 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Vernehmlassungsantwort{% endblock %}
+
+{% block body %}
+
+    {% set consultation = statement.consultation %}
+
+    {# Consultation header #}
+    {% include 'consultation/__header.html.twig' %}
+
+    {# Consultation navigation #}
+    {% include 'consultation/__menu.html.twig' %}
+
+    <div class="bg-gray-50 border-t border-gray-200 p-4 sm:p-6 lg:p-8 h-full w-full">
+        <div class="h-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-2 pb-6">
+            <div class="flex flex-col h-screen">
+                <div class="flex flex-row flex-initial justify-between">
+                    <div class="flex-initial">
+                        <a href="{{ path('app_consultation_show_statements', { 'slug': consultation.slug }) }}" class="text-sm text-gray-400 hover:text-gray-900">
+                            <i class="fa-regular fa-arrow-left mr-2"></i> {{ 'import.backToConsultation'|trans }}
+                        </a>
+                    </div>
+                    <div class="flex-initial">
+                        {# To the right #}
+                    </div>
+                </div>
+
+                <h1 class="mt-6 text-3xl font-bold tracking-tight text-gray-600 break-all md:break-normal">
+                    {{ statement.name }}
+                </h1>
+                {% if statement.description is defined and statement.description is not null %}
+                    <p class="text-md text-gray-400 break-all md:break-normal">
+                        {{ statement.description }}
+                    </p>
+                {% endif %}
+
+
+                <div class="mt-6 flex-1 grid grid-cols-4 gap-4">
+
+                    <div class="col-span-4 lg:col-span-1 flex flex-col">
+                        <h2 class="text-xl text-gray-400 font-medium flex-initial">Informationen</h2>
+                        <div class="mt-2 p-4 bg-white text-gray-700 shadow flex-1 flex flex-col">
+
+                            <p class="h-full mt-1 block w-full ">Tust</p>
+
+                        </div>
+                    </div>
+
+                    <div class="col-span-4 lg:col-span-3 flex flex-col">
+                        <h2 class="text-xl text-gray-400 font-medium flex-initial">Stellungnahme</h2>
+
+                        <iframe
+                                class="mt-2 p-4 bg-white text-gray-700 shadow w-full flex-1"
+                                src="{{ asset('uploads/' ~ statement.file) }}"
+                                loading="lazy"
+                        >
+                        </iframe>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

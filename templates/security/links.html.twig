@@ -1,0 +1,11 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Anmelden{% endblock %}
+
+{% block body %}
+    <div class="p-4">
+        <h1 class="text-xl text-gray-600">Login Link</h1>
+        <p class="text-md text-gray-400">User: {{ email }}</p>
+        <p class="mt-4 text-md text-gray-600">Link:<br>{{ link }}</p>
+    </div>
+{% endblock %}

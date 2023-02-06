@@ -1,0 +1,40 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Tag erstellen{% endblock %}
+
+{% block body %}
+    <header class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="pt-4 sm:pt-12">
+            <a href="{{ path('app_consultation_show_statements', { 'slug': consultation.slug }) }}" class="text-sm text-gray-400 hover:text-gray-900"><i class="fa-regular fa-arrow-left mr-2"></i> Zurück zur Vernehmlassung</a>
+        </div>
+
+        <div class="md:flex items-baseline justify-between border-b border-gray-200 pt-6 pb-6">
+            {% include 'consultation/__title.html.twig' %}
+        </div>
+
+        {# Tags #}
+        <div class="mt-3 -ml-2 col-span-2">
+            <span class="inline-block mt-1 p-1.5 bg-gray-50 border text-gray-400 text-xs rounded-xl">{{ consultation.office|default() }}</span>
+            <span class="inline-block mt-1 p-1.5 bg-gray-50 border text-gray-400 text-xs rounded-xl">{{ consultation.institution|default() }}</span>
+
+            {% for tag in consultation.tags %}
+                <span class="inline-block mt-1 p-1.5 bg-gray-50 border border-gray-200 text-gray-400 text-xs rounded-xl">{{ tag.name }}</span>
+            {% endfor %}
+        </div>
+    </header>
+    <section class="bg-gray-50 mt-8 pt-4 pb-6">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-6 md:pb-12 my-4">
+            <div class="">
+                <h2 class="mt-4 text-xl text-gray-400 font-medium">Tag erstellen</h2>
+                {{ form_start(form) }}
+                {{ form_row(form.name) }}
+                <div class="flex gap-1">
+                    <a href="{{ path('app_consultation_show_statements', { 'slug': consultation.slug }) }}" class="mt-2 inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Abbrechen</a>
+                    {{ form_row(form.submit) }}
+                </div>
+                {{ form_end(form) }}
+            </div>
+            <p class="mt-6 text-gray-500 text-sm">Der Tag wird erst angezeigt, nachdem er von einem Moderator freigeschaltet wurde.</p>
+        </div>
+    </section>
+{% endblock %}

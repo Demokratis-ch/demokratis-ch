@@ -1,0 +1,47 @@
+<div{{ attributes }}>
+    <div class="relative z-10" role="dialog" aria-modal="true">
+        <div class="z-10 overflow-y-auto px-1 py-2 sm:py-6">
+
+            <ul class="mx-auto transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-sm hover:shadow-md active:shadow-md ring-1 ring-black ring-opacity-5 transition-all">
+
+                <div class="relative">
+                    {#
+                    <svg class="pointer-events-none absolute top-3.5 left-4 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+                    </svg>
+                    #}
+                    <input
+                            type="text"
+                            data-model="query"
+                            class="h-12 w-full border-0 bg-transparent pl-4 {# pl-11  #} pr-4 text-gray-800 placeholder-gray-400 focus:ring-0 sm:text-sm" placeholder="Suche..." role="combobox" aria-expanded="false" aria-controls="options"
+                    >
+                </div>
+
+                <!-- Results, show/hide based on command palette state -->
+                {% if this.consultations|length > 0 %}
+                    <ul class="max-h-72 scroll-py-2 overflow-y-auto text-sm text-gray-800" id="options" role="listbox">
+                        {% for consultation in this.consultations %}
+                            <li class="relative cursor-default select-none hover:bg-blue-600 hover:text-white px-6 py-2" id="option-1" role="option" tabindex="-1">
+                                <a href="{{ path('app_consultation_show_statements', { 'slug': consultation.slug }) }}" class="after:absolute after:inset-0">
+                                    {% if consultation.humanTitle is defined and consultation.humanTitle is not null %}
+                                        {{ consultation.humanTitle }}
+                                    {% else %}
+                                        {{ consultation.title }}
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    {% if query is defined and query is not null %}
+                        <!-- Empty state, show/hide based on command palette state -->
+                        <p class="p-4 text-sm text-gray-500">Keine Vernehmlassung gefunden</p>
+                    {% endif %}
+                {% endif %}
+
+            </ul>
+
+
+        </div>
+    </div>
+</div>

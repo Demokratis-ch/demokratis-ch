@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block htmlbody %}
+    <div class="h-screen w-screen overflow-hidden flex flex-col max-w-screen-3xl mx-auto">
+        <div class="relative bg-white flex-initial">
+            <div class="mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-start">
+                    <div class="flex-initial">
+                        {% block header_body %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Body -->
+        <div class="flex-1">
+        {% block body %}{% endblock %}
+        </div>
+
+        <!-- Footer -->
+    </div>
+{% endblock %}

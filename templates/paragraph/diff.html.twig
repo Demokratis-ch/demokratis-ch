@@ -1,0 +1,151 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Änderungsvorschlag von {{ modification.createdBy }}{% endblock %}
+
+{% block body %}
+    {% set consultation = modificationStatement.statement.consultation %}
+
+<section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-8 md:mt-12 ">
+    {# Breadcrumbs #}
+    <nav class="flex py-4" aria-label="Breadcrumb">
+        <ol role="list" class="flex items-center space-x-4">
+            <li>
+                <div>
+                    <a href="{{ path('app_index') }}" class="text-gray-400 hover:text-gray-500">
+                        <i class="fa-solid fa-house"></i>
+                        <span class="sr-only">Home</span>
+                    </a>
+                </div>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                    <a href="{{ path('app_consultation') }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Vernehmlassungen</a>
+                </div>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                    <a href="{{ path('app_consultation_show_statements', { 'slug': consultation.slug }) }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">{{ consultation.humanTitle|default(consultation.title)|u.truncate(15, '...') }}</a>
+                </div>
+            </li>
+
+            <li>
+                <div class="flex items-center">
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                    <a href="{{ path('app_statement_show', { 'uuid': statement.uuid }) }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">{{ statement.name|u.truncate(45, '...') }}</a>
+                </div>
+            </li>
+
+            <li>
+                <div class="flex items-center">
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                    <a href="{{ path('app_paragraph_diff', { 'modification_uuid': modification.uuid, 'statement_uuid': statement.uuid }) }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Änderungsvorschlag von {{ modification.createdBy }}</a>
+                </div>
+            </li>
+
+        </ol>
+    </nav>
+
+    <h1 class="md:mt-2 text-2xl sm:text-3xl md:text-4xl xl:text-6xl font-bold tracking-tight text-gray-700">
+        Änderungsvorschlag
+    </h1>
+    <h2 class="mt-2 text-gray-400 text-md font-normal max-w-5xl break-all md:break-normal">
+        Vorschlag von {{ modification.createdBy }}
+    </h2>
+
+</section>
+
+<section class="bg-gray-50 mt-8 pt-4 pb-6">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-6 md:pb-12 my-4">
+        <div class="grid grid-cols-4 gap-4">
+            <div class="col-span-4 md:col-span-3">
+                <h2 class="mt-4 text-xl text-gray-400 font-medium">
+                    Vorschlag
+                </h2>
+                <div class="mt-2 p-4 bg-white text-gray-700 shadow">
+                    {% for diff in diffs %}
+                        <span class="{% if diff[0] == -1 %}
+                        bg-red-100
+                        line-through
+                        text-red-800
+                    {% elseif diff[0] == 1 %}
+                        bg-green-100
+                        text-green-800
+                    {% endif %}">
+                    {{ diff[1]|nl2br }}
+                </span>
+                    {% endfor %}
+                </div>
+                {% if modification.justification is defined and modification.justification is not null %}
+                    <div class="bg-gray-100 shadow px-4 py-2 text-gray-400">
+                        {{ modification.justification }}
+                    </div>
+                {% endif %}
+
+                {# Check if there is an associated modification statement - if not, it's a "foreign" statement #}
+                {% if modificationStatement is defined and modificationStatement is not null %}
+                    {% if app.user %}
+                        {% if
+                            is_granted('own', statement)
+                            and
+                            modificationStatement.refused == false
+                        %}
+                            {% if not modificationStatement.chosen %}
+                                {{ form_start(form) }}
+                                {{ form_row(form.reason) }}
+                                <div class="flex gap-1">
+                                    {{ form_row(form.refuse) }}
+                                    {{ form_row(form.accept) }}
+                                </div>
+                                {{ form_end(form) }}
+                            {% else %}
+                                <a href="{{ path('app_paragraph_original', { 'uuid': modification.uuid }) }}" class="mt-2 inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Originaltext wiederherstellen</a>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                    {% if modificationStatement.decisionReason is defined and modificationStatement.decisionReason is not null %}
+                        <h3 class="mt-4 text-xl text-gray-400 font-medium">
+                            Begründung der
+                            {% if modificationStatement.refused == true %}
+                                Ablehnung
+                            {% else %}
+                                Annahme
+                            {% endif %}
+                        </h3>
+                        <p class="p-2 bg-gray-100 shadow text-gray-400">
+                            {{ modificationStatement.decisionReason }}
+                        </p>
+                    {% endif %}
+                    {% if
+                        app.user
+                        and
+                        modificationStatement.refused == true
+                        and
+                        is_granted('own', statement)
+                    %}
+                        <a href="{{ path('app_paragraph_reopen', { 'uuid': modificationStatement.uuid }) }}" class="mt-2 inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Erneut öffnen</a>
+                    {% endif %}
+                {% else %}
+                    {{ form_start(form) }}
+                    {% do form.refuse.setRendered %}
+                    {{ form_row(form.reason) }}
+                    <div class="flex gap-1">
+                        <a href="{{ path('app_statement_show', { 'uuid': statement.uuid }) }}" class="mt-1 inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Abbrechen</a>
+                        {{ form_row(form.accept) }}
+                    </div>
+                    {{ form_end(form) }}
+                {% endif %}
+
+            </div>
+            <div class="col-span-4 md:col-span-1">
+                <h2 class="mt-4 mb-2 text-xl text-gray-400 font-medium">Kommentare</h2>
+                {{ component('paragraph_comments', { 'statement': statement, paragraph: modification.paragraph, modification: modification }) }}
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

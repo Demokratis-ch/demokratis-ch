@@ -1,0 +1,122 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\ModificationStatementRepository;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
+
+#[ORM\Entity(repositoryClass: ModificationStatementRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+class ModificationStatement
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\ManyToOne(inversedBy: 'modificationStatements')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Modification $modification = null;
+
+    #[ORM\ManyToOne(inversedBy: 'modificationStatements')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Statement $statement = null;
+
+    #[ORM\Column]
+    private ?bool $refused = null;
+
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $uuid = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $decisionReason = null;
+
+    #[ORM\OneToOne(mappedBy: 'modificationStatement', cascade: ['persist', 'remove'])]
+    private ?ChosenModification $chosen = null;
+
+    public function __toString(): string
+    {
+        return strval($this->getId());
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getModification(): ?Modification
+    {
+        return $this->modification;
+    }
+
+    public function setModification(?Modification $modification): self
+    {
+        $this->modification = $modification;
+
+        return $this;
+    }
+
+    public function getStatement(): ?Statement
+    {
+        return $this->statement;
+    }
+
+    public function setStatement(?Statement $statement): self
+    {
+        $this->statement = $statement;
+
+        return $this;
+    }
+
+    public function isRefused(): ?bool
+    {
+        return $this->refused;
+    }
+
+    public function setRefused(bool $refused): self
+    {
+        $this->refused = $refused;
+
+        return $this;
+    }
+
+    public function getUuid(): ?Uuid
+    {
+        return $this->uuid;
+    }
+
+    #[ORM\PrePersist]
+    public function setUuid(): self
+    {
+        if ($this->getUuid() === null) {
+            $this->uuid = Uuid::v4();
+        }
+
+        return $this;
+    }
+
+    public function getDecisionReason(): ?string
+    {
+        return $this->decisionReason;
+    }
+
+    public function setDecisionReason(?string $decisionReason): self
+    {
+        $this->decisionReason = $decisionReason;
+
+        return $this;
+    }
+
+    public function getChosen(): ?ChosenModification
+    {
+        return $this->chosen;
+    }
+
+    public function setChosen(?ChosenModification $chosen): self
+    {
+        $this->chosen = $chosen;
+
+        return $this;
+    }
+}

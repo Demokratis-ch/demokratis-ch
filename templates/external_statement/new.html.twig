@@ -1,0 +1,40 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Vernehmlassungsantwort{% endblock %}
+
+{% block body %}
+    <div class="bg-white">
+        <div>
+
+            {# Consultation header #}
+            {% include 'consultation/__header.html.twig' %}
+
+            {# Consultation navigation #}
+            {% include 'consultation/__menu.html.twig' %}
+
+            <section class="bg-gray-50 mt-8 mx-8 pt-4 pb-6">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+                    <div class="mt-2">
+                        <h2 class="mt-4 text-xl text-gray-400 font-medium">Neue Stellungnahme anlegen</h2>
+                        {{ form_start(form) }}
+                        <div class="mt-2 p-4 bg-white text-gray-700 shadow">
+                            {{ form_row(form.name) }}
+                            {{ form_row(form.description) }}
+                            {{ form_row(form.file) }}
+                            {{ form_row(form.public) }}
+                        </div>
+                        <div class="flex gap-2">
+                            <a href="{{ path('app_consultation_show_statements', { 'slug': consultation.slug }) }}" class="mt-2 inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Abbrechen</a>
+                            {{ form_row(form.submit, { 'attr': {'class': 'mt-2 inline-flex items-center rounded-md border border-blue-300 bg-blue-100 px-4 py-2 text-sm font-medium text-blue-500 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2' }}) }}
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+{% endblock %}

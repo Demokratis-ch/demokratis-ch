@@ -1,0 +1,46 @@
+{% block comments %}
+
+    {% if more %}
+        {% set maxComments = comments|length %}
+    {% else %}
+        {% set maxComments = 2 %}
+    {% endif %}
+
+    {% for i, comment in comments|slice(0,maxComments) %}
+        {% if comment.deletedAt is null %}
+            <div class="relative text-gray-400 text-xs">
+                {% if comment.author.person is defined and comment.author.person is not null %}
+                    {{ comment.author.person.firstname|default() }} {{ comment.author.person.lastname|default() }}
+                {% else %}
+                    {{ comment.author.email }}
+                {% endif %}
+                <small class="text-gray-300">{{ comment.createdAt ? comment.createdAt|ago : 'unpublished'}}</small>
+
+            </div>
+            <p class="text-sm text-gray-500 bg-white border border-gray-100 rounded-md p-2">
+                {{ comment.text }}
+            </p>
+            <div class="relative flex gap-2">
+                <p class="mt-1 mb-3 text-xs text-gray-300 hover:text-gray-400 underline hover:no-underline"><button data-action="live#action" data-action-name="comment(show=comments,parent={{ comment.id }})">Antworten</button></p>
+                {% if statement is defined and statement is not null %}
+                    {% if app.user and is_granted('own', statement) %}
+                        <span class="mt-1 text-xs text-gray-300">-</span> <p class="mt-1 mb-3 text-xs text-gray-300 hover:text-gray-400 underline hover:no-underline"><button data-action="live#action" data-action-name="delete(id={{ comment.id }})">Entfernen</button></p>
+                    {% endif %}
+                {% endif %}
+
+                {{ component('vote', { 'comment': comment }) }}
+            </div>
+
+            {% set children = thread.childCommentsOf(comment) %}
+            {% if children|length %}
+                <div class="lg:ml-4 ml-2">
+                    {% include 'comment/show.html.twig' with { thread: thread, comments: children } %}
+                </div>
+            {% endif %}
+        {% else %}
+            {# Comment was deleted #}
+        {% endif %}
+    {% else %}
+        {# Keine Kommentare #}
+    {% endfor %}
+{% endblock %}

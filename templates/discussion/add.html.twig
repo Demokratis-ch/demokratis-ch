@@ -1,0 +1,35 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}
+    Diskussion starten
+{% endblock %}
+
+{% block body %}
+    <div class="bg-white">
+        <div>
+
+            {# Consultation header #}
+            {% include 'consultation/__header.html.twig' %}
+
+            {# Consultation navigation #}
+            {% include 'consultation/__menu.html.twig' %}
+
+            <section class="bg-gray-50 mt-8 mx-8 pt-4 pb-6">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-2 pb-6">
+                    <h2 class="mt-4 text-xl text-gray-400 font-medium">Neue Diskussion erstellen</h2>
+                    <div class="mt-2 bg-white p-4 border border-gray-100 rounded-md text-gray-700 shadow-sm">
+                        {{ form_start(form) }}
+                            {{ form_row(form.topic) }}
+                            <div class="flex gap-2">
+                                <a href="{{ path('app_consultation_index_discussion', { 'slug': consultation.slug }) }}" class="items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                                    Abbrechen
+                                </a>
+                                {{ form_row(form.submit) }}
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}{{ consultation.title }}{% endblock %}
+
+{% block body %}
+    <div class="bg-white">
+        <div>
+
+            {# Consultation header #}
+            {% include 'consultation/__header.html.twig' %}
+
+            {# Consultation navigation #}
+            {% include 'consultation/__menu.html.twig' %}
+
+            <section class="bg-gray-50 mt-8 mx-8 pt-4 pb-6">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-2 pb-6">
+                    {% if documents|length > 0 %}
+                        <h2 class="mt-4 text-xl text-gray-400 font-medium">Vernehmlassungsvorlagen</h2>
+                        <div class="mt-2 p-4 bg-white text-gray-700 shadow">
+                            {% for proposal in proposals %}
+                                <p class="mt-2">
+                                    <a href="{{ proposal.fedlexFilePath }}"
+                                       target="_blank"
+                                       class="text-gray-600 hover:text-gray-500 underline hover:no-underline"
+                                    >{{ proposal.title }}</a>
+                                    <i class="fa-regular fa-arrow-up-right-from-square"></i>
+                                </p>
+                            {% endfor %}
+                        </div>
+
+                        <h2 class="mt-4 text-xl text-gray-400 font-medium">{{ 'consultation.documents'|trans }}</h2>
+                        <div class="mt-2 p-4 bg-white text-gray-700 shadow">
+                            {% for document in documents %}
+                                <p class="mt-2">
+                                    <a href="{{ document.fedlexFilePath }}"
+                                       target="_blank"
+                                       class="text-gray-600 hover:text-gray-500 underline hover:no-underline"
+                                    >{{ document.title }}</a>
+                                    <i class="fa-regular fa-arrow-up-right-from-square"></i>
+                                </p>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="mt-2 bg-white p-4 border border-gray-100 rounded-md text-gray-700 shadow-sm text-center">
+                            <div class="grid grid-cols-3 gap-4">
+                                <p class="text-gray-400 col-span-3">Es sind noch keine Dokumente hinterlegt</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+{% endblock %}

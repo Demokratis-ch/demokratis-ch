@@ -1,0 +1,25 @@
+<div class="overflow-x-hidden h-full z-50">
+    <div class="flex flex-col w-[1000%] flex-wrap h-full">
+        {% for comment in thread.getTopCommentsForPreview()|filter(c => c.getDeletedAt() is null) %}
+            <div class="w-[10%] mt-2">
+                <div class="relative text-gray-400 text-xs px-2">
+                    {% if comment.author.person is defined and comment.author.person is not null %}
+                        {{ comment.author.person.firstname|default() }} {{ comment.author.person.lastname|default() }}
+                    {% else %}
+                        {{ comment.author.email }}
+                    {% endif %}
+                    <small class="">{{ comment.createdAt ? comment.createdAt|ago : 'unpublished'}}</small>
+                </div>
+                <p class="text-sm text-gray-500 bg-white border border-gray-100 rounded-md p-2">
+                    {{ comment.text }}
+                </p>
+                {% set responses_count = thread.countChildCommentsRecursive(comment) %}
+                {% if app.user and responses_count > 0 %}
+                    <div class="px-2 text-xs text-gray-400">
+                        <small><i class="fa-regular fa-arrow-turn-down-right"></i> {{ responses_count }} Antworten</small>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</div>

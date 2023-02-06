@@ -1,0 +1,45 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}
+    {% if consultation.humantitle is defined and consultation.humantitle is not null %}
+        {{ consultation.humantitle }}
+    {% else %}
+        {{ consultation.title }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <div class="bg-white">
+        <div>
+
+            {# Consultation header #}
+            {% include 'consultation/__header.html.twig' %}
+
+            {# Consultation navigation #}
+            {% include 'consultation/__menu.html.twig' %}
+
+            <section class="bg-gray-50 mt-8 mx-8 pt-4 pb-6">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-2 pb-6">
+                    <h2 class="mt-4 text-xl text-gray-400 font-medium">Diskussionen</h2>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        {% for discussion in discussions %}
+                            <a class="text-center mt-2 text-gray-600 hover:text-gray-500 bg-white hover:bg-gray-50 p-4 border border-gray-100 hover:border-gray-200 rounded-md shadow-sm" href="{{ path('app_discussion_show', { 'id': discussion.id }) }}" >
+                                <p>{{ discussion.topic }}</p>
+                                <p class="text-xs text-gray-400">{{ discussion.createdBy }} {{ discussion.createdAt|date()|ago }}</p>
+                            </a>
+                        {% else %}
+                            <p class="text-gray-400">Es gibt noch keine Diskussionen</p>
+                        {% endfor %}
+                        {% if app.user %}
+                            <a class="col-span-3 text-center mt-2 pt-5 text-gray-400 hover:text-gray-500 hover:text-gray-500 bg-white hover:bg-gray-50 p-4 border-2 border-dashed hover:border-solid border-gray-300 rounded-md" href="{{ path('app_discussion_add', { 'slug': consultation.slug }) }}" >
+                                Neue Diskussion starten
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Paragraph bearbeiten{% endblock %}
+
+{% block body %}
+    {% set consultation = statement.consultation %}
+
+    <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-8 md:mt-12 ">
+        {# Breadcrumbs #}
+        <nav class="flex py-4" aria-label="Breadcrumb">
+            <ol role="list" class="flex items-center space-x-4">
+                <li>
+                    <div>
+                        <a href="{{ path('app_index') }}" class="text-gray-400 hover:text-gray-500">
+                            <i class="fa-solid fa-house"></i>
+                            <span class="sr-only">Home</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        <a href="{{ path('app_consultation') }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Vernehmlassungen</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        <a href="{{ path('app_consultation_show_statements', { 'slug': consultation.slug }) }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">{{ consultation.humanTitle|default(consultation.title)|u.truncate(15, '...') }}</a>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        <a href="{{ path('app_statement_show', { 'uuid': statement.uuid }) }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">{{ statement.name|u.truncate(45, '...') }}</a>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        <span class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Änderungsvorschlag</span>
+                    </div>
+                </li>
+
+            </ol>
+        </nav>
+
+        <h1 class="md:mt-2 text-2xl sm:text-3xl md:text-4xl xl:text-6xl font-bold tracking-tight text-gray-700">
+            Änderungsvorschlag
+        </h1>
+        <div class="md:flex items-baseline justify-between border-b pt-6 pb-6">
+            <div>
+                {% if statement.consultation.humanTitle is defined and statement.consultation.humanTitle is not null %}
+                    <h2 class="mt-2 text-gray-400 text-md font-normal max-w-5xl break-all md:break-normal">{{ statement.consultation.humanTitle }}</h2>
+                {% else %}
+                    <h2 class="mt-2 text-gray-400 text-md font-normal max-w-5xl break-all md:break-normal">{{ statement.consultation.title }}</h2>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 mt-8 pt-4 pb-6">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-6 md:pb-12 my-4">
+            <div class="">
+                <h2 class="mt-4 text-xl text-gray-400 font-medium">Vorschlag</h2>
+                <div class="mt-2 p-4 bg-white text-gray-700 shadow">
+                    {{ form_start(form) }}
+                    {{ form_row(form.text) }}
+                    {{ form_row(form.justification) }}
+                    {{ form_row(form.submit, { 'attr': { 'class': 'mt-4 inline-flex items-center rounded-md border border-blue-200 bg-blue-100 px-4 py-2 text-sm font-medium text-blue-500 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'  } }) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

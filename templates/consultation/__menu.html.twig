@@ -1,0 +1,42 @@
+{% if consultation.status == 'planned' %}
+{% else %}
+    <nav class="mt-4 md:mt-16 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="">
+            <div class="border-b border-gray-200">
+                <nav class="-mb-px flex overflow-x-auto gap-4" aria-label="Tabs">
+
+                    <a href="{{ path('app_consultation_show_statements', { 'slug': consultation.slug }) }}" class="
+                        {% if app.current_route == 'app_consultation_show_statements' %}border-blue-500 text-blue-600
+                        {% elseif app.current_route == 'app_statement_new' %}border-blue-500 text-blue-600
+                        {% elseif app.current_route == 'app_statement_show' %}border-blue-500 text-blue-600
+                        {% elseif app.current_route == 'app_external_statement_new' %}border-blue-500 text-blue-600
+                        {% elseif app.current_route == 'app_external_statement_show' %}border-blue-500 text-blue-600
+                        {% else %}border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300{% endif%} w-full md:w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm">Stellungnahmen</a>
+
+                    {% if consultation.legalTexts|length > 0 %}
+                        <a href="{{ path('app_consultation_show_legal', { 'slug': consultation.slug }) }}" class="{% if app.current_route == 'app_consultation_show_legal' %}border-blue-500 text-blue-600{% else %}border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300{% endif%} w-full md:w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm">Vernehmlassungsvorlage</a>
+                    {% endif %}
+
+                    <a href="{{ path('app_consultation_show_documents', { 'slug': consultation.slug }) }}" class="{% if app.current_route == 'app_consultation_show_documents' %}border-blue-500 text-blue-600{% else %}border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300{% endif%} w-full md:w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm">Dokumente</a>
+
+                    <a href="{{ path('app_consultation_index_discussion', { 'slug': consultation.slug }) }}" class="
+                        {% if app.current_route == 'app_consultation_index_discussion' %}border-blue-500 text-blue-600
+                        {% elseif app.current_route == 'app_discussion_show'  %}border-blue-500 text-blue-600
+                        {% elseif app.current_route == 'app_discussion_add' %}border-blue-500 text-blue-600
+                        {% else %}border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300{% endif%} w-full md:w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm">
+                        Diskussion
+                    </a>
+
+                    <a href="{{ path('app_consultation_index_media', { 'slug': consultation.slug }) }}" class="
+                        {% if app.current_route == 'app_consultation_index_media' %}border-blue-500 text-blue-600
+                        {% elseif app.current_route == 'app_media_show'  %}border-blue-500 text-blue-600
+                        {% elseif app.current_route == 'app_media_add' %}border-blue-500 text-blue-600
+                        {% else %}border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300{% endif%} w-full md:w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm">
+                        Medien
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </nav>
+{% endif %}
+

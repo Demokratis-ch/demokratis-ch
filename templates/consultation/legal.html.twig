@@ -1,0 +1,68 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}{{ consultation.title }}{% endblock %}
+
+{% block body %}
+    <div class="bg-white">
+        <div>
+
+            {# Consultation header #}
+            {% include 'consultation/__header.html.twig' %}
+
+            {# Consultation navigation #}
+            {% include 'consultation/__menu.html.twig' %}
+
+            <section class="bg-gray-50 mx-8 mt-8 pt-4 pb-6">
+                {% if legalText and legalText.importedFrom.imported == 'paragraphed' %}
+                    {% if not is_granted('IS_AUTHENTICATED') %}
+                        <div class="mx-auto {% if statements|default(0)|length < 1 %}max-w-5xl{% else%}max-w-7xl{% endif%} px-4 sm:px-6 lg:px-8 mt-2 pb-6">
+                            <div class="bg-white p-4 border border-gray-100 rounded-md text-gray-700 shadow-sm text-center">
+                                <a href="{{ path('app_statement_new', { 'uuid': consultation.uuid }) }}" class="mt-4 underline hover:no-underline">Anmelden</a> um eine Stellungnahme zu verfassen
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-6 md:pb-12 my-4">
+                    <div class="{% if legalTexts|length > 1 %}grid grid-cols-4{% endif %}">
+                        {% if legalTexts|length > 1 %}
+                            <div class="mt-4 md:mt-12 xl:mt-14 flex gap-4 md:gap-8 col-span-4 md:col-span-1">
+                                <div>
+                                    <h2 class="mt-4 text-xl text-gray-400 font-medium">Vernehmlassungsvorlage</h2>
+                                    <div class="mt-2 p-4 bg-white text-gray-700 shadow">
+                                        {% for legal in legalTexts %}
+                                            <p class="mt-2">
+                                                <a href="{{ path('app_consultation_show_legal', { 'slug': consultation.slug, 'lt': legal.uuid }) }}"
+                                                   class="
+                                                    {% if legal.id == legalText.id %}
+                                                        text-gray-600 font-semibold
+                                                    {% else %}
+                                                        text-gray-400 hover:text-gray-500 underline hover:no-underline
+                                                    {% endif %}"
+                                                >{{ legal.importedFrom.title }}</a>
+                                            </p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div class="mt-4 md:mt-12 xl:mt-14 flex gap-4 md:gap-8 {% if legalTexts|length > 1 %}col-span-4 md:col-span-3{% endif %}">
+                            {% if legalText and legalText.importedFrom.imported == 'paragraphed' %}
+                                <div class="">
+                                    <h2 class="mt-2 mb-4 text-xl text-gray-400 font-medium">{{ legalText.title }}</h2>
+                                    {% for i, paragraph in paragraphs  %}
+                                        <h3 class="mt-2 text-md text-gray-400 font-light" id="{{ paragraph.uuid[:8] }}">
+                                            <a href="{{ path('app_consultation_show_statements', { 'slug': consultation.slug, 'lt': legalText.uuid.toBase58, '_fragment': paragraph.uuid[:8] }) }}">{{ i+1 }}. Paragraph</a>
+                                        </h3>
+                                        <p class="mt-2 p-4 bg-white shadow text-md text-gray-600">{{ paragraph.text|nl2br }}</p><br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+{% endblock %}

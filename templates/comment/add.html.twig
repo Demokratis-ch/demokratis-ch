@@ -1,0 +1,38 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Kommentar schreiben{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="pt-4 sm:pt-12">
+{#            <a href="{{ path('app_statement_show', { 'uuid': modification.statement.uuid, '_fragment': modification.paragraph.uuid[:8] }) }}" class="text-sm text-gray-400 hover:text-gray-900"><i class="fa-regular fa-arrow-left mr-2"></i> Zurück zur Stellungnahme</a>#}
+        </div>
+
+        <div class="md:flex items-baseline justify-between border-b pt-6 pb-6">
+            <div>
+                <h1 class="text-4xl font-bold tracking-tight text-gray-900 break-all md:break-normal">
+                    Neuer Kommentar
+                </h1>
+{#                {% if modification.statement.consultation.humanTitle is defined and modification.statement.consultation.humanTitle is not null %}#}
+{#                    <h2 class="mt-2 text-gray-400 text-md font-normal max-w-5xl break-all md:break-normal">{{ modification.statement.consultation.humanTitle }}</h2>#}
+{#                {% else %}#}
+{#                    <h2 class="mt-2 text-gray-400 text-md font-normal max-w-5xl break-all md:break-normal">{{ modification.statement.consultation.title }}</h2>#}
+{#                {% endif %}#}
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 mt-8 pt-4 pb-6">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-6 md:pb-12 my-4">
+            <div class="">
+{#                <h2 class="mt-4 text-xl text-gray-400 font-medium">Vorschlag von {{ modification.createdBy }}</h2>#}
+                <div class="mt-2 p-4 bg-white text-gray-700 shadow">
+                    {{ form_start(form) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}

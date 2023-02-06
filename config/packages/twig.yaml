@@ -1,0 +1,9 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    form_themes: ['partials/_tailwind_form.html.twig']
+    globals:
+        fontawesome_key: '%app.fontawesome_key%'
+
+when@test:
+    twig:
+        strict_variables: true

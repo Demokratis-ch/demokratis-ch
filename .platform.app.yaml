@@ -1,0 +1,101 @@
+# The name of this app. Must be unique within a project.
+name: app
+
+# The runtime the application uses. The 'type' key defines the base container
+# image that will be used to run the application. There is a separate base
+# container image for each primary language for the application,
+# in multiple versions. Check the PHP documentation
+# (https://docs.platform.sh/languages/php.html#supported-versions)
+# to find the supported versions for the 'php' type.
+type: php:8.2
+
+dependencies:
+  php:
+    composer/composer: "^2"
+
+# See https://docs.platform.sh/languages/php/extensions.html
+runtime:
+  extensions:
+    - apcu
+    - ctype
+    - iconv
+    - mbstring
+    - pdo_mysql
+    - sodium
+    - xsl
+
+variables:
+  php:
+    opcache.preload: config/preload.php
+build:
+  flavor: none
+
+disk: 1024
+
+web:
+  locations:
+    '/':
+      root: "public"
+      expires: 1h
+      passthru: "/index.php"
+    '/public/uploads':
+      root: 'public/uploads'
+      expires: 300s
+      scripts: false
+      allow: true
+
+# The following block defines a single writable directory, 'web/uploads'
+# The 'source' specifies where the writable mount is. The 'local' source
+# indicates that the mount point will point to a local directory on the
+# application container. The 'source_path' specifies the subdirectory
+# from within the source that the mount should point at.
+#
+# Fabian: Changed it to past setup
+mounts:
+  "/var": { source: local, source_path: var }
+  "/public/uploads": { source: local, source_path: public/uploads }
+
+# The relationships of the application with services or other applications.
+#
+# The left-hand side is the name of the relationship as it will be exposed
+# to the application in the PLATFORM_RELATIONSHIPS variable. The right-hand
+# side is in the form '<service name>:<endpoint name>'.
+relationships:
+  database: 'mariadb:mysql'
+  #chromeheadlessbrowser: 'headlessbrowser:http'
+
+hooks:
+  build: |
+    set -x -e
+    
+    curl -fs https://get.symfony.com/cloud/configurator | bash
+    
+    NODE_VERSION=18 symfony-build
+
+  deploy: |
+    set -x -e
+    
+    symfony-deploy
+
+crons:
+  security-check:
+    # Check that no security issues have been found for PHP packages deployed in production
+    # See https://github.com/fabpot/local-php-security-checker
+    spec: '50 23 * * *'
+    cmd: if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then croncape php-security-checker; fi
+  # Run cron job every 6 hours to pull new consultations
+  consultations:
+    spec: '0 */6 * * *'
+    cmd: 'php bin/console app:consultations:pull'
+  documents:
+    spec: '30 */6 * * *'
+    cmd: 'php bin/console app:consultations:documents'
+  files:
+    spec: '30 */6 * * *'
+    cmd: 'php bin/console app:consultations:files'
+
+#workers:
+  #messenger:
+    #commands:
+      # Consume "async" messages (as configured in the routing section of config/packages/messenger.yaml)
+      #start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Demokratis.ch{% endblock %}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
+    {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+
+    {# Font Awesome #}
+    <script src="https://kit.fontawesome.com/{{ fontawesome_key }}.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 pb-16 text-center lg:pt-32">
+        <h1 class="mx-auto max-w-4xl font-display text-xl font-medium tracking-tight text-slate-900 sm:text-4xl">
+            Demokratis macht es einfach an eidgenössischen Vernehmlassungen teilzunehmen
+        </h1>
+
+        <p class="mx-auto mt-6 max-w-2xl text-md sm:text-lg tracking-tight text-slate-700">Wir denken das Vernehmlassungsverfahren neu: Mit zeitgemässen Medien, offen für alle</p>
+
+            <div class="bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:py-12 sm:px-6 lg:py-16 lg:px-8">
+                <div class="py-10 px-6 bg-gray-50 rounded-3xl sm:py-16 sm:px-12 lg:p-20 lg:flex lg:items-center">
+                    <div class="lg:w-0 lg:flex-1">
+                        <h2 class="text-lg sm:text-xl font-medium tracking-tight text-gray-800">Informiert bleiben</h2>
+                        <p class="mt-4 max-w-3xl text-sm sm:text-md text-gray-600">Interessiert? Inspiriert? Irritiert? Lass Deine Mail-Adresse da, um über den Projektfortschritt informiert zu werden</p>
+                    </div>
+                    <div class="mt-12 sm:w-full sm:max-w-md lg:mt-0 lg:ml-8 lg:flex-1">
+                        {% if (app.flashes | length) > 0 %}
+                            {% for label, messages in app.flashes(['newsletter']) %}
+                                <div class="rounded-md bg-green-50 border border-green-200 border-solid p-4">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <!-- Heroicon name: solid/check-circle -->
+                                            <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium text-green-800">Erfolgreich eingetragen</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {% endfor %}
+                        {% else %}
+                            {{ form_start(form, { 'attr' : { 'class': '' } }) }}
+                            {{ form_widget(form) }}
+                            {{ form_end(form) }}
+                            <p class="mt-3 text-xs sm:text-sm text-gray-400">
+                                Wir nehmen Datenschutz ernst und kommunizieren zurückhaltend.
+                            </p>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="sm:mt-6 md:mt-18 lg:mt-24 xl:mt-32">
+        <div class="max-w-7xl mx-auto py-4 sm:py-12 px-4 overflow-hidden sm:px-6 lg:px-8">
+            <p class="sm:mt-8 text-center text-sm sm:text-base text-gray-400">Umgesetzt mit Unterstützung des Prototype Fund Schweiz</p>
+        </div>
+    </footer>
+</body>
+</html>

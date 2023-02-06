@@ -1,0 +1,27 @@
+{% if consultation.status == 'ongoing' %}
+    <span class="rounded-lg text-sm inline-flex p-3 bg-teal-100 text-teal-700 ring-4 ring-white">
+        {{ 'consultation.status.ongoing'|trans }}
+    </span>
+{% elseif consultation.status == 'planned' %}
+    <span class="rounded-lg text-sm inline-flex p-3 bg-blue-100 text-blue-700 ring-4 ring-white">
+        {{ 'consultation.status.planned'|trans }}
+    </span>
+{% elseif consultation.status == 'done' %}
+    <span class="rounded-lg text-sm inline-flex p-3 bg-gray-100 text-gray-700 ring-4 ring-white">
+        {{ 'consultation.status.done'|trans }}
+    </span>
+{% elseif consultation.status == 'pending_report' %}
+    <span class="rounded-lg text-sm inline-flex py-1 px-3 bg-gray-100 text-gray-700 ring-4 ring-white">
+        <div>
+            <p>{{ 'consultation.status.done'|trans }}</p>
+            <p class="text-xs text-gray-400">Warten auf Bericht</p>
+        </div>
+    </span>
+{% elseif consultation.status == 'pending_statements_report' %}
+    <span class="rounded-lg text-sm inline-flex py-1 px-3 bg-gray-100 text-gray-700 ring-4 ring-white">
+        <div>
+            <p>{{ 'consultation.status.done'|trans }}</p>
+            <p class="text-xs text-gray-400">Warten auf Bericht</p>
+        </div>
+    </span>
+{% endif %}

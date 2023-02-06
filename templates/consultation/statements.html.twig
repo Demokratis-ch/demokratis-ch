@@ -1,0 +1,86 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}
+    {% if consultation.humantitle is defined and consultation.humantitle is not null %}
+        {{ consultation.humantitle }}
+    {% else %}
+        {{ consultation.title }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <div class="bg-white">
+        <div>
+
+            {# Consultation header #}
+            {% include 'consultation/__header.html.twig' %}
+
+            {# Consultation navigation #}
+            {% include 'consultation/__menu.html.twig' %}
+
+            <section class="bg-gray-50 mt-8 mx-8 pt-4 pb-6">
+                {% if consultation.status == 'planned' %}
+                <div class="mx-auto {% if statements|length < 1 %}max-w-5xl{% else%}max-w-7xl{% endif%} px-4 sm:px-6 lg:px-8 mt-2 pb-6">
+                    <h2 class="mt-4 text-xl text-gray-400 font-medium">Vernehmlassung geplant</h2>
+                    <div class="mt-2 bg-white p-4 border border-gray-100 rounded-md text-gray-700 shadow-sm text-center">
+                        <div class="grid grid-cols-3 gap-1">
+                            <p class="text-gray-400 col-span-3">Aktuell ist die Vernehmlassung noch in Planung.</p>
+                            <p class="text-gray-400 col-span-3">Stellungnahmen können erst verfasst werden, sobald die Vernehmlassung eröffnet wurde</p>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                    {% if not is_granted('IS_AUTHENTICATED') %}
+                        <div class="mx-auto {% if statements|length < 1 %}max-w-5xl{% else%}max-w-7xl{% endif%} px-4 sm:px-6 lg:px-8 mt-2 pb-6">
+                            <div class="bg-white p-4 border border-gray-100 rounded-md text-gray-700 shadow-sm text-center">
+                                <a href="{{ path('app_statement_new', { 'uuid': consultation.uuid }) }}" class="mt-4 underline hover:no-underline">Anmelden</a> um eine Stellungnahme zu verfassen
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {# Statements #}
+                    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-2 pb-6">
+                        <h2 class="mt-4 text-xl text-gray-400 font-medium">Stellungnahmen</h2>
+                        {% if is_granted('IS_AUTHENTICATED') %}
+                            <div class="">
+                                <a href="{{ path('app_statement_new', { 'uuid': consultation.uuid }) }}" class="inline-block mt-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md"><i class="fa-solid fa-plus"></i> Neue Stellungnahme verfassen</a>
+                                <a href="{{ path('app_external_statement_new', { 'uuid': consultation.uuid }) }}" class="inline-block mt-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md"><i class="fa-solid fa-plus"></i> Stellungnahme hochladen</a>
+                            </div>
+                        {% endif %}
+                        <div class="mt-2 bg-white p-4 border border-gray-100 rounded-md text-gray-700 shadow-sm text-center">
+                            <div class="grid grid-cols-3 gap-4">
+                                {% set i = 0 %}
+                                {% for statement in statements %}
+                                    {% if is_granted('view', statement) %}
+                                        {% set i = i + 1 %}
+                                        <a href="{{ path('app_statement_show', { 'uuid': statement.uuid }) }}"
+                                           class="col-span-3 hover:bg-gray-50 md:col-span-1 relative block w-full rounded-lg border-2 border-solid border-gray-300 p-4 text-center hover:border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                            <p class="mt-2 block text-sm text-gray-700">{{ statement.name|u.truncate(35, ' ...') }}</p>
+                                            <p class="block text-sm text-gray-500">{{ statement.justification|u.truncate(35, ' ...') }}</p>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                                {% for externalStatement in externalStatements %}
+                                    {% if externalStatement.public %}
+                                        {% set i = i + 1 %}
+                                        <a href="{{ path('app_external_statement_show', { 'uuid': externalStatement.uuid }) }}"
+                                           class="col-span-3 hover:bg-gray-50 md:col-span-1 relative block w-full rounded-lg border-2 border-solid border-gray-300 p-4 text-center hover:border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                            <p class="mt-2 block text-sm text-gray-700">{{ externalStatement.name|u.truncate(35, ' ...') }}</p>
+                                            <p class="block text-sm text-gray-500">{{ externalStatement.description|u.truncate(35, ' ...') }}</p>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if i == 0 %}
+                                    <p class="text-gray-400 col-span-3">Es wurde noch keine Stellungnahme bei uns veröffentlicht</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                {% endif %}
+            </section>
+
+        </div>
+    </div>
+
+{% endblock %}
