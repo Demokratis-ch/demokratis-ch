@@ -1,19 +1,19 @@
 # The name given to the MariaDB/MySQL service (lowercase alphanumeric only).
 mariadb:
-    # The type of your service (mysql), which uses the format
-    # 'type:version'. Be sure to consult the MariaDB/MySQL documentation
-    # (https://docs.platform.sh/add-services/mysql.html#supported-versions)
-    # when choosing a version. If you specify a version number which is not available,
-    # the CLI will return an error.
-    type: mariadb:10.6
-    # The disk attribute is the size of the persistent disk (in MB) allocated to the service.
-    disk: 256
+  # The type of your service (mysql), which uses the format
+  # 'type:version'. Be sure to consult the MariaDB/MySQL documentation
+  # (https://docs.platform.sh/add-services/mysql.html#supported-versions)
+  # when choosing a version. If you specify a version number which is not available,
+  # the CLI will return an error.
+  type: mariadb:10.6
+  # The disk attribute is the size of the persistent disk (in MB) allocated to the service.
+  disk: 256
 
-    # The name given to the Headless Chrome service (lowercase alphanumeric only).
-    #headlessbrowser:
-    # The type of your service (chrome-headless), which uses the format
-    # 'type:version'. Be sure to consult the Headless Chrome documentation
-    # (https://docs.platform.sh/add-services/headless-chrome.html#supported-versions)
-    # when choosing a version. If you specify a version number which is not available,
-    # the CLI will return an error.
-    #type: chrome-headless:91
+  # The name given to the Headless Chrome service (lowercase alphanumeric only).
+  #headlessbrowser:
+  # The type of your service (chrome-headless), which uses the format
+  # 'type:version'. Be sure to consult the Headless Chrome documentation
+  # (https://docs.platform.sh/add-services/headless-chrome.html#supported-versions)
+  # when choosing a version. If you specify a version number which is not available,
+  # the CLI will return an error.
+  #type: chrome-headless:91
