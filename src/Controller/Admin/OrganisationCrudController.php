@@ -29,6 +29,7 @@ class OrganisationCrudController extends AbstractCrudController
             UrlField::new('url'),
             ImageField::new('logo')->setBasePath('/uploads/')->setUploadDir('public/uploads/'),
             BooleanField::new('public'),
+            BooleanField::new('isPersonalOrganisation'),
             AssociationField::new('tags'),
             AssociationField::new('users')->setFormTypeOption('by_reference', false),
         ];
