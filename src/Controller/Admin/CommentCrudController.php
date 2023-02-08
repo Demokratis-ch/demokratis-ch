@@ -26,7 +26,7 @@ class CommentCrudController extends AbstractCrudController
             AssociationField::new('thread'),
             AssociationField::new('parent')->setRequired(false),
             DateTimeField::new('deletedAt')->hideOnIndex(),
-            AssociationField::new('deletedBy'),
+            AssociationField::new('deletedBy')->setRequired(false),
         ];
     }
 }
