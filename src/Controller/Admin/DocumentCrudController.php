@@ -22,7 +22,7 @@ class DocumentCrudController extends AbstractCrudController
             IdField::new('uuid')->hideOnForm(),
             AssociationField::new('consultation'),
             TextField::new('title'),
-            TextField::new('proposal'),
+            TextField::new('type'),
             TextField::new('filepath'),
             TextField::new('fedlexUri'),
             TextField::new('filename'),
