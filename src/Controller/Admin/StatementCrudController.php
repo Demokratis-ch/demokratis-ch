@@ -25,6 +25,8 @@ class StatementCrudController extends AbstractCrudController
             AssociationField::new('consultation'),
             TextField::new('name'),
             TextEditorField::new('justification')->hideOnIndex(),
+            AssociationField::new('organisation'),
+            TextField::new('intro'),
             BooleanField::new('public'),
             BooleanField::new('editable'),
         ];
