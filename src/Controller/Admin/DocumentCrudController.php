@@ -19,7 +19,7 @@ class DocumentCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
+            IdField::new('id')->hideOnForm(),
             IdField::new('uuid')->hideOnForm(),
             AssociationField::new('consultation'),
             TextField::new('title'),
