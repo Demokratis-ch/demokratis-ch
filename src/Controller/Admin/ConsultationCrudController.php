@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Consultation;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -37,6 +38,7 @@ class ConsultationCrudController extends AbstractCrudController
         ]),
             DateField::new('startDate'),
             DateField::new('endDate'),
+            AssociationField::new('documents')->hideOnIndex(),
             TextField::new('office'),
         ];
     }

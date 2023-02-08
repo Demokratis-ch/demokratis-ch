@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Comment;
 use App\Entity\Consultation;
 use App\Entity\Discussion;
+use App\Entity\Document;
 use App\Entity\Invite;
 use App\Entity\LegalText;
 use App\Entity\Media;
@@ -63,6 +64,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Consultation');
         yield MenuItem::linkToCrud('Consultations', 'far fa-book', Consultation::class);
         yield MenuItem::linkToCrud('Legal Texts', 'far fa-book-section', LegalText::class);
+        yield MenuItem::linkToCrud('Documents', 'far fa-file-invoice', Document::class);
         yield MenuItem::linkToCrud('Statements', 'far fa-file-lines', Statement::class);
         yield MenuItem::linkToCrud('Paragraphs', 'far fa-line-height', Paragraph::class);
         yield MenuItem::linkToCrud('Modifications', 'far fa-pencil', Modification::class);

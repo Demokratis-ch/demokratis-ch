@@ -47,7 +47,7 @@ class Document
 
     public function __toString(): string
     {
-        return strval($this->getId());
+        return strval($this->getId().'-'.$this->getType().'-'.$this->getLocalFilename());
     }
 
     public function getId(): ?int
