@@ -22,12 +22,12 @@ class LegalTextCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             IdField::new('uuid')->hideOnForm(),
-            AssociationField::new('statement'),
             AssociationField::new('consultation'),
             TextField::new('title'),
             TextEditorField::new('text'),
             AssociationField::new('paragraphs')->hideOnIndex(),
             AssociationField::new('importedFrom')->hideOnIndex(),
+            AssociationField::new('statement')->setRequired(false),
             DateTimeField::new('createdAt')->hideOnIndex(),
             DateTimeField::new('updatedAt')->hideOnIndex(),
         ];
