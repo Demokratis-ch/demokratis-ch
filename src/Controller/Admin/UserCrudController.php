@@ -34,6 +34,7 @@ class UserCrudController extends AbstractCrudController
             IdField::new('uuid')->hideOnForm(),
             EmailField::new('email'),
             TextField::new('password')->setFormType(PasswordType::class)->onlyWhenCreating(),
+            TextField::new('password')->onlyOnForms(),
             ArrayField::new('roles'),
             AssociationField::new('organisations')->setFormTypeOption('by_reference', false),
         ];
