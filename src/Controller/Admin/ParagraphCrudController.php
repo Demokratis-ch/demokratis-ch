@@ -24,7 +24,7 @@ class ParagraphCrudController extends AbstractCrudController
             IdField::new('uuid')->hideOnForm()->hideOnIndex(),
             IntegerField::new('position'),
             TextareaField::new('text')->renderAsHtml(),
-            AssociationField::new('legalText')->hideOnIndex(),
+            AssociationField::new('legalText'),
             DateTimeField::new('createdAt')->hideOnIndex(),
             DateTimeField::new('updatedAt')->hideOnIndex(),
         ];
