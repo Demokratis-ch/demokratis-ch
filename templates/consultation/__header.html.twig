@@ -45,7 +45,7 @@
 
         {% for tag in consultation.tags %}
             {% if tag.isApproved or is_granted('ROLE_ADMIN') %}
-                <span class="inline-block mt-1 p-1.5 border {% if tag.isApproved %}bg-gray-50 border-gray-200 text-gray-400{% else %}bg-amber-50 border-amber-200 text-amber-400{% endif %} text-xs rounded-xl">{{ tag.name }}</span>
+                <a href="{{ path('app_consultation', { 't': tag.slug }) }}" class="inline-block mt-1 p-1.5 border {% if tag.isApproved %}text-gray-400 hover:text-gray-500 bg-gray-50 hover:bg-gray-100 hover:border-gray-300 border border-gray-200{% else %}bg-amber-50 border-amber-200 text-amber-400{% endif %} text-xs rounded-xl">{{ tag.name }}</a>
             {% endif %}
         {% endfor %}
 
