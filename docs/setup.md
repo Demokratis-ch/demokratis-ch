@@ -18,7 +18,7 @@ Database `root:root@localhost:3307`
 # Code checks
 CS-Fixer ```php vendor/bin/php-cs-fixer fix```
 
-Psalm ```./vendor/bin/psalm```
+Psalm ```./vendor/bin/psalm```, if needed with ```--no-cache```
 
 TwigCS ```php vendor/bin/twigcs templates```
 
