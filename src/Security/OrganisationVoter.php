@@ -62,7 +62,7 @@ class OrganisationVoter extends Voter
         };
     }
 
-    private function canView(Organisation $organisation, UserInterface $user): bool
+    private function canView(Organisation $organisation, UserInterface $user): bool|null
     {
         // if they can edit, they can view
         if ($this->canEdit($organisation, $user)) {

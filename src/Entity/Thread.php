@@ -16,7 +16,7 @@ class Thread
     #[ORM\Column]
     protected ?int $id = null;
 
-    /** @var Collection<Comment> */
+    /** @var Collection<int, Comment> */
     #[ORM\OneToMany(mappedBy: 'thread', targetEntity: Comment::class)]
     protected Collection $comments;
 
@@ -42,7 +42,7 @@ class Thread
     }
 
     /**
-     * @return Collection<int, Comment>
+     * @psalm-return Collection<int, Comment>
      */
     public function getComments(): Collection
     {
@@ -74,9 +74,9 @@ class Thread
     }
 
     /**
-     * @return ReadableCollection<Comment>
+     * @psalm-return Collection<int, Comment>
      */
-    public function getTopLevelComments(bool $includeDeleted = false): ReadableCollection
+    public function getTopLevelComments(bool $includeDeleted = false): Collection
     {
         return $this->comments->filter(
             fn (Comment $comment) => $comment->getParent() === null && ($includeDeleted || $comment->getDeletedAt() === null),
@@ -84,9 +84,9 @@ class Thread
     }
 
     /**
-     * @return ReadableCollection<Comment>
+     * @psalm-return Collection<int, Comment>
      */
-    public function getChildCommentsOf(Comment $parent, bool $includeDeleted = false): ReadableCollection
+    public function getChildCommentsOf(Comment $parent, bool $includeDeleted = false): Collection
     {
         return $this->comments->filter(
             fn (Comment $comment) => $comment->getParent() !== null
