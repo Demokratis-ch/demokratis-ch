@@ -1,4 +1,34 @@
-# Demokratis.ch
+<br>
+<br>
+<div align="center">
+    <a href="https://demokratis.ch" target="_blank">
+        <img width="300" src="https://raw.githubusercontent.com/Demokratis-ch/demokratis-ch/main/public/img/logo.svg">
+    </a>
+    <p>Consultation procedures for the people</p>
+
+  <a href="mailto:team@demokratis.ch">team@demokratis.ch</a> |
+  <a href="https://demokratis.ch">Demokratis.ch</a>
+
+   <a href="https://github.com/demokratis-ch/demokratis-ch/blob/main/LICENSE.md">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Demokratis is released under the MIT License">
+  </a>
+
+  <img src="https://img.shields.io/github/v/tag/Demokratis-ch/demokratis-ch?sort=semver">
+
+  <a href="https://twitter.com/enrolla_io">
+    <img src="https://img.shields.io/badge/follow-%40enrolla__io-1DA1F2?logo=twitter&style=social" alt="Enrolla Twitter" />
+  </a>
+
+<p>
+<a href="https://enrolla.io/#gh-light-mode-only">
+<img width="700" src="/public/img/screenshots/consultations_preview.png">
+</a>
+</p>
+
+</div>
+
+# 🚀 What's Demokratis?
+
 [Demokratis.ch](https://demokratis.ch) makes it easier to participate in Swiss consultation procedures in order to better influence the legislative process at the federal and cantonal level.
 
 ### About
