@@ -64,16 +64,13 @@ I
 
 Die Bundesverfassung wird wie folgt geändert:
 
-
 Art. 136 Abs. 1
 
 1 
 Die politischen Rechte in Bundessachen stehen allen Schweizerinnen und Schweizern zu, die das 16. Altersjahr zurückgelegt haben und die nicht wegen Geisteskrankheit oder Geistesschwäche entmündigt sind. Alle haben die gleichen politischen Rechte und Pflichten.
 
-
 Art. 143
 In den Nationalrat, in den Bundesrat und in das Bundesgericht sind alle Stimmberechtigten wählbar, die das 18. Altersjahr zurückgelegt haben.
-
 !!!
 II
 
@@ -91,15 +88,12 @@ TEXT
         $paragraph1->setText(
             <<<TEXT
 I
-
 Die Bundesverfassung wird wie folgt geändert:
-
 
 Art. 136 Abs. 1
 
 1 
 Die politischen Rechte in Bundessachen stehen allen Schweizerinnen und Schweizern zu, die das 16. Altersjahr zurückgelegt haben und die nicht wegen Geisteskrankheit oder Geistesschwäche entmündigt sind. Alle haben die gleichen politischen Rechte und Pflichten.
-
 
 Art. 143
 In den Nationalrat, in den Bundesrat und in das Bundesgericht sind alle Stimmberechtigten wählbar, die das 18. Altersjahr zurückgelegt haben.
@@ -115,7 +109,6 @@ TEXT
         $paragraph2->setText(
             <<<TEXT
 II
-
 1 
 Dieser Beschluss untersteht der Abstimmung des Volkes und der Stände.
 
@@ -145,6 +138,7 @@ TEXT
         }
 
         $statement = new Statement();
+        $statement->setPublic(true);
 
         $organisation = $this->organisationRepository->findOneBy(['name' => 'Demokratis']);
 
@@ -163,12 +157,10 @@ I
 
 Die Bundesverfassung wird wie folgt geändert:
 
-
 Art. 136 Abs. 1
 
 1 
 Die politischen Rechte in Bundessachen stehen allen Schweizer*n zu, die das 16. Altersjahr zurückgelegt haben und die nicht wegen Geisteskrankheit, Geistesschwäche oder anderen Gründen entmündigt sind. Alle haben die gleichen politischen Rechte und Pflichten.
-
 
 Art. 143
 In den Nationalrat, in den Bundesrat und in das Bundesgericht sind alle Stimmberechtigten wählbar, die das 18. Altersjahr zurückgelegt haben.
