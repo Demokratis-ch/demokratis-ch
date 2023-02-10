@@ -61,7 +61,7 @@
                                     </div>
                                 {% endif %}
                                 <h2 class="mt-4 text-xl text-gray-400 font-medium">{{ 'consultation.documents'|trans }}</h2>
-                                <div class="mt-2 p-4 bg-white text-gray-700 shadow">
+                                <div class="mt-2 p-4 bg-white text-gray-700 shadow mr-1 md:mr-8">
                                     {% for document in documents %}
                                         <p class="mt-2">
                                             <a href="{{ document.fedlexFilePath }}"
@@ -83,13 +83,19 @@
                         %}
                             <div class="mt-4 md:mt-12 xl:mt-14 flex gap-4 md:gap-8 col-span-4 md:col-span-3">
                                 <div>
-                                    <h2 class="mt-4 text-xl text-gray-400 font-medium">Aktionen</h2>
-                                    <div class="mt-2 space-y-4">
-
-                                    {% for proposal in proposals|filter(proposal => proposal.imported != 'paragraphed') %}
-                                        <a href="{{ path('app_consultation_import_legal', { 'uuid': proposal.uuid }) }}" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{{ proposal.title }} importieren</a>
-                                    {% endfor %}
+                                    <h2 class="mt-4 text-xl text-gray-600 font-medium">Vernehmlassungsvorlage{% if proposals|length > 1 %}n{% endif%} importieren</h2>
+                                    <p class="mt-2 text-gray-400">
+                                        Bevor eine Stellungnahme abgegeben werden kann, {% if proposals|length > 1 %}müssen die Vernehmlassungsvorlagen{% else%}muss die Vernehmlassungsvorlage{% endif%} importiert werden.
+                                    </p>
+                                    <div class="mt-4 space-y-4">
+                                        <a href="mailto:team@demokratis.ch" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Import anfragen</a>
+                                        {% if app.user %}
+                                            {% for proposal in proposals|filter(proposal => proposal.imported != 'paragraphed') %}
+                                                <a href="{{ path('app_consultation_import_legal', { 'uuid': proposal.uuid }) }}" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 border-gray-300 bg-gray-100 text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">{{ proposal.title }} importieren</a>
+                                            {% endfor %}
+                                        {% endif %}
                                     </div>
+
                                 </div>
                             </div>
                         {% endif %}
