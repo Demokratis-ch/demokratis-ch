@@ -59,7 +59,7 @@ class ExternalStatementVoter extends Voter
         };
     }
 
-    private function canView(Statement $statement, UserInterface $user): bool
+    private function canView(Statement $statement, UserInterface $user): bool|null
     {
         // if they can edit, they can view
         if ($this->canEdit($statement, $user)) {

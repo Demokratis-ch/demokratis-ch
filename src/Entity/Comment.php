@@ -45,7 +45,7 @@ class Comment
     #[ORM\ManyToOne]
     private ?User $deletedBy = null;
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->text;
     }
