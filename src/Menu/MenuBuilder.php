@@ -23,6 +23,10 @@ class MenuBuilder
             'route' => 'app_consultation',
         ]);
 
+        $menu->addChild('Stellungnahmen', [
+            'route' => 'app_statement_index',
+        ]);
+
         $menu->addChild('Organisationen', [
             'route' => 'app_organisation_index',
         ]);

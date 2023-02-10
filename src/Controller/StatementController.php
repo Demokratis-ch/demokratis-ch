@@ -9,6 +9,7 @@ use App\Form\StatementIntroType;
 use App\Form\StatementType;
 use App\Repository\ChosenModificationRepository;
 use App\Repository\DocumentRepository;
+use App\Repository\ExternalStatementRepository;
 use App\Repository\LegalTextRepository;
 use App\Repository\ModificationRepository;
 use App\Repository\ModificationStatementRepository;
@@ -25,6 +26,18 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/statement', name: 'app_statement')]
 class StatementController extends AbstractController
 {
+    #[Route('s', name: '_index', methods: ['GET', 'POST'])]
+    public function index(StatementRepository $statementRepository, ExternalStatementRepository $externalStatementRepository): Response
+    {
+        $statements = $statementRepository->findBy(['public' => true]);
+        $externalStatements = $externalStatementRepository->findBy(['public' => true]);
+
+        return $this->render('statement/index.html.twig', [
+            'statements' => $statements,
+            'externalStatements' => $externalStatements,
+        ]);
+    }
+
     #[Route('/{uuid}/new', name: '_new', methods: ['GET', 'POST'])]
     public function new(Consultation $consultation, Request $request, EntityManagerInterface $entityManager, StatementRepository $statementRepository): Response
     {
