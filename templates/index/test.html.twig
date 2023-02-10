@@ -209,7 +209,7 @@
                         </div>
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
                             {% for tag in tags %}
-                                <div class="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white py-2 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400">
+                                <div class="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white py-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:border-gray-400">
                                     <a href="{{ path('app_consultation', { 't': tag.slug }) }}" class="after:absolute after:inset-0 mx-auto focus:outline-none truncate text-sm text-gray-500">
                                         {{ tag.name }}
                                     </a>
