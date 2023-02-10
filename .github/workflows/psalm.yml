@@ -1,0 +1,31 @@
+name: Psalm Static analysis
+
+on:
+  push:
+    branches:
+      - 'development'
+  pull_request:
+
+jobs:
+  psalm:
+    name: Psalm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          ini-values: post_max_size=256M, max_execution_time=180
+          tools: composer, psalm
+
+      - name: composer install
+        run: composer install
+
+      - name: warmup cache
+        run: bin/console cache:warmup
+
+      - name: psalm
+        run: psalm
