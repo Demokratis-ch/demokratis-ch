@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ConsultationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,7 +15,6 @@ use whatwedo\SearchBundle\Annotation\Index;
 #[ORM\Entity(repositoryClass: ConsultationRepository::class)]
 #[UniqueEntity('fedlexId')]
 #[ORM\HasLifecycleCallbacks]
-#[ApiResource]
 class Consultation
 {
     #[ORM\Id]

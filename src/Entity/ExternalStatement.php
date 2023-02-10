@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ExternalStatementRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +9,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ExternalStatementRepository::class)]
-#[ApiResource]
 #[ORM\HasLifecycleCallbacks]
 class ExternalStatement
 {
