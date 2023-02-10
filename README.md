@@ -15,10 +15,6 @@
 
   <img src="https://img.shields.io/github/v/tag/Demokratis-ch/demokratis-ch?sort=semver">
 
-  <a href="https://twitter.com/enrolla_io">
-    <img src="https://img.shields.io/badge/follow-%40enrolla__io-1DA1F2?logo=twitter&style=social" alt="Enrolla Twitter" />
-  </a>
-
 <p>
 <a href="https://enrolla.io/#gh-light-mode-only">
 <img width="700" src="/public/img/screenshots/consultations_preview.png">
