@@ -271,11 +271,10 @@
 
 
                             {# Display paragraph #}
-                            <div class="col-span-5 {% if collapse %}md:col-span-4{% else %}md:col-span-3{% endif %}">
+                            <div id="{{ paragraphContainer.paragraph.uuid[:8] }}" class="scroll-mt-20 col-span-5 {% if collapse %}md:col-span-4{% else %}md:col-span-3{% endif %}">
 
                                 {# Paragraph title + edit #}
-                                <h3 class="text-md text-gray-400 font-light"
-                                    id="{{ paragraphContainer.paragraph.uuid[:8] }}">
+                                <h3 class="text-md text-gray-400 font-light">
                                     <a href="{{ path('app_statement_show', { 'uuid': statement.uuid, 'lt': legalText.uuid.toBase58, '_fragment': paragraphContainer.paragraph.uuid[:8] }) }}">{{ i+1 }}. Paragraph</a>
                                     {% if app.user and is_granted('edit', statement) %}
                                         <small><a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}"
