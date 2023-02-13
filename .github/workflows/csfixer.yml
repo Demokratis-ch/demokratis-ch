@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - 'development'
-  pull_request:
 
 name: PHP-CS-Fixer
 
