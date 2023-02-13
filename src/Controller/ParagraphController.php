@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Modification;
+use App\Entity\ModificationStatement;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,15 +12,15 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class ParagraphController extends AbstractController
 {
     #[Route('/force-original/{uuid}', name: 'app_paragraph_original', methods: ['GET'])]
-    public function forceOriginal(Modification $modification, EntityManagerInterface $manager): Response
+    public function forceOriginal(ModificationStatement $modificationStatement, EntityManagerInterface $manager): Response
     {
-        $statement = $modification->getStatement();
+        $statement = $modificationStatement->getStatement();
 
         if (!$this->isGranted('own', $statement)) {
             throw new AccessDeniedException();
         }
 
-        $paragraph = $modification->getParagraph();
+        $paragraph = $modificationStatement->getModification()->getParagraph();
         $manager->persist($paragraph);
         $manager->flush();
 
