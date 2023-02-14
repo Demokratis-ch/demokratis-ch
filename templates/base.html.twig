@@ -15,16 +15,23 @@
         <meta name="theme-color" content="#ffffff">
 
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
+        {%- block stylesheets %}
             {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+        {% endblock -%}
 
-        {% block javascripts %}
+        {%- block javascripts %}
             {{ encore_entry_script_tags('app') }}
-        {% endblock %}
+        {% endblock -%}
 
         {# Font Awesome #}
         <script src="https://kit.fontawesome.com/{{ fontawesome_key }}.js" crossorigin="anonymous"></script>
+
+        {# Plausible #}
+        {%- if app.environment == 'dev' %}
+            <!-- Plausible deactivated for dev environments -->
+        {% else %}
+            <script defer data-domain="demokratis.ch" src="https://plausible.io/js/script.js"></script>
+        {% endif -%}
 
     </head>
     <body data-controller="visibility">
