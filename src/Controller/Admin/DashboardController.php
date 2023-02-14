@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Comment;
 use App\Entity\Consultation;
+use App\Entity\ContactRequest;
 use App\Entity\Discussion;
 use App\Entity\Document;
 use App\Entity\Invite;
@@ -81,6 +82,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Discussions', 'far fa-message-code', Discussion::class);
 
         yield MenuItem::section('Other');
+        yield MenuItem::linkToCrud('Messages', 'far fa-message', ContactRequest::class);
         yield MenuItem::linkToCrud('Media', 'far fa-image', Media::class);
     }
 
