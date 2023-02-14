@@ -27,7 +27,9 @@
         <script src="https://kit.fontawesome.com/{{ fontawesome_key }}.js" crossorigin="anonymous"></script>
 
         {# Plausible #}
-        {%- if app.environment is not 'dev' %}
+        {%- if app.environment == 'dev' %}
+            <!-- Plausible deactivated for dev environments -->
+        {% else %}
             <script defer data-domain="demokratis.ch" src="https://plausible.io/js/script.js"></script>
         {% endif -%}
 
