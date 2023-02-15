@@ -1,0 +1,75 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Demokratis.ch{% endblock %}
+
+{% block body %}
+
+    <div class="md:mt-24 2xl:mt-36 relative bg-white">
+        <div class="absolute inset-0">
+            <div class="absolute inset-y-0 left-0 w-1/2 bg-gray-50"></div>
+        </div>
+        <div class="relative mx-auto max-w-7xl lg:grid lg:grid-cols-5">
+            <div class="bg-gray-50 py-16 px-6 lg:col-span-2 lg:px-8 lg:py-24 xl:pr-12">
+                <div class="mx-auto max-w-lg">
+
+                    <h2 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Kontakt</h2>
+                    <p class="mt-3 text-lg leading-6 text-gray-500">Wir freuen uns auf Nachrichten.</p>
+                    <dl class="mt-8 text-base text-gray-500">
+                        <div>
+                            <dt class="sr-only">Anschrift</dt>
+                            <dd>
+                                <p>Verein Demokratis</p>
+                                <p>Sonnmattstrasse 4</p>
+                                <p>3084 Köniz</p>
+                            </dd>
+                        </div>
+                        <div class="mt-3 xl:mt-8">
+                            <dt class="sr-only">E-Mail</dt>
+                            <dd class="flex">
+                                <!-- Heroicon name: outline/envelope -->
+                                <svg class="h-6 w-6 flex-shrink-0 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                                </svg>
+                                <span class="ml-3">team@demokratis.ch</span>
+                            </dd>
+                        </div>
+                    </dl>
+                    <p class="mt-6 text-base text-gray-500">
+                        Lust mitzuwirken?
+                        <a href="{{ path('app_index_contact') }}" class="font-medium text-gray-700 underline hover:no-underline">Jetzt dem Verein beitreten</a>.
+                    </p>
+                </div>
+            </div>
+            <div class="bg-white py-16 px-6 lg:col-span-3 lg:py-24 lg:px-8 xl:pl-12">
+                <div class="mx-auto max-w-lg lg:max-w-none">
+
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="rounded-md bg-green-50 border border-green-200 border-solid p-4">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <!-- Heroicon name: solid/check-circle -->
+                                        <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    {% for message in messages %}
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium text-green-800">{{ message }}</p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        {{ form_start(form) }}
+                        {{ form_end(form) }}
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

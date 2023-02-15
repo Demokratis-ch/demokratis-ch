@@ -45,7 +45,7 @@
 
         {% for tag in consultation.tags %}
             {% if tag.isApproved or is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('app_consultation', { 't': tag.slug }) }}" class="inline-block mt-1 p-1.5 border {% if tag.isApproved %}text-gray-400 hover:text-gray-500 bg-gray-50 hover:bg-gray-100 hover:border-gray-300 border border-gray-200{% else %}bg-amber-50 border-amber-200 text-amber-400{% endif %} text-xs rounded-xl">{{ tag.name }}</a>
+                <a href="{{ path('app_consultation', { 't': tag.slug }) }}" class="inline-block mt-1 p-1.5 border {% if tag.isApproved %}text-gray-400 hover:text-gray-500 bg-gray-50 hover:bg-gray-100 hover:border-gray-300 border border-gray-200{% else %}bg-gray-50 hover:bg-gray-100 border-gray-200 hover:border-gray-300 border-dashed hover:text-gray-400 text-gray-300{% endif %} text-xs rounded-xl">{{ tag.name }}</a>
             {% endif %}
         {% endfor %}
 
@@ -57,13 +57,9 @@
     </div>
 </header>
 
-<section class="bg-gray-50 mx-8 mt-8 pt-4 pb-6">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-2 pb-6">
-        <div class="mt-2">
-            <h2 class="text-md md:text-xl text-gray-400 font-medium">Beschreibung</h2>
-            <div class="text-sm text-md mt-2 p-4 bg-white text-gray-600 shadow">
-                {{ consultation.description }}
-            </div>
-        </div>
+<section class="mx-auto mt-4 md:mt-6 md:pb-6 max-w-7xl px-4 sm:px-6 lg:px-8">
+    <h2 class="text-md md:text-xl text-gray-400 font-medium">Beschreibung</h2>
+    <div class="text-sm text-md mt-2 p-4 bg-white text-gray-600 shadow">
+        {{ consultation.description }}
     </div>
 </section>

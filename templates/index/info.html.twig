@@ -1,0 +1,35 @@
+{% extends 'layout-default.html.twig' %}
+
+
+{% block title %}Demokratis.ch{% endblock %}
+
+{% block body %}
+
+    <div class="bg-white pt-24 px-6 sm:pt-24 xl:pt-36 lg:px-8">
+        <div class="mx-auto max-w-2xl xl:max-w-4xl text-center">
+            <p class="text-lg font-semibold leading-8 tracking-tight text-blue-600">Häufig gestellte</p>
+            <h2 class="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Fragen</h2>
+            <p class="mt-6 text-lg leading-8 text-gray-600">Als Vernehmlassungsverfahren wird jene Phase des Vorverfahrens der Gesetzgebung bezeichnet, in der Vorhaben des Bundes auf ihre sachliche Richtigkeit, Vollzugstauglichkeit und Akzeptanz hin geprüft werden. <span class="text-base text-gray-300">(Quelle: Parlament.ch)</span></p>
+        </div>
+    </div>
+
+
+    <div class="bg-white">
+        <div class="mx-auto max-w-7xl py-16 px-6 24 lg:px-8">
+            <div class="md:mt-8 text-center">
+                <dl class="space-y-16 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:gap-y-16 sm:space-y-0 lg:gap-x-10">
+                    <div>
+                        <dt id="what" class="text-base font-semibold leading-7 text-gray-900">Was ist eine Vernehmlassung?</dt>
+                        <dd class="mt-2 text-base leading-7 text-gray-600">Feedback zu Gesetzesvorlagen</dd>
+                    </div>
+
+                    <div>
+                        <dt id="who" class="text-base font-semibold leading-7 text-gray-900">Wer darf sich beteiligen?</dt>
+                        <dd class="mt-2 text-base leading-7 text-gray-600">Alle</dd>
+                    </div>
+
+                </dl>
+            </div>
+        </div>
+    </div>
+{% endblock %}
