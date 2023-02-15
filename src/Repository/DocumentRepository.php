@@ -39,7 +39,7 @@ class DocumentRepository extends ServiceEntityRepository
         }
     }
 
-    public function findDocumentsWithoutFiles():mixed
+    public function findDocumentsWithoutFiles(): mixed
     {
         return $this->createQueryBuilder('d')
             ->andWhere('d.type = :proposal')
