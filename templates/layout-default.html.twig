@@ -68,7 +68,16 @@
 
                     </div>
                 </div>
+                <div class="mt-10 xl:mt-0">
+                    <h3 class="text-sm font-semibold leading-6 text-gray-600">Newsletter abonnieren</h3>
+                    <p class="mt-2 text-sm leading-6 text-gray-600">Lass Deine Mail-Adresse da, um über den Projektfortschritt informiert zu werden.</p>
 
+                    {{ render(controller(
+                        'App\\Controller\\NewsletterController::subscribe'
+                    )) }}
+
+                    <p class="mt-2 text-xs leading-6 text-gray-400">Wir nehmen Datenschutz ernst und kommunizieren zurückhaltend.</p>
+                </div>
             </div>
             <div class="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 md:flex md:items-center md:justify-between lg:mt-24">
                 <div class="flex space-x-6 md:order-2">

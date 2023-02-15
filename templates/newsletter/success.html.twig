@@ -1,0 +1,46 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Erfolgreich für den Newsletter angemeldet{% endblock %}
+
+{% block body %}
+    <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class=" pt-12 md:pt-16 pb-6">
+
+            {# Breadcrumbs #}
+            <nav class="flex py-4 sm:pt-6 lg:pt-8" aria-label="Breadcrumb">
+                <ol role="list" class="flex items-center space-x-4">
+                    <li>
+                        <div>
+                            <a href="{{ path('app_index') }}" class="text-gray-400 hover:text-gray-500">
+                                <i class="fa-solid fa-house"></i>
+                                <span class="sr-only">Home</span>
+                            </a>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                            <a href="{{ path('app_newsletter_success') }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Newsletter</a>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+
+            <div class="bg-white">
+                <div class="py-24 px-6 sm:px-6 sm:py-32 lg:px-8">
+                    <div class="mx-auto max-w-2xl text-center">
+                        <h2 class="text-4xl font-bold tracking-tight text-gray-900">Wir bleiben in Kontakt</h2>
+                        <p class="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600">Danke für das Interesse!<br>Wir freuen uns auch immer über Fragen, Feedback und Anregungen</p>
+                        <div class="mt-10 flex items-center justify-center gap-x-6">
+                            <a href="{{ path('app_index_contact') }}" class="rounded-md bg-blue-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Kontakt</a>
+                            <a href="{{ path('app_index_info') }}" class="text-base font-semibold leading-7 text-gray-900">Häufig gestellte Fragen <span aria-hidden="true">→</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+{% endblock %}
