@@ -72,6 +72,7 @@ class ModificationController extends AbstractController
             'modification' => $modification,
             'statement' => $statement,
             'modificationStatement' => $modificationStatement,
+            'consultation' => $statement->getConsultation(),
             'owner' => $statement->getOwners()->contains($this->getUser()),
         ]);
     }
