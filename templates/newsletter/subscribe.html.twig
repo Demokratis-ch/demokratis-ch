@@ -1,6 +1,6 @@
 {% form_theme form with ['partials/_tailwind_form.html.twig'] only %}
 
-<div data-turbo="false">
+<div>
 
 {% if (app.flashes | length) > 0 %}
     {% for label, messages in app.flashes(['success-contacted']) %}
