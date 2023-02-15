@@ -34,7 +34,7 @@
                 </div>
                 {{ form_end(form) }}
             </div>
-            <p class="mt-6 text-gray-500 text-sm">Einen <a href="{{ path('app_tag_create', { 'slug': consultation.slug }) }}" class="underline hover:no-underline">neuen Tag</a> vorschlagen.</p>
+            <p class="mt-6 text-gray-500 text-sm">Einen <a href="{{ path('app_tag_create', { 'uuid': consultation.uuid }) }}" class="underline hover:no-underline">neuen Tag</a> vorschlagen.</p>
         </div>
     </section>
 {% endblock %}
