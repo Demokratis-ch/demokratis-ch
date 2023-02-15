@@ -39,7 +39,7 @@ class DocumentRepository extends ServiceEntityRepository
         }
     }
 
-    public function findDocumentsWithoutFiles()
+    public function findDocumentsWithoutFiles():mixed
     {
         return $this->createQueryBuilder('d')
             ->andWhere('d.type = :proposal')
@@ -53,7 +53,7 @@ class DocumentRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findFilesToDelete()
+    public function findFilesToDelete(): mixed
     {
         return $this->createQueryBuilder('d')
             ->andWhere('d.type = :proposal')
