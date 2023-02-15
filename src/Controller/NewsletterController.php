@@ -37,5 +37,4 @@ class NewsletterController extends AbstractController
     {
         return $this->render('newsletter/success.html.twig');
     }
-
 }
