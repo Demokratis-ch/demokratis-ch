@@ -326,15 +326,15 @@
                                 </li>
 
                                 <li>
-                                    <a href="{{ path('app_consultation', { 'filter': 'ongoing' }) }}" class="{% if filter == 'ongoing' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.ongoing'|trans }} <span class="ml-1 bg-gray-100 rounded text-gray-400 text-xs p-1">{{ ongoingCount }}</span></a>
+                                    <a href="{{ path('app_consultation', { 'filter': 'ongoing' }) }}" class="{% if filter == 'ongoing' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.ongoing'|trans }} <span class="ml-1 {% if filter == 'ongoing' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ ongoingCount }}</span></a>
                                 </li>
 
                                 <li>
-                                    <a href="{{ path('app_consultation', { 'filter': 'planned' }) }}" class="{% if filter == 'planned' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.planned'|trans }} <span class="ml-1 bg-gray-100 rounded text-gray-400 text-xs p-1">{{ plannedCount }}</a>
+                                    <a href="{{ path('app_consultation', { 'filter': 'planned' }) }}" class="{% if filter == 'planned' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.planned'|trans }} <span class="ml-1 {% if filter == 'planned' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ plannedCount }}</a>
                                 </li>
 
                                 <li>
-                                    <a href="{{ path('app_consultation', { 'filter': 'done' }) }}" class="{% if filter == 'done' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.done'|trans }} <span class="ml-1 bg-gray-100 rounded text-gray-400 text-xs p-1">{{ doneCount }}</a>
+                                    <a href="{{ path('app_consultation', { 'filter': 'done' }) }}" class="{% if filter == 'done' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.done'|trans }} <span class="ml-1 {% if filter == 'done' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ doneCount }}</a>
                                 </li>
                             </ul>
 
