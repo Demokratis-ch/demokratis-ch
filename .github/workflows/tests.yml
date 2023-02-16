@@ -1,6 +1,10 @@
-# GitHub Action for Symfony with MySQL
+on:
+  pull_request:
+  push:
+    branches: ['main']
+
 name: PHPUnit Tests
-on: [pull_request]
+
 jobs:
   symfony:
     name: PHP ${{ matrix.php-versions }}

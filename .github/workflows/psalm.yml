@@ -1,8 +1,9 @@
-name: Psalm Static analysis
-
 on:
+  pull_request:
   push:
-    branches:
+    branches: ['main']
+
+name: Psalm Static analysis
 
 jobs:
   psalm:
