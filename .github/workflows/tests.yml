@@ -57,9 +57,9 @@ jobs:
 
       - name: Run Migration
         run: |
-          php bin/console doctrine:database:drop --force
-          php bin/console doctrine:database:create
-          php bin/console doctrine:schema:create
+          php bin/console --env=test doctrine:database:drop --force
+          php bin/console --env=test doctrine:database:create
+          php bin/console --env=test doctrine:schema:create
 
 #          composer require --dev symfony/orm-pack
 #          php bin/console doctrine:schema:update --force || echo "No migrations found or schema update failed"
