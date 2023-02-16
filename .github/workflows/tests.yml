@@ -1,9 +1,9 @@
 # GitHub Action for Symfony with MySQL
-name: Testing Symfony with MySQL
-on: [push, pull_request]
+name: PHPUnit Tests
+on: [pull_request]
 jobs:
   symfony:
-    name: Symfony (PHP ${{ matrix.php-versions }})
+    name: PHP ${{ matrix.php-versions }}
     runs-on: ubuntu-latest
 
     # Docs: https://docs.github.com/en/actions/using-containerized-services
@@ -57,9 +57,13 @@ jobs:
 
       - name: Run Migration
         run: |
-          composer require --dev symfony/orm-pack
-          php bin/console doctrine:schema:update --force || echo "No migrations found or schema update failed"
-          php bin/console doctrine:migrations:migrate || echo "No migrations found or migration failed"
+          php bin/console doctrine:database:drop
+          php bin/console doctrine:database:create
+          php bin/console doctrine:schema:create
+
+#          composer require --dev symfony/orm-pack
+#          php bin/console doctrine:schema:update --force || echo "No migrations found or schema update failed"
+#          php bin/console doctrine:migrations:migrate || echo "No migrations found or migration failed"
         env:
           DATABASE_URL: mysql://root:symfony@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/symfony
 
@@ -68,3 +72,5 @@ jobs:
 
       - name: Run tests
         run: simple-phpunit --coverage-text
+        env:
+          DATABASE_URL: mysql://root:symfony@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/symfony
