@@ -67,6 +67,12 @@ jobs:
         env:
           DATABASE_URL: mysql://root:symfony@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/symfony
 
+      - name: npm setup
+        uses: actions/setup-node@v3
+
+      - name: encore build
+        run: npm run dev
+
       - name: Install PHPUnit
         run: simple-phpunit install
 
