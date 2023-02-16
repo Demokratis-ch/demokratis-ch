@@ -28,3 +28,14 @@ TwigCS ```php vendor/bin/twigcs templates```
 # Production logs
 Access the logs on platform.sh with
 ```symfony log app --tail```
+
+# Tests
+To run the test suite on your local machine you need to do the following setup:
+
+1. Create the file `.env.test.local` and define the `DATABASE_URL`, similar to your `.env.local`. Use a different database name to keep tests separate from your lokal working environment.
+2. `php bin/console --env=test doctrine:database:create`
+3. `php bin/console --env=test doctrine:schema:create`
+
+Once you have done that, you can execute the test suite with the command below:
+
+`php bin/phpunit`
