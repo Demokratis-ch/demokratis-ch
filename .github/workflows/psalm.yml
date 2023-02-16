@@ -3,7 +3,6 @@ name: Psalm Static analysis
 on:
   push:
     branches:
-      - 'development'
 
 jobs:
   psalm:
