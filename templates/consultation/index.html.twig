@@ -349,52 +349,6 @@
                                 {% endfor %}
                             </div>
 
-                            <div class="border-b border-gray-50 py-6">
-                                <h3 class="-my-3">
-                                    <span class="py-3 text-sm font-medium text-gray-300">{{ 'contributors.contributors'|trans }}</span>
-                                </h3>
-                                <!-- Filter section, show/hide based on section state. -->
-                                <div class="pt-6" id="filter-section-0">
-                                    <div class="space-y-4">
-                                        <div class="flex items-center">
-                                            <input id="filter-color-0" name="color[]" value="white" type="checkbox" class="h-4 w-4 rounded border-gray-200 text-blue-600 focus:ring-blue-500" disabled>
-                                            <label for="filter-color-0" class="ml-3 text-sm text-gray-300">{{ 'contributors.my_own'|trans }}</label>
-                                        </div>
-
-                                        <div class="flex items-center">
-                                            <input id="filter-color-1" name="color[]" value="beige" type="checkbox" class="h-4 w-4 rounded border-gray-200 text-blue-600 focus:ring-blue-500" disabled>
-                                            <label for="filter-color-1" class="ml-3 text-sm text-gray-300">{{ 'contributors.contributed'|trans }}</label>
-                                        </div>
-
-                                        <div class="flex items-center">
-                                            <input id="filter-color-2" name="color[]" value="blue" type="checkbox" class="h-4 w-4 rounded border-gray-200 text-blue-600 focus:ring-blue-500" disabled>
-                                            <label for="filter-color-2" class="ml-3 text-sm text-gray-300">{{ 'contributors.by_organisation'|trans }}</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <h3 class="mt-3">
-                                <span class="py-3 text-sm font-medium text-gray-300">{{ 'time_period.time_period'|trans }}</span>
-                            </h3>
-                            <ul role="list" class="mt-4 space-y-4 border-b border-gray-50 pb-6 text-sm text-gray-200">
-                                <li>
-                                    <p href="#" class="">{{ 'time_period.last_week'|trans }}</p>
-                                </li>
-
-                                <li>
-                                    <p href="#" class="font-medium">{{ 'time_period.last_month'|trans }}</p>
-                                </li>
-
-                                <li>
-                                    <p href="#" class="">{{ 'time_period.last_quarter'|trans }}</p>
-                                </li>
-
-                                <li>
-                                    <p href="#" class="">{{ 'time_period.last_year'|trans }}</p>
-                                </li>
-                            </ul>
-
                         </form>
 
                         <!-- Consultation grid -->
