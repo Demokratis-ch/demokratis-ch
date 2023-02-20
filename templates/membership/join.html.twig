@@ -1,0 +1,90 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Verein Demokratis - Mitglied werden{% endblock %}
+
+{% block body %}
+
+<main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class=" pt-12 md:pt-16 pb-6">
+
+        {# Breadcrumbs #}
+        <nav class="flex py-4" aria-label="Breadcrumb">
+            <ol role="list" class="flex items-center space-x-4">
+                <li>
+                    <div>
+                        <a href="{{ path('app_index') }}" class="text-gray-400 hover:text-gray-500">
+                            <i class="fa-solid fa-house"></i>
+                            <span class="sr-only">Home</span>
+                        </a>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        <a href="{{ path('app_membership_join') }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Mitglied werden</a>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <h1 class="text-2xl sm:text-3xl md:text-4xl xl:text-6xl font-bold tracking-tight text-gray-700">Verein Demokratis</h1>
+
+        <div class="mt-4 md:mt-8">
+            {{ form_start(form) }}
+            <div class="bg-white px-4 py-5 shadow sm:rounded-lg sm:p-6">
+                <div class="md:grid md:grid-cols-3 md:gap-6">
+                    <div class="md:col-span-1">
+                        <h3 class="text-lg font-medium leading-6 text-gray-700">Mitglied werden</h3>
+                        <p class="mt-1 text-sm text-gray-500">Direkt hier online Mitglied dem Verein Demokratis beitreten. Wir freuen uns auf Dich!</p>
+                        <br>
+                        <p class="mt-1 text-sm text-gray-500">Juristische Personen melden sich bitte <a href="mailto:team@demokratis.ch" class="underline hover:no-underline text-blue-600 hover:text-blue-700">per E-Mail</a>.</p>
+                    </div>
+                    <div class="mt-5 md:col-span-2 md:mt-0">
+                        <div class="grid grid-cols-6 gap-1 md:gap-2">
+                            <div class="col-span-6 sm:col-span-3">
+                                {{ form_row(form.firstname) }}
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-3">
+                                {{ form_row(form.lastname) }}
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-4">
+                                {{ form_row(form.email) }}
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-2">
+                                {{ form_row(form.phone) }}
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-6 lg:col-span-2">
+                                {{ form_row(form.street) }}
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+                                {{ form_row(form.zip) }}
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+                                {{ form_row(form.location) }}
+                            </div>
+
+                            <div class="col-span-6">
+                                {{ form_row(form.comment) }}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-2 md:mt-4 flex justify-end">
+                {{ form_row(form.submit) }}
+            </div>
+
+        {{ form_end(form) }}
+        </div>
+    </div>
+</main>
+{% endblock %}

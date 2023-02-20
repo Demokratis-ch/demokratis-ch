@@ -15,17 +15,3 @@ import:
   backToConsultation: Zurück zur Vernehmlassung
   plaintext: Reiner Text
   original: Original
-
-contributors:
-  contributors: Beteiligte
-  my_own: Meine Vernehmlassungen
-  contributed: Mit Beiträgen von mir
-  by_organisation: Mit Beiträgen meiner Organisation
-
-time_period:
-  time_period: Zeitraum
-  last_week: Letzte Woche
-  last_month: Letzter Monat
-  last_quarter: Letztes Quartal
-  last_year: Letztes Jahr
-

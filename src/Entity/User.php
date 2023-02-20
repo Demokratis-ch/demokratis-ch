@@ -82,6 +82,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserOrganisation::class)]
     private Collection $organisations;
 
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Membership::class)]
+    private Collection $memberships;
+
     public function __construct()
     {
         $this->legalTexts = new ArrayCollection();
@@ -96,6 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->approvedStatements = new ArrayCollection();
         $this->externalStatements = new ArrayCollection();
         $this->organisations = new ArrayCollection();
+        $this->memberships = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -602,6 +606,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($organisation->getUser() === $this) {
                 $organisation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Membership>
+     */
+    public function getMemberships(): Collection
+    {
+        return $this->memberships;
+    }
+
+    public function addMembership(Membership $membership): self
+    {
+        if (!$this->memberships->contains($membership)) {
+            $this->memberships->add($membership);
+            $membership->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMembership(Membership $membership): self
+    {
+        if ($this->memberships->removeElement($membership)) {
+            // set the owning side to null (unless already changed)
+            if ($membership->getCreatedBy() === $this) {
+                $membership->setCreatedBy(null);
             }
         }
 

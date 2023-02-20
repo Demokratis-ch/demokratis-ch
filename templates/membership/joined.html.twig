@@ -1,0 +1,45 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Verein Demokratis - Mitglied werden{% endblock %}
+
+{% block body %}
+
+<main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class=" pt-12 md:pt-16 pb-6">
+
+        {# Breadcrumbs #}
+        <nav class="flex py-4" aria-label="Breadcrumb">
+            <ol role="list" class="flex items-center space-x-4">
+                <li>
+                    <div>
+                        <a href="{{ path('app_index') }}" class="text-gray-400 hover:text-gray-500">
+                            <i class="fa-solid fa-house"></i>
+                            <span class="sr-only">Home</span>
+                        </a>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        <a href="{{ path('app_membership_join') }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Mitglied werden</a>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <h1 class="text-2xl sm:text-3xl md:text-4xl xl:text-6xl font-bold tracking-tight text-gray-700">Verein Demokratis</h1>
+
+        <div class="bg-white">
+            <div class="mx-auto py-6 sm:py-12 md:py-18">
+                <h2 class="text-4xl font-medium text-gray-700">Herzlich willkommen!</h2>
+                <p class="mt-6 text-lg leading-8 text-gray-600">
+                    Wir freuen uns, dass du dich für eine Mitgliedschaft im Verein Demokratis entschieden hast. Mit deiner Mitgliedschaft unterstützt du unsere Arbeit und stärkst die Schweizer Demokratie.
+                </p>
+            </div>
+        </div>
+
+
+    </div>
+</main>
+{% endblock %}
