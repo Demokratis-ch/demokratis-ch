@@ -10,6 +10,7 @@ use App\Entity\Document;
 use App\Entity\Invite;
 use App\Entity\LegalText;
 use App\Entity\Media;
+use App\Entity\Membership;
 use App\Entity\Modification;
 use App\Entity\ModificationStatement;
 use App\Entity\Newsletter;
@@ -82,8 +83,9 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Discussions', 'far fa-message-code', Discussion::class);
 
         yield MenuItem::section('Other');
-        yield MenuItem::linkToCrud('Messages', 'far fa-message', ContactRequest::class);
         yield MenuItem::linkToCrud('Media', 'far fa-image', Media::class);
+        yield MenuItem::linkToCrud('Messages', 'far fa-message', ContactRequest::class);
+        yield MenuItem::linkToCrud('Membership', 'far fa-user-astronaut', Membership::class);
     }
 
     public function configureAssets(): Assets
