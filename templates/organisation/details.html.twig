@@ -193,6 +193,13 @@
                     {% if statement.isPublic or (app.user and is_granted('own', statement)) %}
                         <a href="{{ path('app_statement_show', { 'uuid': statement.uuid }) }}" class="bg-white col-span-3 hover:bg-gray-100 md:col-span-1 relative block w-full rounded-lg border-2 border-solid border-gray-300 p-4 text-center hover:border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                             <p class="mt-2 block text-sm text-gray-700">
+                                {% if app.user and is_granted('own', statement) %}
+                                    {% if statement.isPublic %}
+                                        <i class="fa-solid fa-lock-open"></i>
+                                    {% else %}
+                                        <i class="fa-solid fa-lock"></i>
+                                    {% endif %}
+                                {% endif %}
                                 {{ statement.name }}
                             </p>
                             <p class="mt-1 block text-xs text-gray-400">
