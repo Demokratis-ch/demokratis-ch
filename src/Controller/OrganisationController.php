@@ -45,7 +45,7 @@ class OrganisationController extends AbstractController
         return $this->render('organisation/details.html.twig', [
             'organisation' => $organisation,
             'invites' => $inviteRepository->findBy(['organisation' => $organisation, 'registeredAt' => null]),
-            'statements' => $statementRepository->findBy(['organisation' => $organisation, 'public' => true]),
+            'statements' => $statementRepository->findBy(['organisation' => $organisation]),
         ]);
     }
 
