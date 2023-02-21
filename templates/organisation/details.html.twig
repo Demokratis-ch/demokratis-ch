@@ -189,23 +189,29 @@
         <div class="mt-4 text-gray-700 text-center">
             <div class="grid grid-cols-3 gap-4">
                 {% for statement in statements %}
-                    <a href="{{ path('app_statement_show', { 'uuid': statement.uuid }) }}" class="bg-white col-span-3 hover:bg-gray-100 md:col-span-1 relative block w-full rounded-lg border-2 border-solid border-gray-300 p-4 text-center hover:border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                        <p class="mt-2 block text-sm text-gray-700">
-                            {% if statement.isPublic %}
-                                <i class="fa-solid fa-lock-open"></i>
-                            {% else %}
-                                <i class="fa-solid fa-lock"></i>
-                            {% endif %}
-                            {{ statement.name }}
-                        </p>
-                        <p class="mt-1 block text-xs text-gray-400">
-                            {% if statement.consultation.humanTitle is defined and statement.consultation.humanTitle is not null %}
-                                {{ statement.consultation.humanTitle }}
-                            {% else %}
-                                {{ statement.consultation.title }}
-                            {% endif %}
-                        </p>
-                    </a>
+
+                    {% if statement.isPublic or (app.user and is_granted('own', statement)) %}
+                        <a href="{{ path('app_statement_show', { 'uuid': statement.uuid }) }}" class="bg-white col-span-3 hover:bg-gray-100 md:col-span-1 relative block w-full rounded-lg border-2 border-solid border-gray-300 p-4 text-center hover:border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            <p class="mt-2 block text-sm text-gray-700">
+                                {% if app.user and is_granted('own', statement) %}
+                                    {% if statement.isPublic %}
+                                        <i class="fa-solid fa-lock-open"></i>
+                                    {% else %}
+                                        <i class="fa-solid fa-lock"></i>
+                                    {% endif %}
+                                {% endif %}
+                                {{ statement.name }}
+                            </p>
+                            <p class="mt-1 block text-xs text-gray-400">
+                                {% if statement.consultation.humanTitle is defined and statement.consultation.humanTitle is not null %}
+                                    {{ statement.consultation.humanTitle }}
+                                {% else %}
+                                    {{ statement.consultation.title }}
+                                {% endif %}
+                            </p>
+                        </a>
+                    {% endif %}
+                    
                 {% else %}
                     <p class="bg-gray-50 text-gray-300 col-span-3 md:col-span-1 relative block w-full rounded-lg p-4 text-center">Es gibt noch keine veröffentlichten Stellungnahmen</p>
                 {% endfor %}
