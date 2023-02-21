@@ -12,9 +12,10 @@
    <a href="https://github.com/demokratis-ch/demokratis-ch/blob/main/LICENSE.md">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Demokratis is released under the MIT License">
   </a>
-
-  <img src="https://img.shields.io/github/v/tag/Demokratis-ch/demokratis-ch?sort=semver">
-
+  
+  <a href="https://github.com/Demokratis-ch/demokratis-ch/releases">
+    <img src="https://img.shields.io/github/v/tag/Demokratis-ch/demokratis-ch?sort=semver">
+  </a>
 <p>
 <a href="https://enrolla.io/#gh-light-mode-only">
 <img width="700" src="/public/img/screenshots/consultations_preview.png">
