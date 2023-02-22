@@ -199,17 +199,11 @@
                                 <div class="col-span-4 md:col-span-1">
                                     <div class="mb-2 opacity-40 hover:opacity-100 transition-opacity duration-500 ease-out">
 
-                                        {% if
-                                            (paragraphContainer.chosen is defined and paragraphContainer.chosen is not null)
-                                            or
-                                            (paragraphContainer.modifications|length > 0)
-                                            or
-                                            (paragraphContainer.refused|length > 0)                                        %}
-                                            <h2 class="mt-2 text-xs text-gray-400 font-medium">Änderungsvorschläge</h2>
-                                        {% endif %}
 
                                         {# Currently chosen #}
                                         {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
+                                            <h2 class="mt-2 text-xs text-gray-400 font-medium">Akzeptierte Änderung</h2>
+
                                             <div class="relative mt-1 px-4 py-2 border bg-white hover:bg-gray-50 rounded-lg border-gray-200 text-sm text-gray-500">
                                                 <a class="after:absolute after:inset-0" href="{{ path('app_paragraph_diff', { 'modification_uuid': paragraphContainer.chosen.modification.uuid, 'statement_uuid': statement.uuid }) }}">
                                                     {{ paragraphContainer.chosen.modification.createdBy }} <span class="text-xs text-gray-300">#{{ paragraphContainer.chosen.modification.uuid[:3] }}</span>
@@ -217,6 +211,13 @@
                                                 </a>
                                             </div>
                                             <a href="{{ path('app_paragraph_remove_chosen', { 'uuid': paragraphContainer.chosen.modificationStatement.uuid }) }}" class="mt-2 ml-2 underline hover:no-underline text-xs text-gray-400">Original wiederherstellen</a>
+                                        {% endif %}
+
+                                        {% if
+                                            (paragraphContainer.modifications|length > 0)
+                                            or
+                                            (paragraphContainer.refused|length > 0)                                        %}
+                                            <h2 class="mt-2 text-xs text-gray-400 font-medium">Änderungsvorschläge</h2>
                                         {% endif %}
 
                                         {# Proposed modifications #}
