@@ -9,6 +9,9 @@
                         {{ comment.author.email }}
                     {% endif %}
                     <small class="">{{ comment.createdAt ? comment.createdAt|ago : 'unpublished'}}</small>
+                    <div class="absolute right-0 -mt-4 mr-1">
+                        {% include 'components/show_votes.html.twig' %}
+                    </div>
                 </div>
                 <p class="text-sm text-gray-500 bg-white border border-gray-100 rounded-md p-2">
                     {{ comment.text }}

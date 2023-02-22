@@ -1,19 +1,18 @@
 {% block comments %}
     {% for i, comment in comments %}
-        {% if (comment.deletedAt is null) or is_granted('own', statement) %}
-            <div class="{% if comment.deletedAt is not null %}bg-red-50{% endif %} -mx-2 my-2 px-2 py-1 rounded">
+        <div class="-mx-2 my-2 px-2 py-1 rounded">
+        {% if comment.deletedAt is null %}
                 <div class="group mb-2">
                     <div class="relative text-gray-400 text-xs px-2">
+                        <div class="absolute right-0 -mt-1 mr-1 ">
+                            {% include 'components/show_votes.html.twig' %}
+                        </div>
                         {% if comment.author.person is defined and comment.author.person is not null %}
                             {{ comment.author.person.firstname|default() }} {{ comment.author.person.lastname|default() }}
                         {% else %}
                             {{ comment.author.email }}
                         {% endif %}
                         <small class="text-gray-300">{{ comment.createdAt ? comment.createdAt|ago : 'unpublished'}}</small>
-                        {% if comment.deletedAt is not null %}
-                            <small class="text-red-500">Dieser Kommentar wurde gelöscht</small>
-                        {% endif %}
-
                     </div>
                     <p class="text-sm text-gray-500 bg-white border border-gray-100 rounded-md p-2">
                         {{ comment.text }}
@@ -22,30 +21,44 @@
                         {% if app.user %}
                             <p class="mt-1 mb-3 text-xs text-gray-300 hover:text-gray-400 underline hover:no-underline"><button data-action="live#update" data-model="parent" data-value="{{ comment.id }}">Antworten</button></p>
                         {% endif %}
+                        {{ component('vote', { 'comment': comment }) }}
                         {% if statement is defined and statement is not null %}
                             {% if app.user and is_granted('own', statement) %}
-                                {% if comment.deletedAt is not null %}
-                                    <span class="mt-1 text-xs text-gray-300">-</span> <p class="mt-1 mb-3 text-xs text-gray-300 hover:text-gray-400 underline hover:no-underline"><button data-action="live#action" data-action-name="delete(id={{ comment.id }}, restore=1)">Wiederherstellen</button></p>
-                                {% else %}
-                                    <span class="mt-1 text-xs text-gray-300">-</span> <p class="mt-1 mb-3 text-xs text-gray-300 hover:text-gray-400 underline hover:no-underline"><button data-action="live#action" data-action-name="delete(id={{ comment.id }})">Entfernen</button></p>
-                                {% endif %}
+                                <span class="mt-1 text-xs text-gray-300">-</span> <p class="mt-1 mb-3 text-xs text-gray-300 hover:text-gray-400 underline hover:no-underline"><button data-action="live#action" data-action-name="delete(id={{ comment.id }})">Entfernen</button></p>
                             {% endif %}
                         {% endif %}
-
-                        {{ component('vote', { 'comment': comment }) }}
                     </div>
                 </div>
-
-                {% set children = thread.childCommentsOf(comment) %}
-                {% if children|length %}
-                    <div class="lg:ml-4 ml-2">
-                        {% include 'comment/paragraph_comments_show.html.twig' with { thread: thread, comments: children } %}
+        {% elseif is_granted('own', statement) %}
+            {# Comment is deleted #}
+                <div class="group mb-2">
+                    <div class="relative text-gray-300 text-xs px-2">
+                        <div class="absolute right-0 -mt-1 mr-1 ">
+                            {% include 'components/show_votes.html.twig' %}
+                        </div>
+                        {% if comment.author.person is defined and comment.author.person is not null %}
+                            {{ comment.author.person.firstname|default() }} {{ comment.author.person.lastname|default() }}
+                        {% else %}
+                            {{ comment.author.email }}
+                        {% endif %}
+                        <small class="text-gray-200">{{ comment.createdAt ? comment.createdAt|ago : 'unpublished'}} |</small>
+                        <small class="text-red-500">Dieser Kommentar wurde gelöscht</small>
                     </div>
-                {% endif %}
-            </div>
-        {% else %}
-            {# Comment was deleted #}
+                    <p class="text-sm text-gray-400 bg-red-50 border border-gray-100 rounded-md p-2">
+                        {{ comment.text }}
+                    </p>
+                    <div class="px-2">
+                        <span class="mt-1 text-xs text-gray-300"></span> <p class="mt-1 mb-3 text-xs text-gray-300 hover:text-gray-400 underline hover:no-underline"><button data-action="live#action" data-action-name="delete(id={{ comment.id }}, restore=1)">Wiederherstellen</button></p>
+                    </div>
+                </div>
         {% endif %}
+            {% set children = thread.childCommentsOf(comment) %}
+            {% if children|length %}
+                <div class="lg:ml-4 ml-2">
+                    {% include 'comment/paragraph_comments_show.html.twig' with { thread: thread, comments: children } %}
+                </div>
+            {% endif %}
+        </div>
     {% else %}
         {# Keine Kommentare #}
     {% endfor %}

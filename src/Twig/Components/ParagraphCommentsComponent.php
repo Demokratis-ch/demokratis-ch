@@ -72,8 +72,8 @@ class ParagraphCommentsComponent extends AbstractController
     {
         $comment = $this->commentRepository->findOneBy(['id' => $id]);
 
-        if ($comment->getAuthor()->getUserIdentifier() !== $this->getUser()->getUserIdentifier()) {
-            throw new BadRequestHttpException('Invalid comment ID');
+        if (!$this->isGranted('edit', $comment)) {
+            throw new BadRequestHttpException('Unable to delete comment');
         }
 
         if ($comment) {
