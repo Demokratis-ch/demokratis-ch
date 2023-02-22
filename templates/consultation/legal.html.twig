@@ -52,7 +52,7 @@
                                     <h2 class="mt-2 mb-4 text-xl text-gray-400 font-medium">{{ legalText.title }}</h2>
                                     {% for i, paragraph in paragraphs  %}
                                         <h3 class="mt-2 text-md text-gray-400 font-light" id="{{ paragraph.uuid[:8] }}">
-                                            <a href="{{ path('app_consultation_show_statements', { 'slug': consultation.slug, 'lt': legalText.uuid.toBase58, '_fragment': paragraph.uuid[:8] }) }}">{{ i+1 }}. Paragraph</a>
+                                            <a href="{{ path('app_consultation_show_statements', { 'slug': consultation.slug, 'lt': legalText.uuid.toBase58, '_fragment': paragraph.uuid[:8] }) }}">{{ i+1 }}. Absatz</a>
                                         </h3>
                                         <p class="mt-2 p-4 bg-white shadow text-md text-gray-600">{{ paragraph.text|nl2br }}</p><br>
                                     {% endfor %}

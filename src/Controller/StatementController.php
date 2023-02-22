@@ -10,6 +10,7 @@ use App\Form\StatementType;
 use App\Repository\ChosenModificationRepository;
 use App\Repository\DocumentRepository;
 use App\Repository\ExternalStatementRepository;
+use App\Repository\FreeTextRepository;
 use App\Repository\LegalTextRepository;
 use App\Repository\ModificationRepository;
 use App\Repository\ModificationStatementRepository;
@@ -83,7 +84,7 @@ class StatementController extends AbstractController
 
     #[Route('/{uuid}', name: '_show', methods: ['GET'])]
     #[IsGranted('view', subject: 'statement')]
-    public function show(Statement $statement, DocumentRepository $documentRepository, LegalTextRepository $legalTextRepository, ParagraphRepository $paragraphRepository, ModificationRepository $modificationRepository, ModificationStatementRepository $modificationStatementRepository, ChosenModificationRepository $chosenModificationRepository, Request $request): Response
+    public function show(Statement $statement, DocumentRepository $documentRepository, LegalTextRepository $legalTextRepository, ParagraphRepository $paragraphRepository, ModificationRepository $modificationRepository, ModificationStatementRepository $modificationStatementRepository, ChosenModificationRepository $chosenModificationRepository, FreeTextRepository $freeTextRepository, Request $request): Response
     {
         $approvals = $statement->getApprovedBy();
 
@@ -109,6 +110,10 @@ class StatementController extends AbstractController
 
         foreach ($paragraphsInLegalText as $i => $paragraph) {
             $paragraphs[$i]['paragraph'] = $paragraph;
+
+            $paragraphs[$i]['freetext']['before'] = $freeTextRepository->findBy(['statement' => $statement, 'paragraph' => $paragraph, 'position' => 'before']);
+            $paragraphs[$i]['freetext']['after'] = $freeTextRepository->findBy(['statement' => $statement, 'paragraph' => $paragraph, 'position' => 'after']);
+
             $chosen[$i] = $chosenModificationRepository->findOneBy(['statement' => $statement, 'paragraph' => $paragraph]);
 
             $paragraphs[$i]['modifications'] = $modificationRepository->findOpenModifications($paragraph, $statement);
