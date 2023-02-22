@@ -12,7 +12,7 @@ use App\Form\ModificationType;
 use App\Repository\ChosenModificationRepository;
 use App\Repository\ModificationRepository;
 use App\Repository\ModificationStatementRepository;
-use DiffMatchPatch\DiffMatchPatch;
+use App\Service\WordDiff;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,8 +35,8 @@ class ModificationController extends AbstractController
     ): Response {
         $modificationStatement = $modificationStatementRepository->findOneBy(['statement' => $statement, 'modification' => $modification]);
 
-        $dmp = new DiffMatchPatch();
-        $diffs = $dmp->diff_main($modification->getParagraph()->getText(), $modification->getText(), false);
+        $wd = new WordDiff();
+        $diffs = $wd->diff($modification->getParagraph()->getText(), $modification->getText());
 
         $form = $this->createForm(AcceptRefuseType::class);
         $form->handleRequest($request);
