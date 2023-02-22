@@ -21,7 +21,14 @@
                 {% if this.consultations|length > 0 %}
                     <ul class="max-h-72 scroll-py-2 overflow-y-auto text-sm text-gray-800" id="options" role="listbox">
                         {% for consultation in this.consultations %}
-                            <li class="relative cursor-default select-none hover:bg-blue-600 hover:text-white px-6 py-2" id="option-1" role="option" tabindex="-1">
+                            <li class="border-l-4
+                             {% if consultation.status == 'ongoing' %}
+                                border-teal-300
+                            {% elseif consultation.status == 'planned' %}
+                                border-blue-300
+                            {% endif %}
+
+                             relative cursor-default select-none hover:bg-blue-600 hover:text-white px-6 py-2" id="option-1" role="option" tabindex="-1">
                                 <a href="{{ path('app_consultation_show_statements', { 'slug': consultation.slug }) }}" class="after:absolute after:inset-0">
                                     {% if consultation.humanTitle is defined and consultation.humanTitle is not null %}
                                         {{ consultation.humanTitle }}
