@@ -1,0 +1,19 @@
+{% if comment.votes|length > 0 %}
+    {% set up = 0 %}
+    {% set down = 0 %}
+    {% for opinion in comment.votes %}
+        {% if opinion.vote == 'up' %}
+            {% set up = up + 1 %}
+        {% elseif opinion.vote == 'down' %}
+            {% set down = down + 1 %}
+        {% endif %}
+    {% endfor %}
+<div class="opacity-40 text-gray-300 text-xs">
+    {% if down > 0 %}{{ down }}  👎{% endif %}
+    {% if up > 0 %}{{ up }} 👍{% endif %}
+</div>
+{% endif %}
+
+
+
+
