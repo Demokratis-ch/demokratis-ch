@@ -8,7 +8,7 @@ use DiffMatchPatch\Utils;
 
 class WordDiff extends DiffToolkit
 {
-    public function diff($text1, $text2): array
+    public function diff(string $text1, string $text2): array
     {
         $a = $this->linesToWords($text1, $text2);
 
@@ -27,7 +27,7 @@ class WordDiff extends DiffToolkit
     /**
      * See DiffMatchPatch\DiffToolkit for the original code.
      */
-    public function linesToWords($text1, $text2)
+    public function linesToWords(string $text1, string $text2): array
     {
         // e.g. $lineArray[4] == "Hello\n"
         $lineArray = [];
@@ -51,14 +51,13 @@ class WordDiff extends DiffToolkit
      *
      * See https://github.com/google/diff-match-patch/wiki/Line-or-Word-Diffs
      */
-    protected function linesToWordsMunge($text, array &$lineArray, array &$lineHash)
+    protected function linesToWordsMunge(string $text, array &$lineArray, array &$lineHash): string
     {
         // Simple string concat is even faster than implode() in PHP.
         $chars = '';
 
         $delimiter = iconv('UTF-8', mb_internal_encoding(), ' ');
 
-        // TODO optimize code
         // explode('\n', $text) would temporarily double our memory footprint,
         // but mb_strpos() and mb_substr() work too slow
         $lines = explode($delimiter, $text);
