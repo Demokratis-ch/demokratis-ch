@@ -26,6 +26,13 @@
     {# Font Awesome #}
     <script src="https://kit.fontawesome.com/{{ fontawesome_key }}.js" crossorigin="anonymous"></script>
 
+    {# Plausible #}
+    {%- if app.environment == 'dev' %}
+        <!-- Plausible deactivated for dev environments -->
+    {% else %}
+        <script defer data-domain="demokratis.ch" src="https://plausible.io/js/script.js"></script>
+    {% endif -%}
+
 </head>
 <body>
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 pb-16 text-center lg:pt-32">
