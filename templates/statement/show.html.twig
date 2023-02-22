@@ -70,10 +70,12 @@
                 {% if is_granted('own', statement) %}
                     <div class="mt-2 flex gap-2 md:mb-2">
                         {# Set the intro text #}
-                        <a href="{{ path('app_statement_intro_add', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
-                            <i class="fa-solid fa-pencil hidden md:inline-block"></i>
-                            <span class="ml-1">Intro</span>
-                        </a>
+                        {% if statement.intro is not defined or statement.intro is null %}
+                            <a href="{{ path('app_statement_intro_add', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
+                                <i class="fa-solid fa-pencil hidden md:inline-block"></i>
+                                <span class="ml-1">Intro</span>
+                            </a>
+                        {% endif %}
 
                         {# Export in the .odt format #}
                         <a href="{{ path('app_word_export', { 'id': statement.id }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
@@ -171,6 +173,15 @@
                 <div>
                     <p class="text-gray-300 text-md">Vernehmlassungsvorlage</p>
                     <h2 class="mb-6 md:mb-12 text-lg md:text-xl text-gray-400 font-medium">{{ legalText.title }}</h2>
+
+                    {% if statement.intro is defined and statement.intro is not null %}
+                        <h3 class="text-md md:-mt-8 pt-4 pb-2 md:pt-0 text-gray-400 font-light">
+                            Intro
+                            <small><a href="{{ path('app_statement_intro_add', { 'uuid': statement.uuid }) }}" class="underline hover:no-underline">Ändern</a></small>
+                        </h3>                        <div class="opacity-75 p-3 mb-8 bg-white border shadow-sm text-md text-gray-600 rounded-md">
+                            {{ statement.intro|raw }}
+                        </div>
+                    {% endif %}
 
                     {% for i, paragraphContainer in paragraphs %}
 
