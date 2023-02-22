@@ -43,6 +43,9 @@ class Paragraph
     #[ORM\Column]
     private ?int $position = null;
 
+    #[ORM\OneToMany(mappedBy: 'paragraph', targetEntity: FreeText::class, orphanRemoval: true)]
+    private Collection $freeTexts;
+
     public function __toString(): string
     {
         return strval($this->getId());
@@ -53,6 +56,7 @@ class Paragraph
         $this->modifications = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->chosenModifications = new ArrayCollection();
+        $this->freeTexts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -191,6 +195,36 @@ class Paragraph
     public function setPosition(int $position): self
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FreeText>
+     */
+    public function getFreeTexts(): Collection
+    {
+        return $this->freeTexts;
+    }
+
+    public function addFreeText(FreeText $freeText): self
+    {
+        if (!$this->freeTexts->contains($freeText)) {
+            $this->freeTexts->add($freeText);
+            $freeText->setParagraph($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFreeText(FreeText $freeText): self
+    {
+        if ($this->freeTexts->removeElement($freeText)) {
+            // set the owning side to null (unless already changed)
+            if ($freeText->getParagraph() === $this) {
+                $freeText->setParagraph(null);
+            }
+        }
 
         return $this;
     }

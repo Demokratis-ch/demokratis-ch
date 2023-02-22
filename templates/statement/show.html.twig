@@ -271,16 +271,24 @@
 
 
                             {# Display paragraph #}
-                            <div id="{{ paragraphContainer.paragraph.uuid[:8] }}" class="scroll-mt-20 col-span-5 {% if collapse %}md:col-span-4{% else %}md:col-span-3{% endif %}">
+                            <div id="{{ paragraphContainer.paragraph.uuid[:8] }}" class="md:pb-12 scroll-mt-20 col-span-5 {% if collapse %}md:col-span-4{% else %}md:col-span-3{% endif %}">
 
                                 {# Paragraph title + edit #}
                                 <h3 class="text-md pt-4 md:pt-0 text-gray-400 font-light">
-                                    <a href="{{ path('app_statement_show', { 'uuid': statement.uuid, 'lt': legalText.uuid.toBase58, '_fragment': paragraphContainer.paragraph.uuid[:8] }) }}">{{ i+1 }}. Paragraph</a>
+                                    <a href="{{ path('app_statement_show', { 'uuid': statement.uuid, 'lt': legalText.uuid.toBase58, '_fragment': paragraphContainer.paragraph.uuid[:8] }) }}">{{ i+1 }}. Absatz</a>
                                     {% if app.user and is_granted('edit', statement) %}
                                         <small><a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}"
                                                   class="underline hover:no-underline">Ändern</a></small>
                                     {% endif %}
                                 </h3>
+
+                                {% if paragraphContainer.freetext.before|length > 0 %}
+                                    {% for freetext in paragraphContainer.freetext.before %}
+                                        <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-md text-gray-600 rounded-md">
+                                            {{ freetext.text }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
 
                                 {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
                                     <p class="mt-2 mb-4 p-6 bg-white border shadow text-md text-gray-600">
@@ -324,15 +332,22 @@
                                         <p class="mt-2 mb-4 p-4 bg-white shadow border text-sm text-gray-300">Keine Änderungsvorschläge</p>
                                     {% endif %}
                                 {% endif %}
+
+
+                                {% if paragraphContainer.freetext.after|length > 0 %}
+                                    {% for freetext in paragraphContainer.freetext.after %}
+                                        <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-md text-gray-600 rounded-md">
+                                            {{ freetext.text }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+
                             </div>
 
                             {# Right sidebar #}
-                            <div class="col-span-5 md:col-span-1 flex flex-col h-full">
+                            <div class="col-span-5 md:pb-12 md:col-span-1 flex flex-col h-full">
                                 {# Comments #}
-                                    <div class="flex-grow-0 hidden md:block">
-                                        <h2 class="md:mt-4 text-xs text-gray-400 font-medium">Kommentare</h2>
-                                    </div>
-                                <div class="md:mt-2 mb-6 text-gray-700 flex-grow h-0 pr-4 -mr-4">
+                                <div class="md:mt-6 text-gray-700 flex-grow h-0 pr-4 -mr-4">
                                     {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
                                         {{ component('paragraph_comments', { 'statement': statement, paragraph: paragraphContainer.paragraph, modification: paragraphContainer.chosen.modification }) }}
                                     {% else %}

@@ -7,6 +7,7 @@ use App\Entity\Consultation;
 use App\Entity\ContactRequest;
 use App\Entity\Discussion;
 use App\Entity\Document;
+use App\Entity\FreeText;
 use App\Entity\Invite;
 use App\Entity\LegalText;
 use App\Entity\Media;
@@ -69,6 +70,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Documents', 'far fa-file-invoice', Document::class);
         yield MenuItem::linkToCrud('Statements', 'far fa-file-lines', Statement::class);
         yield MenuItem::linkToCrud('Paragraphs', 'far fa-line-height', Paragraph::class);
+        yield MenuItem::linkToCrud('Free text', 'far fa-input-text', FreeText::class);
         yield MenuItem::linkToCrud('Modifications', 'far fa-pencil', Modification::class);
         yield MenuItem::linkToCrud('Modification Statements', 'far fa-link', ModificationStatement::class);
 
