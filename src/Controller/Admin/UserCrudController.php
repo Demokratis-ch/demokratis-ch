@@ -35,6 +35,7 @@ class UserCrudController extends AbstractCrudController
             EmailField::new('email'),
             TextField::new('password')->setFormType(PasswordType::class)->onlyWhenCreating(),
             TextField::new('password')->onlyOnForms(),
+            AssociationField::new('person'),
             ArrayField::new('roles'),
             AssociationField::new('organisations')->setFormTypeOption('by_reference', false),
         ];

@@ -80,14 +80,14 @@
                         {# Export in the .odt format #}
                         <a href="{{ path('app_word_export', { 'id': statement.id }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
                             <i class="fa-solid fa-file-word hidden md:inline-block"></i>
-                            <span class="ml-1">Stellungnahme <span class="hidden md:inline-block">als Word</span> exportieren</span>
+                            <span class="ml-1"><span class="hidden md:inline-block">Stellungnahme als Word</span> exportieren</span>
                         </a>
 
                         {# Approve? #}
                         {% if not approved %}
                             <a href="{{ path('app_statement_approve', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
                                 <i class="fa-solid fa-square-check hidden md:inline-block"></i>
-                                <span class="ml-1">Stellungnahme <span class="hidden md:inline-block">als</span> fertig <span class="hidden md:inline-block">markieren</span></span>
+                                <span class="ml-1"><span class="hidden md:inline-block">Stellungnahme als</span> fertig <span class="hidden md:inline-block">markieren</span></span>
                             </a>
                         {% endif %}
 
@@ -95,24 +95,26 @@
                         {% if not statement.public %}
                             <a href="{{ path('app_statement_publish', { 'uuid': statement.uuid }) }}" class="group text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
                                 <i class="fa-solid fa-lock-open hidden md:inline-block"></i>
-                                <span class="ml-1">Stellungnahme veröffentlichen</span>
+                                <span class="ml-1"><span class="hidden md:inline-block">Stellungnahme</span> veröffentlichen</span>
                             </a>
                         {% else %}
                             <a href="{{ path('app_statement_retract', { 'uuid': statement.uuid }) }}" class="group text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
                                 <i class="fa-solid fa-lock hidden md:inline-block"></i>
-                                <span class="ml-1">Stellungnahme verstecken</span>
+                                <span class="ml-1"><span class="hidden md:inline-block">Stellungnahme</span> verstecken</span>
                             </a>
 
                             {# Make editable #}
                             {% if not statement.editable %}
                                 <a href="{{ path('app_statement_accept_edits', { 'uuid': statement.uuid }) }}" class="group text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
                                     <i class="fa-solid fa-user-pen hidden md:inline-block"></i>
-                                    <span class="ml-1">Für Beiträge Dritter öffnen</span>
+                                    <span class="hidden md:inline-block ml-1">Für Beiträge Dritter öffnen</span>
+                                    <span class="md:hidden ml-1">Dritten öffnen</span>
                                 </a>
                             {% else %}
                                 <a href="{{ path('app_statement_prevent_edits', { 'uuid': statement.uuid }) }}" class="group text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
                                     <i class="fa-solid fa-ban hidden md:inline-block"></i>
-                                    <span class="ml-1">Keine Beiträge Dritter akzeptieren</span>
+                                    <span class="hidden md:inline-block ml-1">Keine Beiträge Dritter akzeptieren</span>
+                                    <span class="md:hidden ml-1">Dritten schliessen</span>
                                 </a>
                             {% endif %}
 
@@ -197,7 +199,7 @@
                             %}
 
                                 <div class="col-span-4 md:col-span-1">
-                                    <div class="mb-2 opacity-40 hover:opacity-100 transition-opacity duration-500 ease-out">
+                                    <div class="md:mb-2 opacity-40 hover:opacity-100 transition-opacity duration-500 ease-out">
 
 
                                         {# Currently chosen #}
@@ -210,13 +212,16 @@
                                                     <p class="text-xs text-gray-300">{{ paragraphContainer.chosen.modification.createdAt|ago }}</p>
                                                 </a>
                                             </div>
-                                            <a href="{{ path('app_paragraph_remove_chosen', { 'uuid': paragraphContainer.chosen.modificationStatement.uuid }) }}" class="mt-2 ml-2 underline hover:no-underline text-xs text-gray-400">Original wiederherstellen</a>
+                                            {% if is_granted('edit', statement) %}
+                                                <a href="{{ path('app_paragraph_remove_chosen', { 'uuid': paragraphContainer.chosen.modificationStatement.uuid }) }}" class="mt-2 ml-2 underline hover:no-underline text-xs text-gray-400">Original wiederherstellen</a>
+                                            {% endif %}
                                         {% endif %}
 
                                         {% if
                                             (paragraphContainer.modifications|length > 0)
                                             or
-                                            (paragraphContainer.refused|length > 0)                                        %}
+                                            (paragraphContainer.refused|length > 0)
+                                        %}
                                             <h2 class="mt-2 text-xs text-gray-400 font-medium">Änderungsvorschläge</h2>
                                         {% endif %}
 
@@ -286,7 +291,7 @@
                             <div id="{{ paragraphContainer.paragraph.uuid[:8] }}" class="md:pb-12 scroll-mt-20 col-span-5 {% if collapse %}md:col-span-4{% else %}md:col-span-3{% endif %}">
 
                                 {# Paragraph title + edit #}
-                                <h3 class="text-md pt-4 md:pt-0 text-gray-400 font-light">
+                                <h3 class="text-md pt-6 md:pt-0 text-gray-400 font-light">
                                     <a href="{{ path('app_statement_show', { 'uuid': statement.uuid, 'lt': legalText.uuid.toBase58, '_fragment': paragraphContainer.paragraph.uuid[:8] }) }}">{{ i+1 }}. Absatz</a>
                                     {% if app.user and is_granted('edit', statement) %}
                                         <small><a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}"
@@ -357,7 +362,7 @@
                             </div>
 
                             {# Right sidebar #}
-                            <div class="col-span-5 md:pb-8 md:col-span-1 flex flex-col h-full">
+                            <div class="col-span-5 pb-6 md:pb-8 md:col-span-1 flex flex-col h-full">
                                 {# Comments #}
                                 <div class="md:mt-6 text-gray-700 flex-grow h-0 pr-4 -mr-4">
                                     {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
