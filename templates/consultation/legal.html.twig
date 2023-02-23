@@ -54,7 +54,7 @@
                                         <h3 class="mt-2 text-md text-gray-400 font-light" id="{{ paragraph.uuid[:8] }}">
                                             <a href="{{ path('app_consultation_show_statements', { 'slug': consultation.slug, 'lt': legalText.uuid.toBase58, '_fragment': paragraph.uuid[:8] }) }}">{{ i+1 }}. Absatz</a>
                                         </h3>
-                                        <p class="mt-2 p-4 bg-white shadow text-md text-gray-600">{{ paragraph.text|nl2br }}</p><br>
+                                        <p class="mt-2 p-4 bg-white shadow text-sm md:text-md text-gray-600">{{ paragraph.text|nl2br }}</p><br>
                                     {% endfor %}
                                 </div>
                             {% endif %}

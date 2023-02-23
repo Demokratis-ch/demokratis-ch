@@ -1,11 +1,13 @@
-{% extends 'layout-default.html.twig' %}
+{% extends app.user
+    ? 'layout-default.html.twig'
+    : 'base_naked.html.twig' %}
 
 {% block title %}Verein Demokratis - Mitglied werden{% endblock %}
 
 {% block body %}
 
 <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div class=" pt-12 md:pt-16 pb-6">
+    <div class="pt-12 md:pt-16 pb-6">
 
         {# Breadcrumbs #}
         <nav class="flex py-4" aria-label="Breadcrumb">
@@ -73,8 +75,8 @@
                             <div class="col-span-6">
                                 {{ form_row(form.comment) }}
                             </div>
-
                         </div>
+                        <p class="text-sm text-gray-500">Mit Deinem Beitritt bestätigst Du unsere <a href="https://fortae.com/static/demokratis/010123-statuten.pdf" target="_blank" class="text-gray-500 hover:text-gray-600 underline hover:no-underline">Vereinsstatuten</a> zur Kenntnis zu nehmen.</p>
                     </div>
                 </div>
             </div>

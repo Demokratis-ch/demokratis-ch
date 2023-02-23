@@ -48,7 +48,7 @@ class ContactType extends AbstractType
                 ],
                 'attr' => [
                     'placeholder' => 'Nachricht',
-                    'class' => 'block w-full rounded-md border-gray-300 py-3 px-4 placeholder-gray-500 shadow-sm focus:border-blue-500 focus:ring-blue-500',
+                    'class' => 'block w-full h-1/3 md:h-full rounded-md border-gray-300 py-3 px-4 placeholder-gray-500 shadow-sm focus:border-blue-500 focus:ring-blue-500',
                 ],
             ])
             ->add('submit', SubmitType::class, [
