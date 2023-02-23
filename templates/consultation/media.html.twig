@@ -21,26 +21,28 @@
             <section class="bg-gray-50 mx-8 pt-4 pb-6">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-2 pb-6">
                     <h2 class="mt-4 text-xl text-gray-400 font-medium">Medienberichte</h2>
-                    <div class="grid md:grid-cols-3 gap-4">
-                        {% for medium in media %}
-                            <a class="relative text-center mt-2 text-gray-600 hover:text-gray-500 bg-white hover:bg-gray-50 p-4 border border-gray-100 hover:border-gray-200 rounded-md shadow-sm" href="{{ medium.url }}" target="_blank">
-                                <span class="pointer-events-none absolute top-4 right-4 text-gray-300 group-hover:text-gray-400" aria-hidden="true">
-                                  <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M20 4h1a1 1 0 00-1-1v1zm-1 12a1 1 0 102 0h-2zM8 3a1 1 0 000 2V3zM3.293 19.293a1 1 0 101.414 1.414l-1.414-1.414zM19 4v12h2V4h-2zm1-1H8v2h12V3zm-.707.293l-16 16 1.414 1.414 16-16-1.414-1.414z"></path>
-                                  </svg>
-                                </span>
-                                <p>{{ medium.title }}</p>
-                                <p class="text-xs text-gray-400">{{ medium.createdBy }} {{ medium.createdAt|date()|ago }}</p>
-                            </a>
-                        {% else %}
-                            <p class="text-gray-400">Es gibt noch keine hinterlegten Medienberichte</p>
-                        {% endfor %}
-                        {% if app.user %}
-                            <a class="col-span-3 text-center mt-2 pt-5 text-gray-400 hover:text-gray-500 hover:text-gray-500 bg-white hover:bg-gray-50 p-4 border-2 border-dashed hover:border-solid border-gray-300 rounded-md" href="{{ path('app_media_add', { 'slug': consultation.slug }) }}" >
-                                Neuen Medienbericht hinzufügen
-                            </a>
-                        {% endif %}
-                    </div>
+                    {% if media|length > 0 %}
+                        <div class="grid md:grid-cols-3 gap-4">
+                            {% if app.user %}
+                                <a class="col-span-3 text-center mt-2 pt-5 text-gray-400 hover:text-gray-500 hover:text-gray-500 bg-white hover:bg-gray-50 p-4 border-2 border-dashed hover:border-solid border-gray-300 rounded-md" href="{{ path('app_media_add', { 'slug': consultation.slug }) }}" >
+                                    Neuen Medienbericht hinzufügen
+                                </a>
+                            {% endif %}
+                            {% for medium in media %}
+                                <a class="relative text-center mt-2 text-gray-600 hover:text-gray-500 bg-white hover:bg-gray-50 p-4 border border-gray-100 hover:border-gray-200 rounded-md shadow-sm" href="{{ medium.url }}" target="_blank">
+                                    <span class="pointer-events-none absolute top-4 right-4 text-gray-300 group-hover:text-gray-400" aria-hidden="true">
+                                      <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M20 4h1a1 1 0 00-1-1v1zm-1 12a1 1 0 102 0h-2zM8 3a1 1 0 000 2V3zM3.293 19.293a1 1 0 101.414 1.414l-1.414-1.414zM19 4v12h2V4h-2zm1-1H8v2h12V3zm-.707.293l-16 16 1.414 1.414 16-16-1.414-1.414z"></path>
+                                      </svg>
+                                    </span>
+                                    <p>{{ medium.title }}</p>
+                                    <p class="text-xs text-gray-400">{{ medium.createdBy }} {{ medium.createdAt|date()|ago }}</p>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-gray-400">Es gibt noch keine hinterlegten Medienberichte</p>
+                    {% endif %}
                 </div>
             </section>
 
