@@ -4,7 +4,7 @@
 
 {% block body %}
 
-<section class="mt-8 md:mt-8">
+<section class="mt-16 md:mt-8">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 my-4">
 
         {% set consultation = statement.consultation %}
@@ -180,7 +180,8 @@
                         <h3 class="text-md md:-mt-8 pt-4 pb-2 md:pt-0 text-gray-400 font-light">
                             Intro
                             <small><a href="{{ path('app_statement_intro_add', { 'uuid': statement.uuid }) }}" class="underline hover:no-underline">Ändern</a></small>
-                        </h3>                        <div class="opacity-75 p-3 mb-8 bg-white border shadow-sm text-md text-gray-600 rounded-md">
+                        </h3>
+                        <div class="opacity-75 p-3 mb-8 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-md">
                             {{ statement.intro|raw }}
                         </div>
                     {% endif %}
@@ -301,14 +302,14 @@
 
                                 {% if paragraphContainer.freetext.before|length > 0 %}
                                     {% for freetext in paragraphContainer.freetext.before %}
-                                        <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-md text-gray-600 rounded-md">
+                                        <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-md">
                                             {{ freetext.text }}
                                         </div>
                                     {% endfor %}
                                 {% endif %}
 
                                 {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
-                                    <p class="mt-2 mb-4 p-6 bg-white border shadow text-md text-gray-600">
+                                    <p class="mt-2 mb-4 p-6 bg-white border shadow text-sm md:text-md text-gray-600">
                                         {% for diff in paragraphContainer.chosen.diff %}
                                             <span class="{% if diff[0] == -1 %}
                                                             bg-red-100
@@ -344,7 +345,7 @@
 
                                     {# Only show the full paragraph if the user can edit #}
                                     {% if app.user and is_granted('edit', statement) %}
-                                        <p class="mt-2 mb-4 p-4 bg-white shadow border text-md text-gray-600">{{ paragraphContainer.paragraph.text|nl2br }}</p>
+                                        <p class="mt-2 mb-4 p-4 bg-white shadow border text-sm md:text-md text-gray-600">{{ paragraphContainer.paragraph.text|nl2br }}</p>
                                     {% else %}
                                         <p class="mt-2 mb-4 p-4 bg-white shadow border text-sm text-gray-300">Keine Änderungsvorschläge</p>
                                     {% endif %}
@@ -353,7 +354,7 @@
 
                                 {% if paragraphContainer.freetext.after|length > 0 %}
                                     {% for freetext in paragraphContainer.freetext.after %}
-                                        <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-md text-gray-600 rounded-md">
+                                        <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-md">
                                             {{ freetext.text }}
                                         </div>
                                     {% endfor %}
