@@ -120,7 +120,7 @@ class IndexController extends AbstractController
         ]);
     }
 
-    #[Route('/nutzungsbedingungen', name: 'app_index_terms', methods: ['GET'])]
+    #[Route('/impressum', name: 'app_index_terms', methods: ['GET'])]
     public function terms(
     ): Response {
         return $this->render('index/terms.html.twig', [
