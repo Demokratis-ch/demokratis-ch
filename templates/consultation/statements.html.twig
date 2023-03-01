@@ -18,16 +18,17 @@
 
         <section class="bg-gray-50 mx-8 pt-4 pb-6">
             {% if consultation.status == 'planned' %}
-            <div class="mx-auto {% if statements|length < 1 %}max-w-5xl{% else%}max-w-7xl{% endif%} px-4 sm:px-6 lg:px-8 mt-2 pb-6">
-                <h2 class="mt-4 text-xl text-gray-400 font-medium">Vernehmlassung geplant</h2>
-                <div class="mt-2 bg-white p-4 border border-gray-100 rounded-md text-gray-700 shadow-sm text-center">
-                    <div class="grid grid-cols-3 gap-1">
-                        <p class="text-gray-400 col-span-3">Aktuell ist die Vernehmlassung noch in Planung.</p>
-                        <p class="text-gray-400 col-span-3">Stellungnahmen können erst verfasst werden, sobald die Vernehmlassung eröffnet wurde</p>
+                <div class="mx-auto {% if statements|length < 1 %}max-w-5xl{% else%}max-w-7xl{% endif%} px-4 sm:px-6 lg:px-8 mt-2 pb-6">
+                    <h2 class="mt-4 text-xl text-gray-400 font-medium">Vernehmlassung geplant</h2>
+                    <div class="mt-2 bg-white p-4 border border-gray-100 rounded-md text-gray-700 shadow-sm text-center">
+                        <div class="grid grid-cols-3 gap-1">
+                            <p class="text-gray-400 col-span-3">Aktuell ist die Vernehmlassung noch in Planung.</p>
+                            <p class="text-gray-400 col-span-3">Stellungnahmen können erst verfasst werden, sobald die Vernehmlassung eröffnet wurde</p>
+                        </div>
                     </div>
                 </div>
-            </div>
             {% else %}
+
                 {% if not is_granted('IS_AUTHENTICATED') %}
                     <div class="mx-auto {% if statements|length < 1 %}max-w-5xl{% else%}max-w-7xl{% endif%} px-4 sm:px-6 lg:px-8 mt-2 pb-6">
                         <div class="bg-white p-4 border border-gray-100 rounded-md text-gray-700 shadow-sm text-center">
@@ -39,7 +40,7 @@
                 {# Statements #}
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-2 pb-6">
                     <h2 class="mt-4 text-xl text-gray-400 font-medium">Stellungnahmen</h2>
-                    {% if is_granted('IS_AUTHENTICATED') %}
+                    {% if is_granted('IS_AUTHENTICATED') and consultation.status == 'ongoing' %}
                         <div class="">
                             <a href="{{ path('app_statement_new', { 'uuid': consultation.uuid }) }}" class="inline-block mt-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md"><i class="fa-solid fa-plus"></i> Neue Stellungnahme verfassen</a>
                             <a href="{{ path('app_external_statement_new', { 'uuid': consultation.uuid }) }}" class="inline-block mt-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md"><i class="fa-solid fa-plus"></i> Stellungnahme hochladen</a>
@@ -74,7 +75,6 @@
                         </div>
                     </div>
                 </div>
-
             {% endif %}
         </section>
     </div>
