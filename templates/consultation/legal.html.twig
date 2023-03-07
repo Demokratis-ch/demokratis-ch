@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                         {% endif %}
-                        <div class="mt-4 md:mt-12 xl:mt-14 flex gap-4 md:gap-8 {% if legalTexts|length > 1 %}col-span-4 md:col-span-3{% endif %}">
+                        <div id="legal-texts" class="mt-4 md:mt-12 xl:mt-14 flex gap-4 md:gap-8 {% if legalTexts|length > 1 %}col-span-4 md:col-span-3{% endif %}">
                             {% if legalText and legalText.importedFrom.imported == 'paragraphed' %}
                                 <div class="">
                                     <h2 class="mt-2 mb-4 text-xl text-gray-400 font-medium">{{ legalText.title }}</h2>

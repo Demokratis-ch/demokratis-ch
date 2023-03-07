@@ -5,33 +5,52 @@ namespace App\DataFixtures;
 use App\Entity\ChosenModification;
 use App\Entity\Comment;
 use App\Entity\Consultation;
+use App\Entity\Discussion;
 use App\Entity\Document;
 use App\Entity\LegalText;
 use App\Entity\Modification;
 use App\Entity\ModificationStatement;
+use App\Entity\Organisation;
 use App\Entity\Paragraph;
 use App\Entity\Statement;
 use App\Entity\Thread;
-use App\Repository\OrganisationRepository;
-use App\Repository\UserRepository;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\Uid\Uuid;
 
 class ConsultationStimmUndWahlrecht16JaehrigeFixtures extends Fixture implements FixtureGroupInterface
 {
-    public function __construct(
-        private readonly UserRepository $userRepository,
-        private readonly OrganisationRepository $organisationRepository,
-    ) {
-    }
-
     public function load(ObjectManager $manager): void
     {
-        // user 1 must exist. created by the init.sh
-        $user = $this->userRepository->find(1);
-        $user2 = $this->userRepository->find(2);
-        $user3 = $this->userRepository->find(3);
+        $user = new User();
+        $user->setEmail('test@test.com');
+        $user->setRoles(['ROLE_USER']);
+        $user->setPassword('$2y$13$4v0Vaz3zlFegVjlTbhg7Oe7E/idxGhMAp899Ap1bz1ctGDJ3CE9Su');
+        $user->setIsVerified(true);
+        $manager->persist($user);
+
+        $user2 = new User();
+        $user2->setEmail('toast@test.com');
+        $user2->setRoles(['ROLE_USER']);
+        $user2->setPassword('$2y$13$sg7vcNaaFm.q3Lh1YmHe0uiwCphhxJU4hjg84/vpsel3VjKfPmToy');
+        $user2->setIsVerified(true);
+        $manager->persist($user2);
+
+        $user3 = new User();
+        $user3->setEmail('admin@test.com');
+        $user3->setRoles(['ROLE_ADMIN']);
+        $user3->setPassword('$2y$13$vhPJ/zh7XaFhO/NHeH7LGeL7Hr/FapN598IKarl7MHCx5DrZN6JD.');
+        $user3->setIsVerified(true);
+        $manager->persist($user3);
+
+        $organisation = new Organisation();
+        $organisation->setName('Demokratis');
+        $organisation->setSlug('demokratis');
+        $organisation->setPublic(true);
+        $organisation->setIsPersonalOrganisation(false);
+        $manager->persist($organisation);
 
         $consultation = new Consultation();
         $consultation->setTitle('Pa.Iv. Aktives Stimm- und Wahlrecht für 16-Jährige');
@@ -53,6 +72,36 @@ class ConsultationStimmUndWahlrecht16JaehrigeFixtures extends Fixture implements
         $document->setImported('paragraphed');
 
         $manager->persist($document);
+
+        $document2 = new Document();
+        $document2->setConsultation($consultation);
+        $document2->setTitle('Anhang');
+        $document2->setType('document');
+        $document2->setFedlexUri('https://fedlex.data.admin.ch/eli/dl/proj/2022/59/cons_1/doc_1');
+        $document2->setFilename('doc_2');
+
+        $manager->persist($document2);
+
+        $discussionThread = new Thread();
+        $discussionThread->setIdentifier('consultation-'.$consultation->getId().'-discussion-'.Uuid::v4());
+
+        $manager->persist($discussionThread);
+
+        $discussionComment = new Comment();
+        $discussionComment->setAuthor($user);
+        $discussionComment->setText('Das ist eine Testdiskussion.');
+        $discussionComment->setThread($discussionThread);
+        $discussionComment->setCreatedAt(new \DateTimeImmutable('-10days'));
+        $manager->persist($discussionComment);
+
+        $discussion = new Discussion();
+        $discussion->setConsultation($consultation);
+        $discussion->setThread($discussionThread);
+        $discussion->setTopic('Testdiskussion');
+        $discussion->setCreatedAt(new \DateTimeImmutable());
+        $discussion->setCreatedBy($user);
+
+        $manager->persist($discussion);
 
         $legalText = new LegalText();
         $legalText->setConsultation($consultation);
@@ -139,8 +188,6 @@ TEXT
 
         $statement = new Statement();
         $statement->setPublic(true);
-
-        $organisation = $this->organisationRepository->findOneBy(['name' => 'Demokratis']);
 
         $statement->setOrganisation($organisation);
         $statement->setConsultation($consultation);
