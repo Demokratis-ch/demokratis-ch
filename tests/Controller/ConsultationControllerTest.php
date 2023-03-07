@@ -41,6 +41,10 @@ class ConsultationControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('#discussions p', 'Testdiskussion');
 
+        $client->clickLink('Medien');
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('#media p', 'Artikel in der Zeitung');
+
     }
 
 }

@@ -8,6 +8,7 @@ use App\Entity\Consultation;
 use App\Entity\Discussion;
 use App\Entity\Document;
 use App\Entity\LegalText;
+use App\Entity\Media;
 use App\Entity\Modification;
 use App\Entity\ModificationStatement;
 use App\Entity\Organisation;
@@ -17,40 +18,34 @@ use App\Entity\Thread;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Uid\Uuid;
 
-class ConsultationStimmUndWahlrecht16JaehrigeFixtures extends Fixture implements FixtureGroupInterface
+class ConsultationStimmUndWahlrecht16JaehrigeFixtures extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {
+    public static function getGroups(): array
+    {
+        return ['dummy'];
+    }
+
+    public function getDependencies(): array
+    {
+        return [
+            BasicFixtures::class,
+        ];
+    }
+
     public function load(ObjectManager $manager): void
     {
-        $user = new User();
-        $user->setEmail('test@test.com');
-        $user->setRoles(['ROLE_USER']);
-        $user->setPassword('$2y$13$4v0Vaz3zlFegVjlTbhg7Oe7E/idxGhMAp899Ap1bz1ctGDJ3CE9Su');
-        $user->setIsVerified(true);
-        $manager->persist($user);
-
-        $user2 = new User();
-        $user2->setEmail('toast@test.com');
-        $user2->setRoles(['ROLE_USER']);
-        $user2->setPassword('$2y$13$sg7vcNaaFm.q3Lh1YmHe0uiwCphhxJU4hjg84/vpsel3VjKfPmToy');
-        $user2->setIsVerified(true);
-        $manager->persist($user2);
-
-        $user3 = new User();
-        $user3->setEmail('admin@test.com');
-        $user3->setRoles(['ROLE_ADMIN']);
-        $user3->setPassword('$2y$13$vhPJ/zh7XaFhO/NHeH7LGeL7Hr/FapN598IKarl7MHCx5DrZN6JD.');
-        $user3->setIsVerified(true);
-        $manager->persist($user3);
-
-        $organisation = new Organisation();
-        $organisation->setName('Demokratis');
-        $organisation->setSlug('demokratis');
-        $organisation->setPublic(true);
-        $organisation->setIsPersonalOrganisation(false);
-        $manager->persist($organisation);
+        /** @var User $user */
+        $user = $this->getReference(BasicFixtures::USER1);
+        /** @var User $user2 */
+        $user2 = $this->getReference(BasicFixtures::USER2);
+        /** @var User $user3 */
+        $user3 = $this->getReference(BasicFixtures::USER3);
+        /** @var Organisation $organisation */
+        $organisation = $this->getReference(BasicFixtures::ORGA1);
 
         $consultation = new Consultation();
         $consultation->setTitle('Pa.Iv. Aktives Stimm- und Wahlrecht für 16-Jährige');
@@ -102,6 +97,15 @@ class ConsultationStimmUndWahlrecht16JaehrigeFixtures extends Fixture implements
         $discussion->setCreatedBy($user);
 
         $manager->persist($discussion);
+
+        $media = new Media();
+        $media->setConsultation($consultation);
+        $media->setCreatedBy($user);
+        $media->setTitle('Artikel in der Zeitung');
+        $media->setCreatedAt(new \DateTimeImmutable());
+        $media->setUrl('https://www.demokratis.ch');
+
+        $manager->persist($media);
 
         $legalText = new LegalText();
         $legalText->setConsultation($consultation);
@@ -299,10 +303,5 @@ TEXT
         $manager->persist($comment6);
 
         $manager->flush();
-    }
-
-    public static function getGroups(): array
-    {
-        return ['dummy'];
     }
 }
