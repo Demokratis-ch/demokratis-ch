@@ -6,10 +6,6 @@ namespace App\Tests\Controller;
 
 use App\DataFixtures\ConsultationStimmUndWahlrecht16JaehrigeFixtures;
 use App\Tests\FunctionalTestHelperTrait;
-use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
-use Doctrine\Common\DataFixtures\Loader;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ConsultationControllerTest extends WebTestCase
