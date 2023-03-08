@@ -35,7 +35,7 @@ class ConsultationController extends AbstractController
     }
 
     #[Route('s/{filter}', name: 'app_consultation', methods: ['GET'])]
-    public function index(ConsultationRepository $consultationRepository, TagRepository $tagRepository, Request $request, EntityManagerInterface $entityManager, string $filter = 'all'): Response
+    public function index(ConsultationRepository $consultationRepository, TagRepository $tagRepository, Request $request, string $filter = 'all'): Response
     {
         if (!in_array($filter, ['all', 'ongoing', 'planned', 'done'])) {
             throw new \Exception('Invalid filter');
@@ -48,14 +48,16 @@ class ConsultationController extends AbstractController
         $paginator = $consultationRepository->getPaginator($offset, $filter, $tag);
         $steps = ConsultationRepository::PAGINATOR_PER_PAGE;
 
+        $counts = $consultationRepository->countByStatus();
+
         return $this->render('consultation/index.html.twig', [
             'consultations' => $paginator,
             'tags' => $tagRepository->findBy(['approved' => true]),
             'currentTag' => $tag,
             'filter' => $filter,
-            'ongoingCount' => $consultationRepository->count('ongoing'),
-            'plannedCount' => $consultationRepository->count('planned'),
-            'doneCount' => ($consultationRepository->count('done') + $consultationRepository->count('pending_report') + $consultationRepository->count('pending_statements_report')),
+            'ongoingCount' => ($counts['ongoing'] ?? 0),
+            'plannedCount' => ($counts['planned'] ?? 0),
+            'doneCount' => (($counts['done'] ?? 0) + ($counts['pending_report'] ?? 0) + ($counts['pending_statements_report'] ?? 0)),
             // Paginator
             'offset' => $offset,
             'steps' => $steps,

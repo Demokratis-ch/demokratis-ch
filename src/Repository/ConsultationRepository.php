@@ -21,7 +21,7 @@ class ConsultationRepository extends ServiceEntityRepository
     /**
      * @var int
      */
-    final public const PAGINATOR_PER_PAGE = 8;
+    final public const PAGINATOR_PER_PAGE = 16;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -34,6 +34,8 @@ class ConsultationRepository extends ServiceEntityRepository
             ->orderBy('c.startDate', 'DESC')
             ->setMaxResults(self::PAGINATOR_PER_PAGE)
             ->setFirstResult($offset)
+            ->leftJoin('c.tags', 't')
+            ->addSelect('t')
         ;
 
         if ($filter && $filter !== 'all') {
@@ -42,7 +44,7 @@ class ConsultationRepository extends ServiceEntityRepository
         }
 
         if ($tag) {
-            $query->leftJoin('c.tags', 't')
+            $query
                 ->andWhere('t.slug = :tag')
                 ->setParameter('tag', $tag->getSlug())
             ;
@@ -63,6 +65,17 @@ class ConsultationRepository extends ServiceEntityRepository
         return $query->select('count(c.id)')
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function countByStatus(): array
+    {
+        $result = $this->createQueryBuilder('c')
+            ->select('c.status, count(c.status) as count')
+            ->groupBy('c.status')
+            ->getQuery()
+            ->getArrayResult();
+
+        return array_column($result, 'count', 'status');
     }
 
     public function add(Consultation $entity, bool $flush = false): void
