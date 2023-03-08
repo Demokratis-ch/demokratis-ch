@@ -32,7 +32,7 @@
 
                       {% if documents|length %}
                         <h2 class="mt-4 text-xl text-gray-400 font-medium">{{ 'consultation.documents'|trans }}</h2>
-                        <div class="mt-2 p-4 bg-white text-gray-700 shadow">
+                        <div id="documents" class="mt-2 p-4 bg-white text-gray-700 shadow">
                             {% for document in documents %}
                                 <p class="mt-2">
                                     <a href="{{ document.fedlexFilePath }}"

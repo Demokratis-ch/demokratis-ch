@@ -12,9 +12,6 @@ php bin/console doctrine:schema:create
 
 php bin/console app:organisation:add Demokratis
 
-php bin/console app:user:add test@test.com test 1
-php bin/console app:user:add toast@test.com toast 1
-php bin/console app:user:add admin@test.com admin 1 --admin
 php bin/console app:user:add super@test.com super 1 --superadmin
 
 #php bin/console app:consultations:pull
