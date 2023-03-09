@@ -41,6 +41,7 @@ trait FunctionalTestHelperTrait
         $user = self::getContainer()->get(UserRepository::class)->findOneBy(['email' => $email]);
         self::assertNotNull($user);
         $client->loginUser($user);
+
         return $user;
     }
 }

@@ -58,5 +58,4 @@ class BasicFixtures extends Fixture implements FixtureGroupInterface
 
         $manager->flush();
     }
-
 }
