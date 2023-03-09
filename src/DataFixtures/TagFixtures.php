@@ -10,16 +10,9 @@ use Doctrine\Persistence\ObjectManager;
 
 class TagFixtures extends Fixture implements FixtureGroupInterface
 {
-    private TaggingService $taggingService;
-
-    public function __construct(TaggingService $taggingService)
-    {
-        $this->taggingService = $taggingService;
-    }
-
     public function load(ObjectManager $manager): void
     {
-        $tags = $this->taggingService->tags;
+        $tags = TaggingService::TAGS;
 
         foreach ($tags as $i => $tag) {
             $entities[$i] = new Tag();
