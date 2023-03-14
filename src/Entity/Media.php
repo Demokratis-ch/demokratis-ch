@@ -22,7 +22,7 @@ class Media
     #[ORM\Column(length: 255)]
     private ?string $url = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[Gedmo\Timestampable(on: 'create')]
     private ?\DateTimeImmutable $createdAt = null;
 
