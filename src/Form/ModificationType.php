@@ -29,7 +29,9 @@ class ModificationType extends AbstractType
                     'placeholder' => 'optional',
                 ],
             ])
-            ->add('submit', SubmitType::class)
+            ->add('submit', SubmitType::class, [
+                'label' => 'Speichern',
+            ])
         ;
     }
 

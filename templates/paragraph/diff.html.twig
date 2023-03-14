@@ -62,7 +62,7 @@
                 <h2 class="mt-4 text-xl text-gray-400 font-medium">
                     Vorschlag
                 </h2>
-                <div class="mt-2 p-4 bg-white text-gray-700 shadow">
+                <div id="diff" class="mt-2 p-4 bg-white text-gray-700 shadow">
                     {% for diff in diffs %}
                         <span class="{% if diff[0] == -1 %}
                         bg-red-100
@@ -77,7 +77,7 @@
                     {% endfor %}
                 </div>
                 {% if modification.justification is defined and modification.justification is not null %}
-                    <div class="bg-gray-100 shadow px-4 py-2 text-gray-400">
+                    <div id="justification" class="bg-gray-100 shadow px-4 py-2 text-gray-400">
                         {{ modification.justification }}
                     </div>
                 {% endif %}

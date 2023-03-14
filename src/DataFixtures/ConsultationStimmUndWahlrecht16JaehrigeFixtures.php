@@ -302,6 +302,17 @@ TEXT
         $comment6->setCreatedAt(new \DateTimeImmutable('-3days'));
         $manager->persist($comment6);
 
+        $paragraph1Thread = new Thread();
+        $paragraph1Thread->setIdentifier('statement-'.$statement->getId().'-paragraph-'.$paragraph1->getId());
+        $manager->persist($paragraph1Thread);
+
+        $comment11 = new Comment();
+        $comment11->setAuthor($user);
+        $comment11->setText('Kommentar zum Original');
+        $comment11->setThread($paragraph1Thread);
+        $comment11->setCreatedAt(new \DateTimeImmutable('-12days'));
+        $manager->persist($comment11);
+
         $manager->flush();
     }
 }

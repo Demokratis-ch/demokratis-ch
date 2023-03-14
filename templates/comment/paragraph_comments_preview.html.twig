@@ -1,7 +1,7 @@
 <div class="overflow-x-hidden h-full z-50">
     <div class="flex flex-col w-[1000%] flex-wrap h-full">
         {% for comment in thread.getTopCommentsForPreview()|filter(c => c.getDeletedAt() is null) %}
-            <div class="w-[10%] mt-2">
+            <div class="comment w-[10%] mt-2">
                 <div class="relative text-gray-400 text-xs px-2">
                     {% if comment.author.person is defined and comment.author.person is not null %}
                         {{ comment.author.person.firstname|default() }} {{ comment.author.person.lastname|default() }}
