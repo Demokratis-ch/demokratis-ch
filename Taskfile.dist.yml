@@ -60,3 +60,9 @@ tasks:
     deps: [psalm, tests]
     cmds:
       - task: csfixer
+
+  fake_migrations:
+    desc: Pretends that the migrations have run
+    cmds:
+      - 'php bin/console doctrine:migrations:sync-metadata-storage'
+      - 'bin/console doctrine:migrations:version --add --all --no-interaction'
