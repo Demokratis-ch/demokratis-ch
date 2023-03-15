@@ -65,6 +65,8 @@ class ConsultationController extends AbstractController
     #[Route('/{slug}/import', name: 'app_consultation_import_paragraphs', methods: ['GET'])]
     public function import(Consultation $consultation, DocumentRepository $documentRepository, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('', $consultation);
+
         if (count($documentRepository->findBy(['consultation' => $consultation, 'type' => 'proposal', 'imported' => 'fetched'])) === 0) {
             return $this->redirectToRoute('app_consultation_show_statements', ['slug' => $consultation->getSlug()]);
         }
@@ -81,6 +83,8 @@ class ConsultationController extends AbstractController
     #[Route('/{slug}/legal', name: 'app_consultation_show_legal', methods: ['GET'])]
     public function showLegal(Consultation $consultation, ParagraphRepository $paragraphRepository): Response
     {
+        $this->denyAccessUnlessGranted('', $consultation);
+
         // Import the legal text if not done, yet
         if (count($this->documentRepository->findBy(['consultation' => $consultation, 'type' => 'proposal', 'imported' => 'fetched'])) > 0) {
             return $this->redirectToRoute('app_consultation_import_paragraphs', ['slug' => $consultation->getSlug()]);
@@ -99,6 +103,8 @@ class ConsultationController extends AbstractController
     #[Route('/{slug}/documents', name: 'app_consultation_show_documents', methods: ['GET'])]
     public function showDocuments(Consultation $consultation, DocumentRepository $documentRepository, LegalTextRepository $legalTextRepository, Request $request, Statement $statement = null): Response
     {
+        $this->denyAccessUnlessGranted('', $consultation);
+
         // Import the legal text if not done, yet
         if (count($this->documentRepository->findBy(['consultation' => $consultation, 'type' => 'proposal', 'imported' => 'fetched'])) > 0) {
             return $this->redirectToRoute('app_consultation_import_paragraphs', ['slug' => $consultation->getSlug()]);
@@ -116,6 +122,8 @@ class ConsultationController extends AbstractController
     #[Route('/{slug}/discussion', name: 'app_consultation_index_discussion', methods: ['GET'])]
     public function indexDiscussion(Consultation $consultation, DiscussionRepository $discussionRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('', $consultation);
+
         // Import the legal text if not done, yet
         if (count($this->documentRepository->findBy(['consultation' => $consultation, 'type' => 'proposal', 'imported' => 'fetched'])) > 0) {
             return $this->redirectToRoute('app_consultation_import_paragraphs', ['slug' => $consultation->getSlug()]);
@@ -132,6 +140,8 @@ class ConsultationController extends AbstractController
     #[Route('/{slug}/media', name: 'app_consultation_index_media', methods: ['GET'])]
     public function indexMedia(Consultation $consultation, MediaRepository $mediaRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('', $consultation);
+
         // Import the legal text if not done, yet
         if (count($this->documentRepository->findBy(['consultation' => $consultation, 'type' => 'proposal', 'imported' => 'fetched'])) > 0) {
             return $this->redirectToRoute('app_consultation_import_paragraphs', ['slug' => $consultation->getSlug()]);
@@ -148,6 +158,8 @@ class ConsultationController extends AbstractController
     #[Route('/{slug}', name: 'app_consultation_show_statements', methods: ['GET'])]
     public function showStatements(Consultation $consultation): Response
     {
+        $this->denyAccessUnlessGranted('', $consultation);
+
         // Import the legal text if not done, yet
         if (count($this->documentRepository->findBy(['consultation' => $consultation, 'type' => 'proposal', 'imported' => 'fetched'])) > 0) {
             return $this->redirectToRoute('app_consultation_import_paragraphs', ['slug' => $consultation->getSlug()]);
