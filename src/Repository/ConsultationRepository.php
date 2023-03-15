@@ -58,7 +58,9 @@ class ConsultationRepository extends ServiceEntityRepository
 
         if ($status !== null) {
             $query->andWhere('c.status = :status')
-                ->setParameter('status', $status);
+                ->setParameter('status', $status)
+                ->andWhere('c.organisation IS NULL')
+            ;
         }
 
         return $query->select('count(c.id)')
