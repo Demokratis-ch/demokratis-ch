@@ -182,7 +182,7 @@
                             <small><a href="{{ path('app_statement_intro_add', { 'uuid': statement.uuid }) }}" class="underline hover:no-underline">Ändern</a></small>
                         </h3>
                         <div class="opacity-75 p-3 mb-8 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-md" id="intro">
-                            {{ statement.intro|raw }}
+                            {{ statement.intro|markdown_to_html }}
                         </div>
                     {% endif %}
 
