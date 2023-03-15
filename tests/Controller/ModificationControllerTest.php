@@ -102,6 +102,5 @@ class ModificationControllerTest extends WebTestCase
         $modificationsInSidebar = $crawler->filter('.modifications')->first()->children('div');
         self::assertCount(2, $modificationsInSidebar);
         $this->assertStringNotContainsString('Abgelehnt', $modificationsInSidebar->eq(1)->text());
-
     }
 }
