@@ -23,10 +23,11 @@ class ConsultationCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             IdField::new('uuid')->hideOnForm()->hideOnIndex(),
+            TextField::new('title'),
             SlugField::new('slug')->setTargetFieldName('title')->hideOnIndex(),
             TextField::new('fedlexId')->hideOnIndex(),
-            TextField::new('title'),
-            TextField::new('humanTitle'),
+            AssociationField::new('organisation')->setRequired(false),
+            TextField::new('humanTitle')->hideOnIndex(),
             TextField::new('description')->hideOnIndex(),
             ChoiceField::new('status')->setChoices([
                 'Geplant' => 'planned',
@@ -37,7 +38,7 @@ class ConsultationCrudController extends AbstractCrudController
                 'Unbekannt' => 'unknown',
         ]),
             DateField::new('startDate'),
-            DateField::new('endDate'),
+            DateField::new('endDate')->setRequired(true),
             AssociationField::new('documents')->hideOnIndex(),
             TextField::new('office'),
         ];

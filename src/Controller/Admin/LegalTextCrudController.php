@@ -7,7 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class LegalTextCrudController extends AbstractCrudController
@@ -24,9 +24,9 @@ class LegalTextCrudController extends AbstractCrudController
             IdField::new('uuid')->hideOnForm(),
             AssociationField::new('consultation'),
             TextField::new('title'),
-            TextEditorField::new('text'),
-            AssociationField::new('paragraphs')->hideOnIndex(),
-            AssociationField::new('importedFrom')->hideOnIndex(),
+            TextAreaField::new('text'),
+            AssociationField::new('paragraphs')->hideOnIndex()->setFormTypeOption('by_reference', false),
+            AssociationField::new('importedFrom')->hideOnIndex()->setRequired(false),
             AssociationField::new('statement')->setRequired(false),
             DateTimeField::new('createdAt')->hideOnIndex(),
             DateTimeField::new('updatedAt')->hideOnIndex(),

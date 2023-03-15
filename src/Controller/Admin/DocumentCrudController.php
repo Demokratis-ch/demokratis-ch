@@ -20,22 +20,21 @@ class DocumentCrudController extends AbstractCrudController
     {
         return [
             IdField::new('id')->hideOnForm(),
-            IdField::new('uuid')->hideOnForm(),
+            IdField::new('uuid')->onlyOnIndex(),
             AssociationField::new('consultation'),
             TextField::new('title'),
             ChoiceField::new('type')->setChoices([
                 'Dokument' => 'document',
                 'Vernehmlassungsvorlage' => 'proposal',
             ]),
-            TextField::new('filepath'),
-            TextField::new('fedlexUri'),
-            TextField::new('filename'),
-            TextField::new('imported'),
+            TextField::new('filepath')->hideOnIndex(),
+            TextField::new('fedlexUri')->hideOnIndex(),
+            TextField::new('filename')->hideonIndex(),
             ChoiceField::new('imported')->setChoices([
                 'Fetched' => 'fetched',
                 'Paragraphed' => 'paragraphed',
             ]),
-            TextField::new('localFilename'),
+            TextField::new('localFilename')->hideOnIndex(),
         ];
     }
 }
