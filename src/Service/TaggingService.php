@@ -7,6 +7,29 @@ use App\Repository\TagRepository;
 
 class TaggingService
 {
+    public const TAGS = [
+        'energie',
+        'bildung',
+        'forschung',
+        'informatik',
+        'landwirtschaft',
+        'wirtschaft',
+        'finanzen',
+        'gesundheit',
+        'kultur',
+        'verteidigung',
+        'sicherheit',
+        'recht',
+        'verkehr',
+        'umwelt',
+        'kommunikation',
+        'migration',
+        'sport',
+        'versicherung',
+        'raumordnung',
+        'diplomatie',
+    ];
+
     private TagRepository $tagRepository;
     public array $tags;
 
@@ -14,28 +37,7 @@ class TaggingService
     {
         $this->tagRepository = $tagRepository;
 
-        $this->tags = [
-            'energie',
-            'bildung',
-            'forschung',
-            'informatik',
-            'landwirtschaft',
-            'wirtschaft',
-            'finanzen',
-            'gesundheit',
-            'kultur',
-            'verteidigung',
-            'sicherheit',
-            'recht',
-            'verkehr',
-            'umwelt',
-            'kommunikation',
-            'migration',
-            'sport',
-            'versicherung',
-            'raumordnung',
-            'diplomatie',
-        ];
+        $this->tags = self::TAGS;
     }
 
     public function getTagEntity(string $tag): Tag|null

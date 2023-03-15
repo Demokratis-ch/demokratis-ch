@@ -22,7 +22,7 @@
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-2 pb-6">
                     <h2 class="mt-4 text-xl text-gray-400 font-medium">Medienberichte</h2>
                     {% if media|length > 0 %}
-                        <div class="grid md:grid-cols-3 gap-4">
+                        <div id="media" class="grid md:grid-cols-3 gap-4">
                             {% if app.user %}
                                 <a class="col-span-3 text-center mt-2 pt-5 text-gray-400 hover:text-gray-500 hover:text-gray-500 bg-white hover:bg-gray-50 p-4 border-2 border-dashed hover:border-solid border-gray-300 rounded-md" href="{{ path('app_media_add', { 'slug': consultation.slug }) }}" >
                                     Neuen Medienbericht hinzufügen

@@ -1,0 +1,62 @@
+# See https://taskfile.dev
+# Create your own local Taskfile.yml to override/add tasks
+version: '3'
+
+tasks:
+  schema_update:
+    desc: Updates the DB schema
+    cmds:
+      - 'php bin/console doctrine:schema:update --force'
+      - 'php bin/console --env=test doctrine:schema:update --force'
+
+  watch:
+    desc: Starts the watcher for frontend build
+    cmds:
+      - 'npm run watch'
+
+  reset_db:
+    desc: Resets the DB and loads fixtures
+    cmds:
+      - 'php bin/console doctrine:schema:drop --force --full-database'
+      - 'php bin/console doctrine:schema:create'
+      - 'php bin/console app:user:add super@test.com super 1 --superadmin'
+      - 'php bin/console doctrine:fixtures:load --append'
+
+  install:
+    desc: Installs dependencies (php and js)
+    cmds:
+      - 'composer install'
+      - 'npm install'
+
+  build_dev:
+    desc: Dev build
+    cmds:
+      - task: install
+      - 'npm run dev'
+
+  tests:
+    desc: Runs the test suite
+    cmds:
+      - 'php bin/phpunit'
+
+  import:
+    desc: Gets consultations and documents from Fedlex API
+    cmds:
+      - 'php bin/console app:consultations:pull'
+      - 'php bin/console app:consultations:documents'
+
+  csfixer:
+    desc: Formats all php code using csfixer
+    cmds:
+      - 'php vendor/bin/php-cs-fixer fix'
+
+  psalm:
+    desc: Runs static analysis with psalm
+    cmds:
+      - 'php vendor/bin/psalm --no-cache'
+
+  checks:
+    desc: Runs code formatting, static analysis and unit tests (run before committing!)
+    deps: [psalm, tests]
+    cmds:
+      - task: csfixer

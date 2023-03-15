@@ -5,33 +5,47 @@ namespace App\DataFixtures;
 use App\Entity\ChosenModification;
 use App\Entity\Comment;
 use App\Entity\Consultation;
+use App\Entity\Discussion;
 use App\Entity\Document;
 use App\Entity\LegalText;
+use App\Entity\Media;
 use App\Entity\Modification;
 use App\Entity\ModificationStatement;
+use App\Entity\Organisation;
 use App\Entity\Paragraph;
 use App\Entity\Statement;
 use App\Entity\Thread;
-use App\Repository\OrganisationRepository;
-use App\Repository\UserRepository;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\Uid\Uuid;
 
-class ConsultationStimmUndWahlrecht16JaehrigeFixtures extends Fixture implements FixtureGroupInterface
+class ConsultationStimmUndWahlrecht16JaehrigeFixtures extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {
-    public function __construct(
-        private readonly UserRepository $userRepository,
-        private readonly OrganisationRepository $organisationRepository,
-    ) {
+    public static function getGroups(): array
+    {
+        return ['dummy'];
+    }
+
+    public function getDependencies(): array
+    {
+        return [
+            BasicFixtures::class,
+        ];
     }
 
     public function load(ObjectManager $manager): void
     {
-        // user 1 must exist. created by the init.sh
-        $user = $this->userRepository->find(1);
-        $user2 = $this->userRepository->find(2);
-        $user3 = $this->userRepository->find(3);
+        /** @var User $user */
+        $user = $this->getReference(BasicFixtures::USER1);
+        /** @var User $user2 */
+        $user2 = $this->getReference(BasicFixtures::USER2);
+        /** @var User $user3 */
+        $user3 = $this->getReference(BasicFixtures::USER3);
+        /** @var Organisation $organisation */
+        $organisation = $this->getReference(BasicFixtures::ORGA1);
 
         $consultation = new Consultation();
         $consultation->setTitle('Pa.Iv. Aktives Stimm- und Wahlrecht für 16-Jährige');
@@ -53,6 +67,45 @@ class ConsultationStimmUndWahlrecht16JaehrigeFixtures extends Fixture implements
         $document->setImported('paragraphed');
 
         $manager->persist($document);
+
+        $document2 = new Document();
+        $document2->setConsultation($consultation);
+        $document2->setTitle('Anhang');
+        $document2->setType('document');
+        $document2->setFedlexUri('https://fedlex.data.admin.ch/eli/dl/proj/2022/59/cons_1/doc_1');
+        $document2->setFilename('doc_2');
+
+        $manager->persist($document2);
+
+        $discussionThread = new Thread();
+        $discussionThread->setIdentifier('consultation-'.$consultation->getId().'-discussion-'.Uuid::v4());
+
+        $manager->persist($discussionThread);
+
+        $discussionComment = new Comment();
+        $discussionComment->setAuthor($user);
+        $discussionComment->setText('Das ist eine Testdiskussion.');
+        $discussionComment->setThread($discussionThread);
+        $discussionComment->setCreatedAt(new \DateTimeImmutable('-10days'));
+        $manager->persist($discussionComment);
+
+        $discussion = new Discussion();
+        $discussion->setConsultation($consultation);
+        $discussion->setThread($discussionThread);
+        $discussion->setTopic('Testdiskussion');
+        $discussion->setCreatedAt(new \DateTimeImmutable());
+        $discussion->setCreatedBy($user);
+
+        $manager->persist($discussion);
+
+        $media = new Media();
+        $media->setConsultation($consultation);
+        $media->setCreatedBy($user);
+        $media->setTitle('Artikel in der Zeitung');
+        $media->setCreatedAt(new \DateTimeImmutable());
+        $media->setUrl('https://www.demokratis.ch');
+
+        $manager->persist($media);
 
         $legalText = new LegalText();
         $legalText->setConsultation($consultation);
@@ -139,8 +192,6 @@ TEXT
 
         $statement = new Statement();
         $statement->setPublic(true);
-
-        $organisation = $this->organisationRepository->findOneBy(['name' => 'Demokratis']);
 
         $statement->setOrganisation($organisation);
         $statement->setConsultation($consultation);
@@ -251,11 +302,17 @@ TEXT
         $comment6->setCreatedAt(new \DateTimeImmutable('-3days'));
         $manager->persist($comment6);
 
-        $manager->flush();
-    }
+        $paragraph1Thread = new Thread();
+        $paragraph1Thread->setIdentifier('statement-'.$statement->getId().'-paragraph-'.$paragraph1->getId());
+        $manager->persist($paragraph1Thread);
 
-    public static function getGroups(): array
-    {
-        return ['dummy'];
+        $comment11 = new Comment();
+        $comment11->setAuthor($user);
+        $comment11->setText('Kommentar zum Original');
+        $comment11->setThread($paragraph1Thread);
+        $comment11->setCreatedAt(new \DateTimeImmutable('-12days'));
+        $manager->persist($comment11);
+
+        $manager->flush();
     }
 }

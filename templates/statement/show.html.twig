@@ -68,7 +68,7 @@
             {# For statement owners #}
             {% if app.user %}
                 {% if is_granted('own', statement) %}
-                    <div class="mt-2 flex gap-2 md:mb-2">
+                    <div class="mt-2 flex gap-2 md:mb-2" id="actions">
                         {# Set the intro text #}
                         {% if statement.intro is not defined or statement.intro is null %}
                             <a href="{{ path('app_statement_intro_add', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
@@ -181,8 +181,8 @@
                             Intro
                             <small><a href="{{ path('app_statement_intro_add', { 'uuid': statement.uuid }) }}" class="underline hover:no-underline">Ändern</a></small>
                         </h3>
-                        <div class="opacity-75 p-3 mb-8 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-md">
-                            {{ statement.intro|raw }}
+                        <div class="opacity-75 p-3 mb-8 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-md" id="intro">
+                            {{ statement.intro|markdown_to_html }}
                         </div>
                     {% endif %}
 
@@ -200,7 +200,7 @@
                             %}
 
                                 <div class="col-span-4 md:col-span-1">
-                                    <div class="md:mb-2 opacity-40 hover:opacity-100 transition-opacity duration-500 ease-out">
+                                    <div class="modifications md:mb-2 opacity-40 hover:opacity-100 transition-opacity duration-500 ease-out">
 
 
                                         {# Currently chosen #}
@@ -289,7 +289,7 @@
 
 
                             {# Display paragraph #}
-                            <div id="{{ paragraphContainer.paragraph.uuid[:8] }}" class="md:pb-12 scroll-mt-20 col-span-5 {% if collapse %}md:col-span-4{% else %}md:col-span-3{% endif %}">
+                            <div id="{{ paragraphContainer.paragraph.uuid[:8] }}" class="paragraph md:pb-12 scroll-mt-20 col-span-5 {% if collapse %}md:col-span-4{% else %}md:col-span-3{% endif %}">
 
                                 {# Paragraph title + edit #}
                                 <h3 class="text-md pt-6 md:pt-0 text-gray-400 font-light">
@@ -365,7 +365,7 @@
                             {# Right sidebar #}
                             <div class="col-span-5 pb-6 md:pb-8 md:col-span-1 flex flex-col h-full">
                                 {# Comments #}
-                                <div class="md:mt-6 text-gray-700 flex-grow h-0 pr-4 -mr-4">
+                                <div class="comments md:mt-6 text-gray-700 flex-grow h-0 pr-4 -mr-4">
                                     {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
                                         {{ component('paragraph_comments', { 'statement': statement, paragraph: paragraphContainer.paragraph, modification: paragraphContainer.chosen.modification }) }}
                                     {% else %}
