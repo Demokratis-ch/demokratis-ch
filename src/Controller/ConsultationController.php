@@ -167,10 +167,7 @@ class ConsultationController extends AbstractController
         $legalText = $this->legalTextRepository->findOneBy(['uuid' => $lt]);
 
         if (!$legalText) {
-            $proposals = $this->documentRepository->findBy(['consultation' => $consultation, 'type' => 'proposal']);
-            if ($proposals) {
-                $legalText = $this->legalTextRepository->findOneBy(['importedFrom' => $proposals[0]]);
-            }
+            $legalText = $this->legalTextRepository->findOneBy(['consultation' => $consultation]);
         }
 
         return $legalText;
