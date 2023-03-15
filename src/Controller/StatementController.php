@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Aggregate\ParagraphAggregate;
 use App\Entity\Consultation;
+use App\Entity\FreeText;
+use App\Entity\Modification;
 use App\Entity\Organisation;
 use App\Entity\Statement;
 use App\Form\StatementIntroType;
@@ -108,38 +111,40 @@ class StatementController extends AbstractController
         $paragraphs = [];
         $collapse = true;
 
+        $freeTexts = $freeTextRepository->findFreeTextsByStatementIndexed($statement);
+        $openModifications = $modificationRepository->findOpenModificationsIndexed($statement);
+        $refusedModifications = $modificationRepository->findRefusedModificationsIndexed($statement);
+        $foreignModifications = $modificationRepository->findForeignModificationsIndexed($statement);
+        $chosens = $chosenModificationRepository->findByStatementIndexed($statement);
+        $peersIndexed = $modificationStatementRepository->findPeers($statement, array_values($chosens));
+
         foreach ($paragraphsInLegalText as $i => $paragraph) {
-            $paragraphs[$i]['paragraph'] = $paragraph;
-
-            $paragraphs[$i]['freetext']['before'] = $freeTextRepository->findBy(['statement' => $statement, 'paragraph' => $paragraph, 'position' => 'before']);
-            $paragraphs[$i]['freetext']['after'] = $freeTextRepository->findBy(['statement' => $statement, 'paragraph' => $paragraph, 'position' => 'after']);
-
-            $chosen[$i] = $chosenModificationRepository->findOneBy(['statement' => $statement, 'paragraph' => $paragraph]);
-
-            $paragraphs[$i]['modifications'] = $modificationRepository->findOpenModifications($paragraph, $statement);
-
-            $paragraphs[$i]['refused'] = $modificationRepository->findRefusedModifications($paragraph, $statement);
-            $paragraphs[$i]['foreign'] = $modificationRepository->findForeignModifications($paragraph, $statement);
-
-            if ($chosen[$i]) {
-                $paragraphs[$i]['chosen']['modification'] = $chosen[$i]->getModificationStatement()->getModification();
-                $paragraphs[$i]['chosen']['modificationStatement'] = $chosen[$i]->getModificationStatement();
-                $paragraphs[$i]['chosen']['peers'] = $modificationStatementRepository->findPeers($chosen[$i]->getModificationStatement()->getModification(), $statement);
-
+            $chosen = $chosens[$paragraph->getId()] ?? null;
+            $foreign = $foreignModifications[$paragraph->getId()] ?? [];
+            if ($chosen) {
                 $dmp[$i] = new DiffMatchPatch();
-                $paragraphs[$i]['chosen']['diff'] = $dmp[$i]->diff_main($paragraph->getText(), $chosen[$i]->getModificationStatement()->getModification()->getText(), false);
+                $diff = $dmp[$i]->diff_main($paragraph->getText(), $chosen->getModificationStatement()->getModification()->getText(), false);
+                $peers = $peersIndexed[$chosen->getModificationStatement()->getModification()->getId()] ?? [];
 
                 // Remove chosen from foreign modifications
-                foreach ($paragraphs[$i]['foreign'] as $foreign) {
-                    if ($foreign->getUuid() == $chosen[$i]->getModificationStatement()->getModification()->getUuid()) {
-                        $paragraphs[$i]['foreign'] = null;
-                    }
-                }
+                $foreign = array_filter($foreign, fn (Modification $mod) => $mod->getUuid() !== $chosen->getModificationStatement()->getModification()->getUuid());
 
                 $collapse = false;
             }
 
-            if (!empty($paragraphs[$i]['modifications']) > 0 || !empty($paragraphs[$i]['refused']) > 0 || !empty($paragraphs[$i]['foreign']) > 0) {
+            $paragraphs[] = $aggregate = new ParagraphAggregate(
+                $paragraph,
+                $freeTexts[$paragraph->getId()][FreeText::POSITION_BEFORE] ?? [],
+                $freeTexts[$paragraph->getId()][FreeText::POSITION_AFTER] ?? [],
+                $openModifications[$paragraph->getId()] ?? [],
+                $refusedModifications[$paragraph->getId()] ?? [],
+                $foreign,
+                $chosen,
+                $peers ?? [],
+                $diff ?? null,
+            );
+
+            if (count($aggregate->getAllModifications()) === 0) {
                 $collapse = false;
             }
         }

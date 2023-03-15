@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\FreeText;
+use App\Entity\Statement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,5 +38,30 @@ class FreeTextRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @return array<int, array<string, FreeText>>
+     */
+    public function findFreeTextsByStatementIndexed(Statement $statement): array
+    {
+        $freeTexts = $this->findBy(['statement' => $statement]);
+
+        $indexed = [];
+        foreach ($freeTexts as $freeText) {
+            // defensive programming, because for some reason these properties are nullable
+            if ($freeText->getStatement() === null || $freeText->getPosition() === null) {
+                continue;
+            }
+
+            $id = $freeText->getParagraph()->getId();
+            if (!isset($indexed[$id])) {
+                $indexed[$id] = ['before' => [], 'after' => []];
+            }
+
+            $indexed[$id][$freeText->getPosition()][] = $freeText;
+        }
+
+        return $indexed;
     }
 }

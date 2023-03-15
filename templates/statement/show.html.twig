@@ -186,7 +186,7 @@
                         </div>
                     {% endif %}
 
-                    {% for i, paragraphContainer in paragraphs %}
+                    {% for i, paragraphAggregate in paragraphs %}
 
 
                         <div class="grid grid-cols-5 md:gap-4 ">
@@ -194,7 +194,7 @@
                             {% if
                                 statement.modificationStatements|length > 0
                                 or
-                                paragraphContainer.foreign|length > 0
+                                paragraphAggregate.foreignModifications|length > 0
                                 or
                                 collapse == false
                             %}
@@ -204,31 +204,31 @@
 
 
                                         {# Currently chosen #}
-                                        {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
+                                        {% if paragraphAggregate.chosenModification is defined and paragraphAggregate.chosenModification is not null %}
                                             <h2 class="mt-2 text-xs text-gray-400 font-medium">Akzeptierte Änderung</h2>
 
                                             <div class="relative mt-1 px-4 py-2 border bg-white hover:bg-gray-50 rounded-lg border-gray-200 text-sm text-gray-500">
-                                                <a class="after:absolute after:inset-0" href="{{ path('app_paragraph_diff', { 'modification_uuid': paragraphContainer.chosen.modification.uuid, 'statement_uuid': statement.uuid }) }}">
-                                                    {{ paragraphContainer.chosen.modification.createdBy }} <span class="text-xs text-gray-300">#{{ paragraphContainer.chosen.modification.uuid[:3] }}</span>
-                                                    <p class="text-xs text-gray-300">{{ paragraphContainer.chosen.modification.createdAt|ago }}</p>
+                                                <a class="after:absolute after:inset-0" href="{{ path('app_paragraph_diff', { 'modification_uuid': paragraphAggregate.chosenModification.modification.uuid, 'statement_uuid': statement.uuid }) }}">
+                                                    {{ paragraphAggregate.chosenModification.modification.createdBy }} <span class="text-xs text-gray-300">#{{ paragraphAggregate.chosenModification.modification.uuid[:3] }}</span>
+                                                    <p class="text-xs text-gray-300">{{ paragraphAggregate.chosenModification.modification.createdAt|ago }}</p>
                                                 </a>
                                             </div>
                                             {% if is_granted('edit', statement) %}
-                                                <a href="{{ path('app_paragraph_remove_chosen', { 'uuid': paragraphContainer.chosen.modificationStatement.uuid }) }}" class="mt-2 ml-2 underline hover:no-underline text-xs text-gray-400">Original wiederherstellen</a>
+                                                <a href="{{ path('app_paragraph_remove_chosen', { 'uuid': paragraphAggregate.chosenModification.modificationStatement.uuid }) }}" class="mt-2 ml-2 underline hover:no-underline text-xs text-gray-400">Original wiederherstellen</a>
                                             {% endif %}
                                         {% endif %}
 
                                         {% if
-                                            (paragraphContainer.modifications|length > 0)
+                                            (paragraphAggregate.openModifications|length > 0)
                                             or
-                                            (paragraphContainer.refused|length > 0)
+                                            (paragraphAggregate.refusedModifications|length > 0)
                                         %}
                                             <h2 class="mt-2 text-xs text-gray-400 font-medium">Änderungsvorschläge</h2>
                                         {% endif %}
 
                                         {# Proposed modifications #}
-                                        {% if paragraphContainer.modifications|length > 0 %}
-                                            {% for n, modification in paragraphContainer.modifications %}
+                                        {% if paragraphAggregate.openModifications|length > 0 %}
+                                            {% for n, modification in paragraphAggregate.openModifications %}
                                                 <div class="relative mt-1 px-4 py-2 border bg-gray-100 hover:bg-white rounded-lg border-gray-200 text-sm text-gray-400 hover:text-gray-500">
                                                     <a class="after:absolute after:inset-0" href="{{ path('app_paragraph_diff', { 'modification_uuid': modification.uuid, 'statement_uuid': statement.uuid }) }}">
                                                         {{ modification.createdBy }} <span class="text-xs text-gray-300">#{{ modification.uuid[:3] }}</span>
@@ -239,21 +239,21 @@
                                         {% endif %}
 
                                         {# Refused #}
-                                        {% if paragraphContainer.refused|length > 0 %}
+                                        {% if paragraphAggregate.refusedModifications|length > 0 %}
                                             <div class="mt-2 text-xs text-gray-400">Abgelehnt:
-                                                {% for refused in paragraphContainer.refused %}
+                                                {% for refused in paragraphAggregate.refusedModifications %}
                                                 <a href="{{ path('app_paragraph_diff', { 'modification_uuid': refused.uuid, 'statement_uuid': statement.uuid  }) }}"
                                                    class="">
-                                                    <span class="underline hover:no-underline">{{ refused.createdBy }} </span></a> <small>#{{ refused.uuid[:3] }}</small>{% if paragraphContainer.refused|length > 1 and loop.last == false %},{% endif %}
+                                                    <span class="underline hover:no-underline">{{ refused.createdBy }} </span></a> <small>#{{ refused.uuid[:3] }}</small>{% if paragraphAggregate.refusedModifications|length > 1 and loop.last == false %},{% endif %}
                                                 {% endfor %}
                                             </div>
                                         {% endif %}
 
                                         {# Foreign inspirations #}
-                                        {% if paragraphContainer.foreign|length > 0 %}
+                                        {% if paragraphAggregate.foreignModifications|length > 0 %}
 
                                             <h2 class="mt-4 text-xs text-gray-400 font-medium">Inspiration aus anderen Stellungnahmen</h2>
-                                            {% for foreign in paragraphContainer.foreign %}
+                                            {% for foreign in paragraphAggregate.foreignModifications %}
                                                 {% if is_granted('view', statement) %}
 
                                                     <div class="relative mt-1 px-4 py-2 border bg-gray-100 hover:bg-white rounded-lg text-sm text-gray-500">
@@ -264,53 +264,34 @@
                                                 {% endif %}
                                             {% endfor %}
                                         {% endif %}
-
-
-                                        {% if paragraphContainer.former is defined and paragraphContainer.former is not null %}
-                                            {% if paragraphContainer.chosen.modification.paragraph.forceOriginal == true %}
-                                                <small>Previous chosen: <a
-                                                            href="{{ path('app_paragraph_diff', { 'uuid': paragraphContainer.chosen.modification.uuid  }) }}"
-                                                            class="underline hover:no-underline">#{{ paragraphContainer.chosen.modification.uuid[:8] }}</a></small>
-                                            {% endif %}
-
-                                            {% if paragraphContainer.former|length > 0 %}
-                                                <small>Former:</small>
-                                                {% for former in paragraphContainer.former %}
-                                                    <small><a href="{{ path('app_paragraph_diff', { 'uuid': former.modification.uuid  }) }}"
-                                                              class="underline hover:no-underline">#{{ former.modification.uuid[:8] }}</a>{% if paragraphContainer.former|length > 1 and loop.last == false %},{% endif %}
-                                                    </small>
-                                                {% endfor %}
-                                            {% endif %}
-                                        {% endif %}
-
                                     </div>
                                 </div>
                             {% endif %}
 
 
                             {# Display paragraph #}
-                            <div id="{{ paragraphContainer.paragraph.uuid[:8] }}" class="paragraph md:pb-12 scroll-mt-20 col-span-5 {% if collapse %}md:col-span-4{% else %}md:col-span-3{% endif %}">
+                            <div id="{{ paragraphAggregate.paragraph.uuid[:8] }}" class="paragraph md:pb-12 scroll-mt-20 col-span-5 {% if collapse %}md:col-span-4{% else %}md:col-span-3{% endif %}">
 
                                 {# Paragraph title + edit #}
                                 <h3 class="text-md pt-6 md:pt-0 text-gray-400 font-light">
-                                    <a href="{{ path('app_statement_show', { 'uuid': statement.uuid, 'lt': legalText.uuid.toBase58, '_fragment': paragraphContainer.paragraph.uuid[:8] }) }}">{{ i+1 }}. Absatz</a>
+                                    <a href="{{ path('app_statement_show', { 'uuid': statement.uuid, 'lt': legalText.uuid.toBase58, '_fragment': paragraphAggregate.paragraph.uuid[:8] }) }}">{{ i+1 }}. Absatz</a>
                                     {% if app.user and is_granted('edit', statement) %}
-                                        <small><a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}"
+                                        <small><a href="{{ path('app_paragraph_edit', { 'uuid': paragraphAggregate.paragraph.uuid, 'statement': statement.id }) }}"
                                                   class="underline hover:no-underline">Ändern</a></small>
                                     {% endif %}
                                 </h3>
 
-                                {% if paragraphContainer.freetext.before|length > 0 %}
-                                    {% for freetext in paragraphContainer.freetext.before %}
+                                {% if paragraphAggregate.freetextBefore|length > 0 %}
+                                    {% for freetext in paragraphAggregate.freetextBefore %}
                                         <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-md">
                                             {{ freetext.text }}
                                         </div>
                                     {% endfor %}
                                 {% endif %}
 
-                                {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
+                                {% if paragraphAggregate.chosenModification.modificationStatement is defined and paragraphAggregate.chosenModification.modificationStatement is not null %}
                                     <p class="mt-2 mb-4 p-6 bg-white border shadow text-sm md:text-md text-gray-600">
-                                        {% for diff in paragraphContainer.chosen.diff %}
+                                        {% for diff in paragraphAggregate.chosenDiff %}
                                             <span class="{% if diff[0] == -1 %}
                                                             bg-red-100
                                                             line-through
@@ -323,16 +304,16 @@
                                                     </span>
                                         {% endfor %}
                                     </p>
-                                    {% if paragraphContainer.chosen.modification.justification is defined and paragraphContainer.chosen.modification.justification is not null %}
+                                    {% if paragraphAggregate.chosenModification.modification.justification is defined and paragraphAggregate.chosenModification.modification.justification is not null %}
                                         <div class="bg-gray-100 shadow px-4 py-2 -mt-6 mb-6 text-gray-400">
-                                            {{ paragraphContainer.chosen.modification.justification }}
+                                            {{ paragraphAggregate.chosenModification.modification.justification }}
                                         </div>
                                     {% endif %}
 
-                                    {% if paragraphContainer.chosen.peers|length > 0 %}
+                                    {% if paragraphAggregate.peers|length > 0 %}
                                         <div class="text-xs text-gray-400 -mt-1 mb-8">
                                             Dieser Vorschlag ist auch Teil folgender Stellungnahmen:
-                                            {% for peer in paragraphContainer.chosen.peers %}
+                                            {% for peer in paragraphAggregate.peers %}
                                                 {% if peer.statement != statement %}
                                                         <a href="{{ path('app_statement_show', { 'uuid': peer.statement.uuid }) }}" target="_blank"
                                                            class="underline hover:no-underline">{{ peer.statement }}</a>
@@ -345,15 +326,15 @@
 
                                     {# Only show the full paragraph if the user can edit #}
                                     {% if app.user and is_granted('edit', statement) %}
-                                        <p class="mt-2 mb-4 p-4 bg-white shadow border text-sm md:text-md text-gray-600">{{ paragraphContainer.paragraph.text|nl2br }}</p>
+                                        <p class="mt-2 mb-4 p-4 bg-white shadow border text-sm md:text-md text-gray-600">{{ paragraphAggregate.paragraph.text|nl2br }}</p>
                                     {% else %}
                                         <p class="mt-2 mb-4 p-4 bg-white shadow border text-sm text-gray-300">Keine Änderungsvorschläge</p>
                                     {% endif %}
                                 {% endif %}
 
 
-                                {% if paragraphContainer.freetext.after|length > 0 %}
-                                    {% for freetext in paragraphContainer.freetext.after %}
+                                {% if paragraphAggregate.freetextAfter|length > 0 %}
+                                    {% for freetext in paragraphAggregate.freetextAfter %}
                                         <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-md">
                                             {{ freetext.text }}
                                         </div>
@@ -366,10 +347,10 @@
                             <div class="col-span-5 pb-6 md:pb-8 md:col-span-1 flex flex-col h-full">
                                 {# Comments #}
                                 <div class="comments md:mt-6 text-gray-700 flex-grow h-0 pr-4 -mr-4">
-                                    {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
-                                        {{ component('paragraph_comments', { 'statement': statement, paragraph: paragraphContainer.paragraph, modification: paragraphContainer.chosen.modification }) }}
+                                    {% if paragraphAggregate.chosenModification is defined and paragraphAggregate.chosenModification is not null %}
+                                        {{ component('paragraph_comments', { 'statement': statement, paragraph: paragraphAggregate.paragraph, modification: paragraphAggregate.chosenModification.modification }) }}
                                     {% else %}
-                                        {{ component('paragraph_comments', { 'statement': statement, paragraph: paragraphContainer.paragraph }) }}
+                                        {{ component('paragraph_comments', { 'statement': statement, paragraph: paragraphAggregate.paragraph }) }}
                                     {% endif %}
                                 </div>
 
