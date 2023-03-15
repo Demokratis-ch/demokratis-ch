@@ -161,7 +161,7 @@
                                    class="
                                     {% if legalText.id == text.id %}bg-gray-100{% endif %}
                                     col-span-3 md:col-span-1 relative block w-full rounded-lg border-2 border-solid border-gray-300 p-4 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                    <p class="mt-2 block text-sm text-gray-700">{{ text.importedFrom.title }}</p>
+                                    <p class="mt-2 block text-sm text-gray-700">{{ text.title ? text.title : text.importedFrom.title }}</p>
                                 </a>
                             {% endfor %}
                         </div>

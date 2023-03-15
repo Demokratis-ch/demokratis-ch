@@ -13,7 +13,7 @@
             {% include 'consultation/__menu.html.twig' %}
 
             <section class="bg-gray-50 mx-8 pt-4 pb-6">
-                {% if legalText and legalText.importedFrom.imported == 'paragraphed' %}
+                {% if legalText and (legalText.importedFrom.imported|default('not') == 'paragraphed' or legalText.consultation.organisation is not null) %}
                     {% if not is_granted('IS_AUTHENTICATED') %}
                         <div class="mx-auto {% if statements|default(0)|length < 1 %}max-w-5xl{% else%}max-w-7xl{% endif%} px-4 sm:px-6 lg:px-8 mt-2 pb-6">
                             <div class="bg-white p-4 border border-gray-100 rounded-md text-gray-700 shadow-sm text-center">
@@ -39,7 +39,7 @@
                                                     {% else %}
                                                         text-gray-400 hover:text-gray-500 underline hover:no-underline
                                                     {% endif %}"
-                                                >{{ legal.importedFrom.title }}</a>
+                                                >{{ legal.title ? legal.title : legal.imported.title|default('Unbekannt') }}</a>
                                             </p>
                                         {% endfor %}
                                     </div>
@@ -47,7 +47,7 @@
                             </div>
                         {% endif %}
                         <div id="legal-texts" class="mt-4 md:mt-12 xl:mt-14 flex gap-4 md:gap-8 {% if legalTexts|length > 1 %}col-span-4 md:col-span-3{% endif %}">
-                            {% if legalText and legalText.importedFrom.imported == 'paragraphed' %}
+                            {% if legalText and (legalText.importedFrom.imported|default('not') == 'paragraphed' or legalText.consultation.organisation is not null) %}
                                 <div class="">
                                     <h2 class="mt-2 mb-4 text-xl text-gray-400 font-medium">{{ legalText.title }}</h2>
                                     {% for i, paragraph in paragraphs  %}
