@@ -10,6 +10,7 @@ use App\Repository\DiscussionRepository;
 use App\Repository\DocumentRepository;
 use App\Repository\LegalTextRepository;
 use App\Repository\MediaRepository;
+use App\Repository\OrganisationRepository;
 use App\Repository\ParagraphRepository;
 use App\Repository\TagRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,7 +36,7 @@ class ConsultationController extends AbstractController
     }
 
     #[Route('s/{filter}', name: 'app_consultation', methods: ['GET'])]
-    public function index(ConsultationRepository $consultationRepository, TagRepository $tagRepository, Request $request, EntityManagerInterface $entityManager, string $filter = 'all'): Response
+    public function index(ConsultationRepository $consultationRepository, OrganisationRepository $organisationRepository, TagRepository $tagRepository, Request $request, EntityManagerInterface $entityManager, string $filter = 'all'): Response
     {
         if (!in_array($filter, ['all', 'ongoing', 'planned', 'done'])) {
             throw new \Exception('Invalid filter');
@@ -44,14 +45,18 @@ class ConsultationController extends AbstractController
         $tag = $this->requestStack->getCurrentRequest()->query->get('t');
         $tag = $tagRepository->findOneBy(['slug' => $tag]);
 
+        $organisation = $this->requestStack->getCurrentRequest()->query->get('cp');
+        $organisation = $organisationRepository->findOneBy(['slug' => $organisation]);
+
         $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $consultationRepository->getPaginator($offset, $filter, $tag);
+        $paginator = $consultationRepository->getPaginator($offset, $filter, $tag, $organisation);
         $steps = ConsultationRepository::PAGINATOR_PER_PAGE;
 
         return $this->render('consultation/index.html.twig', [
             'consultations' => $paginator,
             'tags' => $tagRepository->findBy(['approved' => true]),
             'currentTag' => $tag,
+            'currentOrganisation' => $organisation,
             'filter' => $filter,
             'ongoingCount' => $consultationRepository->count('ongoing'),
             'plannedCount' => $consultationRepository->count('planned'),
