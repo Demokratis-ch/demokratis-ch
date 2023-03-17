@@ -7,6 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class DocumentCrudController extends AbstractCrudController
@@ -23,6 +24,14 @@ class DocumentCrudController extends AbstractCrudController
             IdField::new('uuid')->onlyOnIndex(),
             AssociationField::new('consultation'),
             TextField::new('title'),
+            ImageField::new('localFilename')
+                ->setBasePath('/uploads/')->setUploadDir('public/uploads/proposals/')
+                ->setUploadedFileNamePattern('[randomhash].[extension]')
+                ->setFormTypeOptions(['attr' => ['accept' => 'application/pdf']])
+                ->setRequired(true)
+                ->setHelp('Es können nur PDF-Dateien hochgeladen werden.')
+                ->onlyWhenCreating(),
+
             ChoiceField::new('type')->setChoices([
                 'Dokument' => 'document',
                 'Vernehmlassungsvorlage' => 'proposal',
@@ -34,7 +43,6 @@ class DocumentCrudController extends AbstractCrudController
                 'Fetched' => 'fetched',
                 'Paragraphed' => 'paragraphed',
             ]),
-            TextField::new('localFilename')->hideOnIndex(),
         ];
     }
 }

@@ -36,7 +36,7 @@ class ConsultationCrudController extends AbstractCrudController
                 'Abgeschlossen – abwarten Ergebnisbericht' => 'pending_report',
                 'Abgeschlossen' => 'done',
                 'Unbekannt' => 'unknown',
-        ]),
+        ])->setRequired(true),
             DateField::new('startDate'),
             DateField::new('endDate')->setRequired(true),
             AssociationField::new('documents')->hideOnIndex(),
