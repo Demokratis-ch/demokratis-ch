@@ -56,20 +56,6 @@ class ConsultationRepository extends ServiceEntityRepository
             $query->andWhere('c.organisation IS NULL');
         }
 
-        /*
-        if ($organisation) {
-            $query->leftJoin('c.organisation', 'o')
-                ->andWhere('o.slug = :organisation')
-                ->setParameter('organisation', $organisation->getSlug())
-            ;
-        }
-        /*
-        if ($organisation) {
-            $query->andWhere('c.organisation = :organisation')
-                ->setParameter('organisation', $organisation);
-        }
-        */
-
         return new Paginator($query->getQuery());
     }
 
