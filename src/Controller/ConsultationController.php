@@ -13,6 +13,7 @@ use App\Repository\MediaRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ParagraphRepository;
 use App\Repository\TagRepository;
+use App\Repository\UserOrganisationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +37,7 @@ class ConsultationController extends AbstractController
     }
 
     #[Route('s/{filter}', name: 'app_consultation', methods: ['GET'])]
-    public function index(ConsultationRepository $consultationRepository, OrganisationRepository $organisationRepository, TagRepository $tagRepository, Request $request, EntityManagerInterface $entityManager, string $filter = 'all'): Response
+    public function index(ConsultationRepository $consultationRepository, OrganisationRepository $organisationRepository, UserOrganisationRepository $userOrganisationRepository, TagRepository $tagRepository, Request $request, EntityManagerInterface $entityManager, string $filter = 'all'): Response
     {
         if (!in_array($filter, ['all', 'ongoing', 'planned', 'done'])) {
             throw new \Exception('Invalid filter');
@@ -57,6 +58,7 @@ class ConsultationController extends AbstractController
             'tags' => $tagRepository->findBy(['approved' => true]),
             'currentTag' => $tag,
             'currentOrganisation' => $organisation,
+            'organisations' => $this->getUser() ? $organisationRepository->getOrganisationByUser($this->getUser()->getId()) : null,
             'filter' => $filter,
             'ongoingCount' => $consultationRepository->count('ongoing'),
             'plannedCount' => $consultationRepository->count('planned'),
