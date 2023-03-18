@@ -42,10 +42,10 @@ class ConsultationController extends AbstractController
             throw new \Exception('Invalid filter');
         }
 
-        $tag = $this->requestStack->getCurrentRequest()->query->get('t');
+        $tag = $request->query->get('t');
         $tag = $tagRepository->findOneBy(['slug' => $tag]);
 
-        $organisation = $this->requestStack->getCurrentRequest()->query->get('cp');
+        $organisation = $request->query->get('cp');
         $organisation = $organisationRepository->findOneBy(['slug' => $organisation]);
 
         $offset = max(0, $request->query->getInt('offset', 0));
