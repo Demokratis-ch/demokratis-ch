@@ -53,16 +53,25 @@
                                 {% endfor %}
                             </div>
 
-                            <div class="border-b border-gray-200 py-4 text-sm text-gray-600">
-                                {% if currentOrganisation is not null %}
-                                    <p><a href="{{ path('app_consultation', { 'filter': filter }) }}" class="mr-2 pb-2 underline hover:no-underline text-gray-400 text-xs">Auswahl aufheben</a></p>
-                                {% endif %}
-                                {% for userorga in app.user.organisations %}
-                                    <a href="?cp={{ userorga.organisation.slug }}" class="inline-block mt-1 p-1.5 {% if currentOrganisation is not null and userorga.organisation.id == currentOrganisation.id %}bg-blue-100 border-blue-300 text-blue-400{% else %}bg-gray-50 hover:bg-gray-100 hover:border-gray-300{% endif%} border border-gray-200 text-gray-400 text-xs rounded-xl">{{ userorga.organisation.name }}</a>
-                                {% else %}
-                                    Es gibt keine Tags
-                                {% endfor %}
-                            </div>
+                            {% if app.user and organisations|length > 0 %}
+                                <div class="mt-6">
+                                    <h3 class="mb-3 text-gray-300 text-sm text-semibold">Private Konsultationen anzeigen</h3>
+
+                                    <ul role="list" class="space-y-2 border-b border-gray-200 pb-6 text-sm text-gray-500">
+                                        {% for organisation in organisations %}
+                                            {% if currentOrganisation is not null %}
+                                                <li>
+                                                    <a href="{{ path('app_consultation', { 'filter': filter }) }}" class="mr-2 pb-2 underline hover:no-underline text-gray-400 text-xs">Auswahl aufheben</a>
+                                                </li>
+                                            {% endif %}
+
+                                            <li>
+                                                <a href="?cp={{ organisation.slug }}" class="{% if currentOrganisation is not null and organisation.id == currentOrganisation.id == 'all' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ organisation.name }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
 
                         </form>
 
