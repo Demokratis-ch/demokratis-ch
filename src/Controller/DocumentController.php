@@ -69,7 +69,7 @@ class DocumentController extends AbstractController
 
             foreach ($paragraphs as $i => $sourceParagraph) {
                 $paragraph[$i] = new Paragraph();
-                $paragraph[$i]->setPosition($i);
+                $paragraph[$i]->setPosition($i * 100);
                 $paragraph[$i]->setText($sourceParagraph);
                 $paragraph[$i]->setLegalText($legalText);
                 $paragraph[$i]->setCreatedAt(new \DateTimeImmutable());

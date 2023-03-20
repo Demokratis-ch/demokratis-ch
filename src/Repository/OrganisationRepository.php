@@ -21,6 +21,19 @@ class OrganisationRepository extends ServiceEntityRepository
         parent::__construct($registry, Organisation::class);
     }
 
+    public function getOrganisationByUser(int $userId): array
+    {
+        return $this->createQueryBuilder('o')
+            ->leftJoin('o.users', 'u')
+            ->andWhere('u.id = :userId')
+            ->setParameter('userId', $userId)
+            ->andWhere('o.isPersonalOrganisation = :isPersonalOrganisation')
+            ->setParameter('isPersonalOrganisation', false)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     public function add(Organisation $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

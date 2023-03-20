@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Consultation;
+use App\Entity\Organisation;
 use App\Entity\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -28,7 +29,7 @@ class ConsultationRepository extends ServiceEntityRepository
         parent::__construct($registry, Consultation::class);
     }
 
-    public function getPaginator(int $offset, string $filter = null, Tag $tag = null): Paginator
+    public function getPaginator(int $offset, string $filter = null, Tag $tag = null, Organisation $organisation = null): Paginator
     {
         $query = $this->createQueryBuilder('c')
             ->orderBy('c.startDate', 'DESC')
@@ -48,6 +49,13 @@ class ConsultationRepository extends ServiceEntityRepository
             ;
         }
 
+        if ($organisation) {
+            $query->andWhere('c.organisation = :organisation')
+                ->setParameter('organisation', $organisation);
+        } else {
+            $query->andWhere('c.organisation IS NULL');
+        }
+
         return new Paginator($query->getQuery());
     }
 
@@ -57,7 +65,9 @@ class ConsultationRepository extends ServiceEntityRepository
 
         if ($status !== null) {
             $query->andWhere('c.status = :status')
-                ->setParameter('status', $status);
+                ->setParameter('status', $status)
+                ->andWhere('c.organisation IS NULL')
+            ;
         }
 
         return $query->select('count(c.id)')
