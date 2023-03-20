@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Voter;
+namespace App\Security;
 
 use App\Entity\Consultation;
 use App\Entity\User;
@@ -19,17 +19,17 @@ class ConsultationVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        $user = $token->getUser();
-
-        if (!$user instanceof User) {
-            return false;
-        }
-
         /** @var Consultation $consultation */
         $consultation = $subject;
 
         if ($consultation->getOrganisation() === null) {
             return true;
+        }
+
+        $user = $token->getUser();
+
+        if (!$user instanceof User) {
+            return false;
         }
 
         if ($user->getOrganisations()
