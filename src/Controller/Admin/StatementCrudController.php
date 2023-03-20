@@ -7,6 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class StatementCrudController extends AbstractCrudController
@@ -25,7 +26,7 @@ class StatementCrudController extends AbstractCrudController
             TextField::new('name'),
             TextField::new('justification')->hideOnIndex(),
             AssociationField::new('organisation'),
-            TextField::new('intro'),
+            TextareaField::new('intro'),
             BooleanField::new('public'),
             BooleanField::new('editable'),
         ];
