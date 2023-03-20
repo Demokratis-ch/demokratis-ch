@@ -53,6 +53,8 @@ class ConsultationController extends AbstractController
         $paginator = $consultationRepository->getPaginator($offset, $filter, $tag, $organisation);
         $steps = ConsultationRepository::PAGINATOR_PER_PAGE;
 
+        $counts = $consultationRepository->countByStatus();
+
         return $this->render('consultation/index.html.twig', [
             'consultations' => $paginator,
             'tags' => $tagRepository->findBy(['approved' => true]),
@@ -60,9 +62,9 @@ class ConsultationController extends AbstractController
             'currentOrganisation' => $organisation,
             'organisations' => $this->getUser() ? $organisationRepository->getOrganisationByUser($this->getUser()->getId()) : null,
             'filter' => $filter,
-            'ongoingCount' => $consultationRepository->count('ongoing'),
-            'plannedCount' => $consultationRepository->count('planned'),
-            'doneCount' => ($consultationRepository->count('done') + $consultationRepository->count('pending_report') + $consultationRepository->count('pending_statements_report')),
+            'ongoingCount' => ($counts['ongoing'] ?? 0),
+            'plannedCount' => ($counts['planned'] ?? 0),
+            'doneCount' => (($counts['done'] ?? 0) + ($counts['pending_report'] ?? 0) + ($counts['pending_statements_report'] ?? 0)),
             // Paginator
             'offset' => $offset,
             'steps' => $steps,
