@@ -107,8 +107,8 @@
 
                                         {# Institutions, Tags & Dates #}
                                         <div class="mt-3 -ml-2 col-span-2">
-                                            <span class="inline-block mt-1 p-1.5 bg-gray-50 border border-gray-200 text-gray-400 text-xs rounded-xl">{{ consultation.office|default() }}</span>
-                                            <span class="inline-block mt-1 p-1.5 bg-gray-50 border border-gray-200 text-gray-400 text-xs rounded-xl">{{ consultation.institution|default() }}</span>
+                                            {% if consultation.office is defined and consultation.office is not null %}<span class="inline-block mt-1 p-1.5 bg-gray-50 border border-gray-200 text-gray-400 text-xs rounded-xl">{{ consultation.office }}</span>{% endif %}
+                                            {% if consultation.institution is defined and consultation.institution is not null %}<span class="inline-block mt-1 p-1.5 bg-gray-50 border border-gray-200 text-gray-400 text-xs rounded-xl">{{ consultation.institution }}</span>{% endif %}
 
                                             {% for tag in consultation.tags %}
                                                 <span class="inline-block mt-1 p-1.5 bg-gray-50 border border-gray-200 text-gray-400 text-xs rounded-xl">{{ tag.name }}</span>
