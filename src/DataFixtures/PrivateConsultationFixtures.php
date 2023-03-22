@@ -76,7 +76,7 @@ TEXT
         $manager->persist($legalText);
         $manager->flush();
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $paragraph[$i] = new Paragraph();
             $paragraph[$i]->setPosition(200);
             $paragraph[$i]->setLegalText($legalText);
@@ -94,7 +94,5 @@ TEXT
         $manager->persist($statement);
 
         $manager->flush();
-
     }
-
 }
