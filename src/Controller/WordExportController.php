@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Statement;
+use App\Form\ExportType;
 use App\Repository\ChosenModificationRepository;
 use App\Repository\DocumentRepository;
 use App\Repository\LegalTextRepository;
@@ -10,14 +11,37 @@ use DiffMatchPatch\DiffMatchPatch;
 use PhpOffice\PhpWord\PhpWord;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class WordExportController extends AbstractController
 {
-    #[Route('/word-export/{id}/{diffOutput}', name: 'app_word_export', methods: ['GET'])]
-    public function test(
+    #[Route('/export/{id}', name: 'app_word_export')]
+    public function export(Statement $statement, Request $request): Response
+    {
+        $form = $this->createForm(ExportType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            return $this->redirectToRoute('app_word_export_file', [
+                'id' => $statement->getId(),
+                'diffOutput' => $data['colored'] ? 1 : 0,
+            ]);
+        }
+
+        return $this->render('export/export.html.twig', [
+            'form' => $form,
+            'statement' => $statement,
+        ]);
+    }
+
+    #[Route('/export/file/{id}/{diffOutput}', name: 'app_word_export_file', methods: ['GET', 'POST'])]
+    public function serveFile(
         Statement $statement,
         LegalTextRepository $legalTextRepository,
         DocumentRepository $documentRepository,
@@ -75,15 +99,21 @@ class WordExportController extends AbstractController
         }
 
         // Preparing and serving the file
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'ODText');
+        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
         $slugger = new AsciiSlugger();
         $filename = substr($slugger->slug($statement->getName()), 0, 45);
-        $objWriter->save('../var/'.$filename.'.odt', 'ODText', true);
-        $response = new BinaryFileResponse('../var/'.$filename.'.odt');
+
+        $filename = $filename.'-'.date('Y-m-d-H-i-s');
+        $format = '.docx';
+        $file = $filename.$format;
+        $path = '../var/';
+
+        $objWriter->save($path.$file);
+        $response = new BinaryFileResponse($path.$file);
 
         $response->setContentDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $filename.'.odt'
+            $file
         );
 
         $response->deleteFileAfterSend(true);
