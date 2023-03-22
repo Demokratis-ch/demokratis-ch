@@ -25,7 +25,7 @@ class OrganisationRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('o')
             ->leftJoin('o.users', 'u')
-            ->andWhere('u.id = :userId')
+            ->andWhere('u.user = :userId')
             ->setParameter('userId', $userId)
             ->andWhere('o.isPersonalOrganisation = :isPersonalOrganisation')
             ->setParameter('isPersonalOrganisation', false)

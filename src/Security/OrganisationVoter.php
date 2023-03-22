@@ -16,6 +16,7 @@ class OrganisationVoter extends Voter
     public const VIEW = 'view';
     public const EDIT = 'edit';
     public const OWN = 'own';
+    public const MEMBER = 'member';
 
     private Security $security;
     private UserOrganisationRepository $userOrganisationRepository;
@@ -29,7 +30,7 @@ class OrganisationVoter extends Voter
     protected function supports(string $attribute, mixed $subject): bool
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, [self::VIEW, self::EDIT, self::OWN])) {
+        if (!in_array($attribute, [self::VIEW, self::EDIT, self::OWN, self::MEMBER])) {
             return false;
         }
 
@@ -58,6 +59,7 @@ class OrganisationVoter extends Voter
             self::VIEW => $this->canView($organisation, $user),
             self::EDIT => $this->canEdit($organisation, $user),
             self::OWN => $this->canOwn($organisation, $user),
+            self::MEMBER => $this->isMember($organisation, $user),
             default => throw new \LogicException('This code should not be reached!')
         };
     }
@@ -96,5 +98,12 @@ class OrganisationVoter extends Voter
         }
 
         return false;
+    }
+
+    private function isMember(Organisation $organisation, UserInterface $user): bool
+    {
+        $member = $this->userOrganisationRepository->findOneBy(['organisation' => $organisation, 'user' => $user]);
+
+        return $member !== null;
     }
 }

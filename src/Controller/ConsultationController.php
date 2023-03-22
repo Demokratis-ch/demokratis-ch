@@ -14,6 +14,7 @@ use App\Repository\OrganisationRepository;
 use App\Repository\ParagraphRepository;
 use App\Repository\TagRepository;
 use App\Repository\UserOrganisationRepository;
+use App\Security\OrganisationVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,8 +47,12 @@ class ConsultationController extends AbstractController
         $tag = $request->query->get('t');
         $tag = $tagRepository->findOneBy(['slug' => $tag]);
 
-        $organisation = $request->query->get('cp');
-        $organisation = $organisationRepository->findOneBy(['slug' => $organisation]);
+        $organisationSlug = $request->query->get('cp');
+        $organisation = $organisationRepository->findOneBy(['slug' => $organisationSlug]);
+
+        if ($organisation !== null) {
+            $this->denyAccessUnlessGranted(OrganisationVoter::MEMBER, $organisation);
+        }
 
         $offset = max(0, $request->query->getInt('offset', 0));
         $paginator = $consultationRepository->getPaginator($offset, $filter, $tag, $organisation);
