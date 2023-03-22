@@ -69,14 +69,6 @@
             {% if app.user %}
                 {% if is_granted('own', statement) %}
                     <div class="mt-2 flex gap-2 md:mb-2" id="actions">
-                        {# Set the intro text #}
-                        {% if statement.intro is not defined or statement.intro is null %}
-                            <a href="{{ path('app_statement_intro_add', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
-                                <i class="fa-solid fa-pencil hidden md:inline-block"></i>
-                                <span class="ml-1">Intro</span>
-                            </a>
-                        {% endif %}
-
                         {# Export in the .odt format #}
                         <a href="{{ path('app_word_export', { 'id': statement.id }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
                             <i class="fa-solid fa-file-word hidden md:inline-block"></i>
@@ -183,6 +175,13 @@
                         </h3>
                         <div class="opacity-75 p-3 mb-8 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-md" id="intro">
                             <p class="prose lg:prose-xl">{{ statement.intro|markdown_to_html }}</p>
+                        </div>
+                    {% else %}
+                        <div class="md:-mt-6 pt-4 pb-4 md:pt-0">
+                            <a href="{{ path('app_statement_intro_add', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-gray-50 border border-gray-300 hover:border-gray-400 rounded-md">
+                                <i class="fa-solid fa-pencil hidden md:inline-block"></i>
+                                <span class="ml-1">Intro Text hinzufügen</span>
+                            </a>
                         </div>
                     {% endif %}
 
