@@ -42,6 +42,14 @@ class ConsultationRepository extends ServiceEntityRepository
         if ($filter && $filter !== 'all') {
             $query->andWhere('c.status = :val')
                 ->setParameter('val', $filter);
+
+            if ($filter === 'done') {
+                $query->orWhere('c.status = :pendingReport')
+                    ->setParameter('pendingReport', 'pending_report')
+                    ->orWhere('c.status = :pendingAll')
+                    ->setParameter('pendingAll', 'pending_statements_report')
+                ;
+            }
         }
 
         if ($tag) {
