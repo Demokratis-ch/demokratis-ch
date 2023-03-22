@@ -41,6 +41,7 @@ class ConsultationCrudController extends AbstractCrudController
             DateField::new('endDate')->setRequired(true),
             AssociationField::new('documents')->hideOnIndex(),
             TextField::new('office'),
+            TextField::new('institution'),
         ];
     }
 }
