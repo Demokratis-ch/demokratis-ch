@@ -48,7 +48,7 @@ class PrivateConsultationFixtures extends Fixture implements FixtureGroupInterfa
         $consultation->setFedlexId('proj/2022/59/cons_1');
         $consultation->setStartDate(new \DateTimeImmutable('2022-09-12 00:00:00.0'));
         $consultation->setEndDate(new \DateTimeImmutable('2022-12-16 00:00:00.0'));
-        $consultation->setOffice('');
+        $consultation->setOffice('Unser Verein');
         $consultation->setOrganisation($organisation);
 
         $manager->persist($consultation);
