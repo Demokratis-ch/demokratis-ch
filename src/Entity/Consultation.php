@@ -8,12 +8,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Uid\Uuid;
 use whatwedo\SearchBundle\Annotation\Index;
 
 #[ORM\Entity(repositoryClass: ConsultationRepository::class)]
-#[UniqueEntity('fedlexId')]
 #[ORM\HasLifecycleCallbacks]
 class Consultation
 {
@@ -44,7 +42,7 @@ class Consultation
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $uuid = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(unique: true, nullable: true)]
     private ?string $fedlexId = null;
 
     #[ORM\OneToMany(mappedBy: 'consultation', targetEntity: LegalText::class)]
