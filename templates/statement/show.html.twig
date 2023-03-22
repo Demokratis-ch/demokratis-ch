@@ -295,8 +295,10 @@
                                 <h3 class="text-md pt-6 md:pt-0 text-gray-400 font-light">
                                     <a href="{{ path('app_statement_show', { 'uuid': statement.uuid, 'lt': legalText.uuid.toBase58, '_fragment': paragraphContainer.paragraph.uuid[:8] }) }}">{{ i+1 }}. Absatz</a>
                                     {% if app.user and is_granted('edit', statement) %}
-                                        <small><a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}"
-                                                  class="underline hover:no-underline">Ändern</a></small>
+                                        <small>
+                                            <a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}"
+                                               class="underline hover:no-underline">Ändern</a>
+                                        </small>
                                     {% endif %}
                                 </h3>
 
@@ -304,9 +306,15 @@
                                     {% for freetext in paragraphContainer.freetext.before %}
                                         <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-md">
                                             {{ freetext.text }}
+                                            {% if is_granted('edit', statement) %}<a href="{{ path('app_freetext_edit', { 'uuid': freetext.uuid }) }}" class="ml-2 text-gray-400 hover:text-gray-600"><i class="fas fa-edit text-xs"></i></a>{% endif %}
+                                            {% if is_granted('own', statement) %}<a href="{{ path('app_freetext_delete', { 'uuid': freetext.uuid }) }}" class="ml-2 text-gray-400 hover:text-gray-600"><i class="fas fa-trash text-xs"></i></a>{% endif %}
                                         </div>
                                     {% endfor %}
                                 {% endif %}
+
+                                <a href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}" class="opacity-60 hover:opacity-100 inline-block mt-2 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                                    <i class="fa-solid fa-plus"></i> Text hinzufügen
+                                </a>
 
                                 {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
                                     <p class="mt-2 mb-4 p-6 bg-white border shadow text-sm md:text-md text-gray-600">
@@ -345,17 +353,22 @@
 
                                     {# Only show the full paragraph if the user can edit #}
                                     {% if app.user and is_granted('edit', statement) %}
-                                        <p class="mt-2 mb-4 p-4 bg-white shadow border text-sm md:text-md text-gray-600">{{ paragraphContainer.paragraph.text|nl2br }}</p>
+                                        <p class="mt-2 mb-0.5 p-4 bg-white shadow border text-sm md:text-md text-gray-600">{{ paragraphContainer.paragraph.text|nl2br }}</p>
                                     {% else %}
-                                        <p class="mt-2 mb-4 p-4 bg-white shadow border text-sm text-gray-300">Keine Änderungsvorschläge</p>
+                                        <p class="mt-2 mb-0.5 p-4 bg-white shadow border text-sm text-gray-300">Keine Änderungsvorschläge</p>
                                     {% endif %}
                                 {% endif %}
 
+                                <a href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'p': 'after' }) }}" class="opacity-60 hover:opacity-100 inline-block mt-2 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                                    <i class="fa-solid fa-plus"></i> Text hinzufügen
+                                </a>
 
                                 {% if paragraphContainer.freetext.after|length > 0 %}
                                     {% for freetext in paragraphContainer.freetext.after %}
                                         <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-md">
                                             {{ freetext.text }}
+                                            {% if is_granted('edit', statement) %}<a href="{{ path('app_freetext_edit', { 'uuid': freetext.uuid }) }}" class="ml-2 text-gray-400 hover:text-gray-600"><i class="fas fa-edit text-xs"></i></a>{% endif %}
+                                            {% if is_granted('own', statement) %}<a href="{{ path('app_freetext_delete', { 'uuid': freetext.uuid }) }}" class="ml-2 text-gray-400 hover:text-gray-600"><i class="fas fa-trash text-xs"></i></a>{% endif %}
                                         </div>
                                     {% endfor %}
                                 {% endif %}
