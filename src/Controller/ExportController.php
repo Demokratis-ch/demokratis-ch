@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
-class WordExportController extends AbstractController
+class ExportController extends AbstractController
 {
     #[Route('/export/{id}', name: 'app_word_export')]
     public function export(Statement $statement, Request $request): Response
@@ -31,6 +31,7 @@ class WordExportController extends AbstractController
             return $this->redirectToRoute('app_word_export_file', [
                 'id' => $statement->getId(),
                 'diffOutput' => $data['colored'] ? 1 : 0,
+                'reasons' => $data['reasons'] ? 1 : 0,
             ]);
         }
 
@@ -47,6 +48,7 @@ class WordExportController extends AbstractController
         DocumentRepository $documentRepository,
         ChosenModificationRepository $chosenModificationRepository,
         bool $diffOutput = true,
+        bool $reasons = false,
     ): BinaryFileResponse {
         $phpWord = new PhpWord();
 
@@ -80,17 +82,24 @@ class WordExportController extends AbstractController
                         $dmp[$i] = new DiffMatchPatch();
                         $paragraphs[$i]['chosen']['diff'] = $dmp[$i]->diff_main($paragraph->getText(), $chosen[$i]->getModificationStatement()->getModification()->getText(), false);
 
+                        $textRun = $section->addTextRun();
+
                         foreach ($paragraphs[$i]['chosen']['diff'] as $diff) {
                             if ($diff[0] == 0) {
-                                $section->addText($diff[1]);
+                                $textRun->addText($diff[1]);
                             } elseif ($diff[0] == -1) {
-                                $section->addText($diff[1], ['color' => 'darkRed']);
+                                $textRun->addText($diff[1], ['color' => '#991B1B', 'bgColor' => '#FEE2E2']);
                             } elseif ($diff[0] == 1) {
-                                $section->addText($diff[1], ['color' => 'darkGreen']);
+                                $textRun->addText($diff[1], ['color' => '#206D3D', 'bgColor' => '#DCFCE7']);
                             }
                         }
                     } else {
                         $section->addText($paragraphs[$i]['chosen']['modification']->getText());
+                    }
+
+                    // Show reasons, if $reasons is true
+                    if ($reasons) {
+                        $section->addText($paragraphs[$i]['chosen']['modification']->getJustification());
                     }
                 }
                 // Add linebreak
