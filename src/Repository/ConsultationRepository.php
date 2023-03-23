@@ -71,12 +71,12 @@ class ConsultationRepository extends ServiceEntityRepository
 
     public function count($status = null)
     {
-        $query = $this->createQueryBuilder('c');
+        $query = $this->createQueryBuilder('c')
+            ->where('c.organisation IS NULL');
 
         if ($status !== null) {
             $query->andWhere('c.status = :status')
                 ->setParameter('status', $status)
-                ->andWhere('c.organisation IS NULL')
             ;
         }
 
@@ -89,6 +89,7 @@ class ConsultationRepository extends ServiceEntityRepository
     {
         $result = $this->createQueryBuilder('c')
             ->select('c.status, count(c.status) as count')
+            ->andWhere('c.organisation IS NULL')
             ->groupBy('c.status')
             ->getQuery()
             ->getArrayResult();

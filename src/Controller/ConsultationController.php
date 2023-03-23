@@ -172,7 +172,7 @@ class ConsultationController extends AbstractController
     #[Route('/{slug}', name: 'app_consultation_show_statements', methods: ['GET'])]
     public function showStatements(Consultation $consultation): Response
     {
-        $this->denyAccessUnlessGranted('', $consultation);
+        $this->denyAccessUnlessGranted('show', $consultation);
 
         // Import the legal text if not done, yet
         if (count($this->documentRepository->findBy(['consultation' => $consultation, 'type' => 'proposal', 'imported' => 'fetched'])) > 0) {

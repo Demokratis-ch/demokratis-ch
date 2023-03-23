@@ -45,7 +45,7 @@ class PrivateConsultationFixtures extends Fixture implements FixtureGroupInterfa
         $consultation->setTitle('Private Vernehmlassung');
         $consultation->setDescription('Diese Vernehmlassung ist nur für Mitglieder der Organisation.');
         $consultation->setStatus('ongoing');
-        $consultation->setFedlexId('proj/2022/59/cons_1');
+        $consultation->setFedlexId('proj/2021/17/cons_1');
         $consultation->setStartDate(new \DateTimeImmutable('2022-09-12 00:00:00.0'));
         $consultation->setEndDate(new \DateTimeImmutable('2022-12-16 00:00:00.0'));
         $consultation->setOffice('Unser Verein');
@@ -57,7 +57,7 @@ class PrivateConsultationFixtures extends Fixture implements FixtureGroupInterfa
         $document->setConsultation($consultation);
         $document->setTitle('Vernehmlassungsvorlage');
         $document->setType('proposal');
-        $document->setFedlexUri('https://fedlex.data.admin.ch/eli/dl/proj/2022/59/cons_1/doc_1');
+        $document->setFedlexUri('https://fedlex.data.admin.ch/eli/dl/proj/2021/17/cons_1/doc_1');
         $document->setFilename('doc_1');
         $document->setImported('paragraphed');
 

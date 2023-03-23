@@ -19,11 +19,11 @@ class StatementIntroType extends AbstractType
     {
         $builder
             ->add('intro', TextareaType::class, [
-                'label' => 'Intro',
-                'help' => 'Hier kommt ein Hilfstext',
+                'label' => 'Einführender Text',
+                'help' => 'Hier ist der richtige Platz für Grussformeln, einleitende Worte oder ähnliches.',
                 'required' => true,
                 'attr' => [
-                    'class' => 'block p-1 w-full h-20 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 ',
+                    'class' => 'block mt-1 p-1 w-full h-20 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 ',
                 ],
             ])
             ->add('submit', SubmitType::class, [

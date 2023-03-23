@@ -1,0 +1,76 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Vernehmlassungsantwort exportieren{% endblock %}
+
+{% block body %}
+
+    {% set consultation = statement.consultation %}
+
+    <header class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {# Breadcrumbs #}
+        <nav class="flex py-4 pb-6 pt-10" aria-label="Breadcrumb">
+            <ol role="list" class="flex items-center space-x-4">
+                <li>
+                    <div>
+                        <a href="{{ path('app_index') }}" class="text-gray-400 hover:text-gray-500">
+                            <i class="fa-solid fa-house"></i>
+                            <span class="sr-only">Home</span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        <a href="{{ path('app_consultation') }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"><i class="fa-solid fa-folder-open md:hidden text-gray-400 hover:text-gray-500"></i><span class="hidden md:inline-block">Vernehmlassungen</span></a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        <a href="{{ path('app_consultation_show_statements', { 'slug': consultation.slug }) }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"><span class="hidden md:inline-block">{{ consultation.humanTitle|default(consultation.title)|u.truncate(75, '...') }}</span><span class="md:hidden">{{ consultation.humanTitle|default(consultation.title)|u.truncate(25, '...') }}</span></a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        <a href="{{ path('app_statement_show', { 'uuid': statement.uuid }) }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"><span class="hidden md:inline-block">{{ statement.name|u.truncate(75, '...') }}</span><span class="md:hidden">{{ statement.name|u.truncate(25, '...') }}</span></a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        <span class="ml-4 text-sm font-medium text-gray-500"><span class="hidden md:inline-block">Export</span></span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+    </header>
+
+    <div class="bg-white">
+        <div>
+
+            <section class="bg-gray-50 mx-8 pt-4 pb-6">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+                    <div class="mt-2">
+                        <h2 class="mt-4 text-xl text-gray-400 font-medium">Als Word-Dokument exportieren</h2>
+                        {{ form_start(form) }}
+                        <div class="mt-2 p-4 bg-white text-gray-700 shadow">
+                            {{ form_row(form.colored) }}
+                            {{ form_row(form.reasons) }}
+                            {{ form_row(form.freetext) }}
+                        </div>
+                        <div class="flex gap-2">
+                            <a href="{{ path('app_statement_show', { 'uuid': statement.uuid }) }}" class="mt-2 inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Zurück</a>
+                            {{ form_row(form.submit, { 'attr': {'class': 'mt-2 inline-flex items-center rounded-md border border-blue-300 bg-blue-100 px-4 py-2 text-sm font-medium text-blue-500 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2' }}) }}
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+{% endblock %}
