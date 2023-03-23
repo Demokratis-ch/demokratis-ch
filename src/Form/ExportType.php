@@ -28,6 +28,14 @@ class ExportType extends AbstractType
                 'label' => 'Begründungen der Änderungen mit exportieren',
                 'required' => false,
             ])
+            ->add('freetext', CheckboxType::class, [
+                'label' => 'Freitextfelder mit exportieren',
+                'required' => false,
+                'attr' => [
+                    'checked' => 'checked',
+                ],
+            ])
+
             ->add('submit', SubmitType::class, [
                 'label' => 'Exportieren',
             ])

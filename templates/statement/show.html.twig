@@ -70,9 +70,9 @@
                 {% if is_granted('own', statement) %}
                     <div class="mt-2 flex gap-2 md:mb-2" id="actions">
                         {# Export in the .odt format #}
-                        <a href="{{ path('app_word_export', { 'id': statement.id }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
-                            <i class="fa-solid fa-file-word hidden md:inline-block"></i>
-                            <span class="ml-1"><span class="hidden md:inline-block">Stellungnahme als Word</span> exportieren</span>
+                        <a href="{{ path('app_word_export', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
+                            <i class="fa-solid fa-file-export hidden md:inline-block"></i>
+                            <span class="ml-1"><span class="hidden md:inline-block">Stellungnahme</span> exportieren</span>
                         </a>
 
                         {# Approve? #}
