@@ -161,14 +161,19 @@ class ModificationController extends AbstractController
 
     #[Route('/{uuid}/{statement}', name: 'app_paragraph_edit', methods: ['GET', 'POST'])]
     #[IsGranted('edit', subject: 'statement')]
-    public function index(Paragraph $paragraph, Statement $statement, EntityManagerInterface $entityManager, Request $request, ModificationRepository $repository): Response
+    public function index(Paragraph $paragraph, Statement $statement, Request $request, EntityManagerInterface $entityManager, ModificationRepository $modificationRepository): Response
     {
         if (!$this->getUser()) {
             throw new AccessDeniedException();
         }
 
+        $mod = $request->get('mod');
+        $modifiedText = $modificationRepository->findOneBy(['uuid' => $mod]);
+
         $modification = new Modification();
-        if (!$modification->getText()) {
+        if ($modifiedText) {
+            $modification->setText($modifiedText->getText());
+        } elseif (!$modification->getText()) {
             $modification->setText($paragraph->getText());
         }
 
