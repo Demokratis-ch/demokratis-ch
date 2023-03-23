@@ -93,6 +93,9 @@ TEXT
         $statement->setName('Statement');
         $manager->persist($statement);
 
+        $consultation->setSingleStatement($statement);
+        $manager->persist($consultation);
+
         $manager->flush();
     }
 }
