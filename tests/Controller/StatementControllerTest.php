@@ -26,9 +26,9 @@ class StatementControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
 
-        $crawler = $client->clickLink('Intro');
+        $crawler = $client->clickLink('Intro Text hinzufügen');
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('label', 'Intro');
+        $this->assertSelectorTextContains('label', 'Einführender Text');
 
         $form = $crawler->selectButton('Speichern')->form();
         $form['statement_intro[intro]'] = 'Lorem Ipsum';
