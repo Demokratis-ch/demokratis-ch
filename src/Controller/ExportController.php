@@ -102,18 +102,18 @@ class ExportController extends AbstractController
                             if ($diff[0] == 0) {
                                 $textRun->addText($diff[1]);
                             } elseif ($diff[0] == -1) {
-                                $textRun->addText($diff[1], ['color' => '#991B1B', 'bgColor' => '#FEE2E2']);
+                                $textRun->addText($diff[1], ['color' => '991B1B', 'bgColor' => 'FEE2E2']);
                             } elseif ($diff[0] == 1) {
-                                $textRun->addText($diff[1], ['color' => '#206D3D', 'bgColor' => '#DCFCE7']);
+                                $textRun->addText($diff[1], ['color' => '206D3D', 'bgColor' => 'DCFCE7']);
                             }
                         }
                     } else {
                         $section->addText($paragraphs[$i]['chosen']['modification']->getText());
-                        $section->addTextBreak(1);
                     }
 
                     // Show reasons, if $reasons is true
                     if ($reasons) {
+                        $section->addTextBreak(1);
                         $section->addText($paragraphs[$i]['chosen']['modification']->getJustification(), ['color' => 'gray', 'italic' => true]);
                     }
                 }
