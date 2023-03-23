@@ -41,7 +41,7 @@ class ExportController extends AbstractController
         ]);
     }
 
-    #[Route('/export/file/{id}/{diffOutput}', name: 'app_word_export_file', methods: ['GET', 'POST'])]
+    #[Route('/export/file/{id}/{diffOutput}/{reasons}', name: 'app_word_export_file', methods: ['GET', 'POST'])]
     public function serveFile(
         Statement $statement,
         LegalTextRepository $legalTextRepository,
@@ -99,7 +99,7 @@ class ExportController extends AbstractController
 
                     // Show reasons, if $reasons is true
                     if ($reasons) {
-                        $section->addText($paragraphs[$i]['chosen']['modification']->getJustification());
+                        $section->addText($paragraphs[$i]['chosen']['modification']->getJustification(), ['color' => 'gray', 'italic' => true]);
                     }
                 }
                 // Add linebreak

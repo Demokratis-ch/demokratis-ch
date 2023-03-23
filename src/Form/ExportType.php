@@ -20,6 +20,13 @@ class ExportType extends AbstractType
             ->add('colored', CheckboxType::class, [
                 'label' => 'Vorgeschlagene Änderungen farblich hervorheben',
                 'required' => false,
+                'attr' => [
+                    'checked' => 'checked',
+                ],
+            ])
+            ->add('reasons', CheckboxType::class, [
+                'label' => 'Begründungen der Änderungen mit exportieren',
+                'required' => false,
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Exportieren',
