@@ -10,8 +10,11 @@ use App\Repository\DiscussionRepository;
 use App\Repository\DocumentRepository;
 use App\Repository\LegalTextRepository;
 use App\Repository\MediaRepository;
+use App\Repository\OrganisationRepository;
 use App\Repository\ParagraphRepository;
 use App\Repository\TagRepository;
+use App\Repository\UserOrganisationRepository;
+use App\Security\OrganisationVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,17 +38,24 @@ class ConsultationController extends AbstractController
     }
 
     #[Route('s/{filter}', name: 'app_consultation', methods: ['GET'])]
-    public function index(ConsultationRepository $consultationRepository, TagRepository $tagRepository, Request $request, string $filter = 'all'): Response
+    public function index(ConsultationRepository $consultationRepository, OrganisationRepository $organisationRepository, UserOrganisationRepository $userOrganisationRepository, TagRepository $tagRepository, Request $request, EntityManagerInterface $entityManager, string $filter = 'all'): Response
     {
         if (!in_array($filter, ['all', 'ongoing', 'planned', 'done'])) {
             throw new \Exception('Invalid filter');
         }
 
-        $tag = $this->requestStack->getCurrentRequest()->query->get('t');
+        $tag = $request->query->get('t');
         $tag = $tagRepository->findOneBy(['slug' => $tag]);
 
+        $organisationSlug = $request->query->get('cp');
+        $organisation = $organisationRepository->findOneBy(['slug' => $organisationSlug]);
+
+        if ($organisation !== null) {
+            $this->denyAccessUnlessGranted(OrganisationVoter::MEMBER, $organisation);
+        }
+
         $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $consultationRepository->getPaginator($offset, $filter, $tag);
+        $paginator = $consultationRepository->getPaginator($offset, $filter, $tag, $organisation);
         $steps = ConsultationRepository::PAGINATOR_PER_PAGE;
 
         $counts = $consultationRepository->countByStatus();
@@ -54,6 +64,8 @@ class ConsultationController extends AbstractController
             'consultations' => $paginator,
             'tags' => $tagRepository->findBy(['approved' => true]),
             'currentTag' => $tag,
+            'currentOrganisation' => $organisation,
+            'organisations' => $this->getUser() ? $organisationRepository->getOrganisationByUser($this->getUser()->getId()) : null,
             'filter' => $filter,
             'ongoingCount' => ($counts['ongoing'] ?? 0),
             'plannedCount' => ($counts['planned'] ?? 0),
@@ -67,6 +79,8 @@ class ConsultationController extends AbstractController
     #[Route('/{slug}/import', name: 'app_consultation_import_paragraphs', methods: ['GET'])]
     public function import(Consultation $consultation, DocumentRepository $documentRepository, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('', $consultation);
+
         if (count($documentRepository->findBy(['consultation' => $consultation, 'type' => 'proposal', 'imported' => 'fetched'])) === 0) {
             return $this->redirectToRoute('app_consultation_show_statements', ['slug' => $consultation->getSlug()]);
         }
@@ -83,6 +97,8 @@ class ConsultationController extends AbstractController
     #[Route('/{slug}/legal', name: 'app_consultation_show_legal', methods: ['GET'])]
     public function showLegal(Consultation $consultation, ParagraphRepository $paragraphRepository): Response
     {
+        $this->denyAccessUnlessGranted('', $consultation);
+
         // Import the legal text if not done, yet
         if (count($this->documentRepository->findBy(['consultation' => $consultation, 'type' => 'proposal', 'imported' => 'fetched'])) > 0) {
             return $this->redirectToRoute('app_consultation_import_paragraphs', ['slug' => $consultation->getSlug()]);
@@ -101,6 +117,8 @@ class ConsultationController extends AbstractController
     #[Route('/{slug}/documents', name: 'app_consultation_show_documents', methods: ['GET'])]
     public function showDocuments(Consultation $consultation, DocumentRepository $documentRepository, LegalTextRepository $legalTextRepository, Request $request, Statement $statement = null): Response
     {
+        $this->denyAccessUnlessGranted('', $consultation);
+
         // Import the legal text if not done, yet
         if (count($this->documentRepository->findBy(['consultation' => $consultation, 'type' => 'proposal', 'imported' => 'fetched'])) > 0) {
             return $this->redirectToRoute('app_consultation_import_paragraphs', ['slug' => $consultation->getSlug()]);
@@ -118,6 +136,8 @@ class ConsultationController extends AbstractController
     #[Route('/{slug}/discussion', name: 'app_consultation_index_discussion', methods: ['GET'])]
     public function indexDiscussion(Consultation $consultation, DiscussionRepository $discussionRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('', $consultation);
+
         // Import the legal text if not done, yet
         if (count($this->documentRepository->findBy(['consultation' => $consultation, 'type' => 'proposal', 'imported' => 'fetched'])) > 0) {
             return $this->redirectToRoute('app_consultation_import_paragraphs', ['slug' => $consultation->getSlug()]);
@@ -134,6 +154,8 @@ class ConsultationController extends AbstractController
     #[Route('/{slug}/media', name: 'app_consultation_index_media', methods: ['GET'])]
     public function indexMedia(Consultation $consultation, MediaRepository $mediaRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('', $consultation);
+
         // Import the legal text if not done, yet
         if (count($this->documentRepository->findBy(['consultation' => $consultation, 'type' => 'proposal', 'imported' => 'fetched'])) > 0) {
             return $this->redirectToRoute('app_consultation_import_paragraphs', ['slug' => $consultation->getSlug()]);
@@ -150,6 +172,8 @@ class ConsultationController extends AbstractController
     #[Route('/{slug}', name: 'app_consultation_show_statements', methods: ['GET'])]
     public function showStatements(Consultation $consultation): Response
     {
+        $this->denyAccessUnlessGranted('show', $consultation);
+
         // Import the legal text if not done, yet
         if (count($this->documentRepository->findBy(['consultation' => $consultation, 'type' => 'proposal', 'imported' => 'fetched'])) > 0) {
             return $this->redirectToRoute('app_consultation_import_paragraphs', ['slug' => $consultation->getSlug()]);
@@ -169,10 +193,7 @@ class ConsultationController extends AbstractController
         $legalText = $this->legalTextRepository->findOneBy(['uuid' => $lt]);
 
         if (!$legalText) {
-            $proposals = $this->documentRepository->findBy(['consultation' => $consultation, 'type' => 'proposal']);
-            if ($proposals) {
-                $legalText = $this->legalTextRepository->findOneBy(['importedFrom' => $proposals[0]]);
-            }
+            $legalText = $this->legalTextRepository->findOneBy(['consultation' => $consultation]);
         }
 
         return $legalText;

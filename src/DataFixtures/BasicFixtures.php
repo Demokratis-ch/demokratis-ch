@@ -6,6 +6,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Organisation;
 use App\Entity\User;
+use App\Entity\UserOrganisation;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -55,6 +56,20 @@ class BasicFixtures extends Fixture implements FixtureGroupInterface
         $organisation->setIsPersonalOrganisation(false);
         $manager->persist($organisation);
         $this->addReference(self::ORGA1, $organisation);
+
+        $uo = new UserOrganisation();
+        $uo->setOrganisation($organisation);
+        $uo->setUser($user);
+        $uo->setIsAdmin(false);
+
+        $manager->persist($uo);
+
+        $uo3 = new UserOrganisation();
+        $uo3->setOrganisation($organisation);
+        $uo3->setUser($user3);
+        $uo3->setIsAdmin(true);
+
+        $manager->persist($uo3);
 
         $manager->flush();
     }

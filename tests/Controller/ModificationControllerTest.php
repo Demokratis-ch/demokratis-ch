@@ -34,7 +34,7 @@ class ModificationControllerTest extends WebTestCase
 
         // new modification proposal
 
-        $crawler = $client->click($crawler->filter('.paragraph')->first()->selectLink('Ändern')->link());
+        $crawler = $client->click($crawler->filter('.paragraph')->first()->selectLink('Absatz bearbeiten')->link());
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Änderungsvorschlag');
 

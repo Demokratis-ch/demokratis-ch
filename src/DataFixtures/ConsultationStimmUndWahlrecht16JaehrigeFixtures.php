@@ -198,6 +198,14 @@ TEXT
         $statement->setName('Meine Meinung');
         $manager->persist($statement);
 
+        $statement_foreign = new Statement();
+        $statement_foreign->setPublic(true);
+
+        $statement_foreign->setOrganisation($organisation);
+        $statement_foreign->setConsultation($consultation);
+        $statement_foreign->setName('Fremde Meinung');
+        $manager->persist($statement_foreign);
+
         $manager->flush();
 
         $modification = new Modification();

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Consultation;
+use App\Entity\Organisation;
 use App\Entity\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -28,7 +29,7 @@ class ConsultationRepository extends ServiceEntityRepository
         parent::__construct($registry, Consultation::class);
     }
 
-    public function getPaginator(int $offset, string $filter = null, Tag $tag = null): Paginator
+    public function getPaginator(int $offset, string $filter = null, Tag $tag = null, Organisation $organisation = null): Paginator
     {
         $query = $this->createQueryBuilder('c')
             ->orderBy('c.startDate', 'DESC')
@@ -41,6 +42,14 @@ class ConsultationRepository extends ServiceEntityRepository
         if ($filter && $filter !== 'all') {
             $query->andWhere('c.status = :val')
                 ->setParameter('val', $filter);
+
+            if ($filter === 'done') {
+                $query->orWhere('c.status = :pendingReport')
+                    ->setParameter('pendingReport', 'pending_report')
+                    ->orWhere('c.status = :pendingAll')
+                    ->setParameter('pendingAll', 'pending_statements_report')
+                ;
+            }
         }
 
         if ($tag) {
@@ -50,16 +59,25 @@ class ConsultationRepository extends ServiceEntityRepository
             ;
         }
 
+        if ($organisation) {
+            $query->andWhere('c.organisation = :organisation')
+                ->setParameter('organisation', $organisation);
+        } else {
+            $query->andWhere('c.organisation IS NULL');
+        }
+
         return new Paginator($query->getQuery());
     }
 
     public function count($status = null)
     {
-        $query = $this->createQueryBuilder('c');
+        $query = $this->createQueryBuilder('c')
+            ->where('c.organisation IS NULL');
 
         if ($status !== null) {
             $query->andWhere('c.status = :status')
-                ->setParameter('status', $status);
+                ->setParameter('status', $status)
+            ;
         }
 
         return $query->select('count(c.id)')
@@ -71,6 +89,7 @@ class ConsultationRepository extends ServiceEntityRepository
     {
         $result = $this->createQueryBuilder('c')
             ->select('c.status, count(c.status) as count')
+            ->andWhere('c.organisation IS NULL')
             ->groupBy('c.status')
             ->getQuery()
             ->getArrayResult();
