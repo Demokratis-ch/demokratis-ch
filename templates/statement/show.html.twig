@@ -4,58 +4,17 @@
 
 {% block body %}
 
-<section class="mt-16 md:mt-8">
+    {% set consultation = statement.consultation %}
+
+    {# Consultation header #}
+    {% include 'consultation/__header.html.twig' %}
+
+    {# Consultation navigation #}
+    {% include 'consultation/__menu.html.twig' %}
+
+
+    <section class="mt-16 md:mt-8">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 my-4">
-
-        {% set consultation = statement.consultation %}
-
-        {# Breadcrumbs #}
-        <nav class="flex py-4" aria-label="Breadcrumb">
-            <ol role="list" class="flex items-center space-x-4">
-                <li>
-                    <div>
-                        <a href="{{ path('app_index') }}" class="text-gray-400 hover:text-gray-500">
-                            <i class="fa-solid fa-house"></i>
-                            <span class="sr-only">Home</span>
-                        </a>
-                    </div>
-                </li>
-                <li>
-                    <div class="flex items-center">
-                        <i class="fas fa-chevron-right text-xs text-gray-400"></i>
-                        <a href="{{ path('app_consultation') }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"><i class="fa-solid fa-folder-open md:hidden text-gray-400 hover:text-gray-500"></i><span class="hidden md:inline-block">Vernehmlassungen</span></a>
-                    </div>
-                </li>
-                <li>
-                    <div class="flex items-center">
-                        <i class="fas fa-chevron-right text-xs text-gray-400"></i>
-                        <a href="{{ path('app_consultation_show_statements', { 'slug': consultation.slug }) }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"><span class="hidden md:inline-block">{{ consultation.humanTitle|default(consultation.title)|u.truncate(75, '...') }}</span><i class="fa-solid fa-book-section md:hidden text-gray-400 hover:text-gray-500"></i></a>
-                    </div>
-                </li>
-
-                <li>
-                    <div class="flex items-center">
-                        <i class="fas fa-chevron-right text-xs text-gray-400"></i>
-                        <a href="{{ path('app_statement_show', { 'uuid': statement.uuid }) }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"><span class="hidden md:inline-block">Stellungnahme:</span> {{ statement.name|u.truncate(75, '...') }}</a>
-                    </div>
-                </li>
-
-            </ol>
-        </nav>
-
-    <h1 class="md:mt-2 text-2xl sm:text-3xl md:text-4xl xl:text-6xl font-bold tracking-tight text-gray-700">
-        {{ statement.name }}
-    </h1>
-    {% if statement.public %}
-        {% if app.user %}
-            {% if is_granted('own', statement) %}
-                <p class="mt-1 mb-3 text-md text-gray-400"><i class="fas fa-lock-open text-gray-300"></i> Die Stellungnahme ist öffentlich sichtbar</p>
-                {% endif %}
-            {% endif %}
-    {% else %}
-        <p class="mt-1 mb-3 text-md text-gray-400"><i class="fas fa-lock text-gray-300"></i> Die Stellungnahme ist nicht öffentlich sichtbar</p>
-    {% endif %}
-
     {% if statement.justification is defined and statement.justification is not null %}
         <p class="text-sm text-gray-400">
             {{ statement.justification }}
