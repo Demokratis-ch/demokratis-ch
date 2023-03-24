@@ -296,9 +296,9 @@
                                 </h3>
 
                                 {% if paragraphContainer.freetext.before|length > 0 %}
-                                    {% for freetext in paragraphContainer.freetext.before %}
+                                    {% for f, freetext in paragraphContainer.freetext.before %}
                                         <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-mdf flex">
-                                            <div class="flex-grow">
+                                            <div id="freetext_content_before_{{ f }}" class="flex-grow">
                                                 {{ freetext.text }}
                                             </div>
                                             {% if app.user %}
@@ -316,7 +316,7 @@
                                         <a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}" class="opacity-60 hover:opacity-100 inline-block mt-2 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                                             <i class="fa-solid fa-edit"></i> Absatz bearbeiten
                                         </a>
-                                        <a href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}" class="opacity-60 hover:opacity-100 inline-block mt-2 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                                        <a id="free_text_before_{{ i }}" href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}" class="opacity-60 hover:opacity-100 inline-block mt-2 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                                             <i class="fa-solid fa-plus"></i> Text hinzufügen
                                         </a>
                                     </div>
@@ -374,9 +374,9 @@
                                 </div>
 
                                 {% if paragraphContainer.freetext.after|length > 0 %}
-                                    {% for freetext in paragraphContainer.freetext.after %}
+                                    {% for f, freetext in paragraphContainer.freetext.after %}
                                         <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-mdf flex">
-                                            <div class="flex-grow">
+                                            <div id="freetext_content_after_{{ f }}" class="flex-grow">
                                                 {{ freetext.text }}
                                             </div>
                                             {% if app.user %}
@@ -390,7 +390,7 @@
                                 {% endif %}
 
                                 {% if app.user and is_granted('edit', statement) %}
-                                    <a href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'p': 'after' }) }}" class="opacity-60 hover:opacity-100 inline-block mt-2 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                                    <a id="free_text_after_{{ i }}" href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'p': 'after' }) }}" class="opacity-60 hover:opacity-100 inline-block mt-2 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                                         <i class="fa-solid fa-plus"></i> Text hinzufügen
                                     </a>
                                 {% endif %}
