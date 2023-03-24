@@ -9,8 +9,16 @@
             {{ consultation.title }}
         </h1>
     {% endif %}
-    <p class="mt-4 text-gray-400 text-sm font-normal">{{ consultation.office|default('unknown') }} / {{ consultation.institution|default('unknown') }}</p>
-    {% if consultation.startDate is defined and consultation.startDate is not null and consultation.endDate is defined and consultation.endDate is not null %}
-        <p class="mt-1 text-gray-400 text-sm font-normal">Die Vernehmlassung läuft vom {{ consultation.startDate|format_datetime('long', 'none', locale='de')|default('') }} bis {{ consultation.endDate|format_datetime('long', 'none', locale='de')|default('') }}</p>
+    <p class="mt-4 text-gray-400 text-sm font-normal">
+        {% if consultation.office is defined and consultation.office is not null %}
+            {{ consultation.office }}
+        {% endif %}
+        {% if consultation.institution is defined and consultation.institution is not null %}
+    <p class="mt-4 text-gray-400 text-sm font-normal">{{ consultation.institution }}
+        {% endif %}
+    </p>
+
+    {% if (consultation.startDate is defined and consultation.startDate is not null) or (consultation.endDate is defined and consultation.endDate is not null) %}
+        <p class="mt-1 text-gray-400 text-sm font-normal">Die Vernehmlassung läuft {% if consultation.startDate is defined and consultation.startDate is not null  %}vom {{ consultation.startDate|format_datetime('long', 'none', locale='de')|default('') }}{% endif%} {% if consultation.endDate is defined and consultation.endDate is not null %}bis {{ consultation.endDate|format_datetime('long', 'none', locale='de')|default('') }}{% endif %}</p>
     {% endif %}
 </div>

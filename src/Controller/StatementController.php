@@ -104,7 +104,7 @@ class StatementController extends AbstractController
         $legalText = $legalTextRepository->findOneBy(['uuid' => $lt]);
 
         if (!$legalText) {
-            $legalText = $legalTextRepository->findOneBy(['importedFrom' => $proposals[0]]);
+            $legalText = $legalTextRepository->findOneBy(['consultation' => $statement->getConsultation()]);
         }
 
         $paragraphsInLegalText = $paragraphRepository->findBy(['legalText' => $legalText], ['position' => 'ASC']);

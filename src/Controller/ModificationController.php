@@ -10,7 +10,6 @@ use App\Entity\Statement;
 use App\Form\AcceptRefuseType;
 use App\Form\ModificationType;
 use App\Repository\ChosenModificationRepository;
-use App\Repository\ModificationRepository;
 use App\Repository\ModificationStatementRepository;
 use App\Service\WordDiff;
 use Doctrine\ORM\EntityManagerInterface;
@@ -161,7 +160,7 @@ class ModificationController extends AbstractController
 
     #[Route('/{uuid}/{statement}', name: 'app_paragraph_edit', methods: ['GET', 'POST'])]
     #[IsGranted('edit', subject: 'statement')]
-    public function index(Paragraph $paragraph, Statement $statement, EntityManagerInterface $entityManager, Request $request, ModificationRepository $repository): Response
+    public function index(Paragraph $paragraph, Statement $statement, EntityManagerInterface $entityManager, Request $request): Response
     {
         if (!$this->getUser()) {
             throw new AccessDeniedException();

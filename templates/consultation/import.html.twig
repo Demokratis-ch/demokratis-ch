@@ -54,18 +54,20 @@
 
                                     </div>
                                 {% endif %}
-                                <h2 class="mt-4 text-xl text-gray-400 font-medium">{{ 'consultation.documents'|trans }}</h2>
-                                <div class="mt-2 p-4 bg-white text-gray-700 shadow mr-1 md:mr-8">
-                                    {% for document in documents %}
-                                        <p class="mt-2">
-                                            <a href="{{ document.fedlexFilePath }}"
-                                               target="_blank"
-                                               class="text-gray-600 hover:text-gray-500 underline hover:no-underline"
-                                            >{{ document.title }}</a>
-                                            <i class="fa-regular fa-arrow-up-right-from-square"></i>
-                                        </p>
-                                    {% endfor %}
-                                </div>
+                                {% if documents|length > 0 %}
+                                    <h2 class="mt-4 text-xl text-gray-400 font-medium">{{ 'consultation.documents'|trans }}</h2>
+                                    <div class="mt-2 p-4 bg-white text-gray-700 shadow mr-1 md:mr-8">
+                                        {% for document in documents %}
+                                            <p class="mt-2">
+                                                <a href="{{ document.fedlexFilePath }}"
+                                                   target="_blank"
+                                                   class="text-gray-600 hover:text-gray-500 underline hover:no-underline"
+                                                >{{ document.title }}</a>
+                                                <i class="fa-regular fa-arrow-up-right-from-square"></i>
+                                            </p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                         {% if not

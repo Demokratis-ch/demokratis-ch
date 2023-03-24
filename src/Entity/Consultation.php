@@ -79,6 +79,9 @@ class Consultation
     #[Gedmo\Slug(fields: ['title'])]
     private ?string $slug = null;
 
+    #[ORM\ManyToOne(inversedBy: 'consultations')]
+    private ?Organisation $organisation = null;
+
     public function __toString(): string
     {
         return substr($this->getTitle(), 0, 65).' ('.substr($this->getUuid(), 0, 8).')';
@@ -452,6 +455,18 @@ class Consultation
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getOrganisation(): ?Organisation
+    {
+        return $this->organisation;
+    }
+
+    public function setOrganisation(?Organisation $organisation): self
+    {
+        $this->organisation = $organisation;
 
         return $this;
     }

@@ -19,7 +19,6 @@ tasks:
     cmds:
       - 'php bin/console doctrine:schema:drop --force --full-database'
       - 'php bin/console doctrine:schema:create'
-      - 'php bin/console app:user:add super@test.com super 1 --superadmin'
       - 'php bin/console doctrine:fixtures:load --append'
 
   install:
@@ -60,6 +59,12 @@ tasks:
     deps: [psalm, tests]
     cmds:
       - task: csfixer
+
+  migrations:
+    desc: Runs migrations
+    cmds:
+      - 'php bin/console doctrine:migrations:migrate --no-interaction'
+      - 'php bin/console --env=test doctrine:migrations:migrate --no-interaction'
 
   fake_migrations:
     desc: Pretends that the migrations have run
