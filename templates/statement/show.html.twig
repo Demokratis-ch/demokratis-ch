@@ -171,7 +171,7 @@
                                                     <p class="text-xs text-gray-300">{{ paragraphContainer.chosen.modification.createdAt|ago }}</p>
                                                 </a>
                                             </div>
-                                            {% if is_granted('edit', statement) %}
+                                            {% if app.user and is_granted('edit', statement) %}
                                                 <a href="{{ path('app_paragraph_remove_chosen', { 'uuid': paragraphContainer.chosen.modificationStatement.uuid }) }}" class="mt-2 ml-2 underline hover:no-underline text-xs text-gray-400">Original wiederherstellen</a>
                                             {% endif %}
                                         {% endif %}
@@ -210,7 +210,7 @@
                                         {# Foreign inspirations #}
                                         {% if paragraphContainer.foreign|length > 0 %}
 
-                                            <h2 class="mt-4 text-xs text-gray-400 font-medium">Inspiration aus anderen Stellungnahmen</h2>
+                                            <h2 class="inspirations mt-4 text-xs text-gray-400 font-medium">Inspiration aus anderen Stellungnahmen</h2>
                                             {% for foreign in paragraphContainer.foreign %}
                                                 {% if is_granted('view', statement) %}
 
@@ -252,24 +252,41 @@
                                 {# Paragraph title + edit #}
                                 <h3 class="text-md pt-6 md:pt-0 text-gray-400 font-light">
                                     <a href="{{ path('app_statement_show', { 'uuid': statement.uuid, 'lt': legalText.uuid.toBase58, '_fragment': paragraphContainer.paragraph.uuid[:8] }) }}">{{ i+1 }}. Absatz</a>
-                                    {% if app.user and is_granted('edit', statement) %}
-                                        <small><a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}"
-                                                  class="underline hover:no-underline">Ändern</a></small>
-                                    {% endif %}
                                 </h3>
 
                                 {% if paragraphContainer.freetext.before|length > 0 %}
                                     {% for freetext in paragraphContainer.freetext.before %}
-                                        <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-md">
-                                            {{ freetext.text }}
+                                        <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-mdf flex">
+                                            <div class="flex-grow">
+                                                {{ freetext.text }}
+                                            </div>
+                                            {% if app.user %}
+                                            <div class="whitespace-nowrap flex-grow-0">
+                                                {% if is_granted('edit', statement) %}<a href="{{ path('app_freetext_edit', { 'uuid': freetext.uuid }) }}" class="p-1 m-1 text-gray-400 hover:text-gray-600"><i class="fas fa-edit text-xs"></i></a>{% endif %}
+                                                {% if is_granted('own', statement) %}<a href="{{ path('app_freetext_delete', { 'uuid': freetext.uuid }) }}" class="p-1 m-1 text-gray-400 hover:text-gray-600"><i class="fas fa-trash text-xs"></i></a>{% endif %}
+                                            </div>
+                                            {% endif %}
                                         </div>
                                     {% endfor %}
                                 {% endif %}
 
-                                {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
-                                    <p class="mt-2 mb-4 p-6 bg-white border shadow text-sm md:text-md text-gray-600">
-                                        {% for diff in paragraphContainer.chosen.diff %}
-                                            <span class="{% if diff[0] == -1 %}
+                                {% if app.user and is_granted('edit', statement) %}
+                                    <div class="flex gap-2">
+                                        <a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}" class="opacity-60 hover:opacity-100 inline-block mt-2 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                                            <i class="fa-solid fa-edit"></i> Absatz bearbeiten
+                                        </a>
+                                        <a href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}" class="opacity-60 hover:opacity-100 inline-block mt-2 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                                            <i class="fa-solid fa-plus"></i> Text hinzufügen
+                                        </a>
+                                    </div>
+                                {% endif %}
+
+                                <div class="my-2">
+                                    {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
+                                        <div class="mt-2 mb-0.5 bg-white shadow border">
+                                            <p class="p-4 text-sm md:text-md text-gray-600 border-l-8 border-blue-300">
+                                                {% for diff in paragraphContainer.chosen.diff %}
+                                                    <span class="{% if diff[0] == -1 %}
                                                             bg-red-100
                                                             line-through
                                                             text-red-800
@@ -279,43 +296,62 @@
                                                         {% endif %}">
                                                         {{ diff[1]|nl2br }}
                                                     </span>
-                                        {% endfor %}
-                                    </p>
-                                    {% if paragraphContainer.chosen.modification.justification is defined and paragraphContainer.chosen.modification.justification is not null %}
-                                        <div class="bg-gray-100 shadow px-4 py-2 -mt-6 mb-6 text-gray-400">
-                                            {{ paragraphContainer.chosen.modification.justification }}
+                                                {% endfor %}
+                                            </p>
                                         </div>
-                                    {% endif %}
+                                        {% if paragraphContainer.chosen.modification.justification is defined and paragraphContainer.chosen.modification.justification is not null %}
+                                            <div class="bg-gray-100 shadow px-4 py-2 -mt-6 mb-6 text-gray-400">
+                                                {{ paragraphContainer.chosen.modification.justification }}
+                                            </div>
+                                        {% endif %}
 
-                                    {% if paragraphContainer.chosen.peers|length > 0 %}
-                                        <div class="text-xs text-gray-400 -mt-1 mb-8">
-                                            Dieser Vorschlag ist auch Teil folgender Stellungnahmen:
-                                            {% for peer in paragraphContainer.chosen.peers %}
-                                                {% if peer.statement != statement %}
+                                        {% if paragraphContainer.chosen.peers|length > 0 %}
+                                            <div class="text-xs text-gray-400 mt-2 mb-8">
+                                                Dieser Vorschlag ist auch Teil folgender Stellungnahmen:
+                                                {% for peer in paragraphContainer.chosen.peers %}
+                                                    {% if peer.statement != statement %}
                                                         <a href="{{ path('app_statement_show', { 'uuid': peer.statement.uuid }) }}" target="_blank"
-                                                           class="underline hover:no-underline">{{ peer.statement }}</a>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
+                                                           class="related-statement underline hover:no-underline">{{ peer.statement }}</a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
 
-                                {% else %}
-
-                                    {# Only show the full paragraph if the user can edit #}
-                                    {% if app.user and is_granted('edit', statement) %}
-                                        <p class="mt-2 mb-4 p-4 bg-white shadow border text-sm md:text-md text-gray-600">{{ paragraphContainer.paragraph.text|nl2br }}</p>
                                     {% else %}
-                                        <p class="mt-2 mb-4 p-4 bg-white shadow border text-sm text-gray-300">Keine Änderungsvorschläge</p>
-                                    {% endif %}
-                                {% endif %}
 
+                                        {# Only show the full paragraph if the user can edit #}
+                                        {% if app.user and is_granted('edit', statement) %}
+                                            <div class="mt-2 mb-0.5 bg-white shadow border">
+                                                <p class="p-4 text-sm md:text-md text-gray-600 border-l-8 border-gray-300">
+                                                    {{ paragraphContainer.paragraph.text|nl2br }}
+                                                </p>
+                                            </div>
+                                        {% else %}
+                                            <p class="mt-2 mb-0.5 p-4 bg-white shadow border text-sm text-gray-300">Keine Änderungsvorschläge</p>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
 
                                 {% if paragraphContainer.freetext.after|length > 0 %}
                                     {% for freetext in paragraphContainer.freetext.after %}
-                                        <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-md">
-                                            {{ freetext.text }}
+                                        <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-mdf flex">
+                                            <div class="flex-grow">
+                                                {{ freetext.text }}
+                                            </div>
+                                            {% if app.user %}
+                                                <div class="whitespace-nowrap flex-grow-0">
+                                                    {% if is_granted('edit', statement) %}<a href="{{ path('app_freetext_edit', { 'uuid': freetext.uuid }) }}" class="p-1 m-1 text-gray-400 hover:text-gray-600"><i class="fas fa-edit text-xs"></i></a>{% endif %}
+                                                    {% if is_granted('own', statement) %}<a href="{{ path('app_freetext_delete', { 'uuid': freetext.uuid }) }}" class="p-1 m-1 text-gray-400 hover:text-gray-600"><i class="fas fa-trash text-xs"></i></a>{% endif %}
+                                                </div>
+                                            {% endif %}
                                         </div>
                                     {% endfor %}
+                                {% endif %}
+
+                                {% if app.user and is_granted('edit', statement) %}
+                                    <a href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'p': 'after' }) }}" class="opacity-60 hover:opacity-100 inline-block mt-2 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                                        <i class="fa-solid fa-plus"></i> Text hinzufügen
+                                    </a>
                                 {% endif %}
 
                             </div>

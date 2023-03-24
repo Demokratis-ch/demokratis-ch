@@ -63,5 +63,40 @@ class StatementControllerTest extends WebTestCase
         $client->followRedirect();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
         $this->assertSelectorTextContains('#actions > a:nth-child(3)', 'Für Beiträge Dritter öffnen');
+
+        // Foreign statement
+
+        $client->clickLink('Pa.Iv. Aktives Stimm- und Wahlrecht für 16-Jährige');
+        $this->assertSelectorTextContains('h1', 'Pa.Iv. Aktives Stimm- und Wahlrecht für 16-Jährige');
+        $client->clickLink('Fremde Meinung');
+        $this->assertSelectorTextContains('h1', 'Fremde Meinung');
+        $this->assertSelectorTextContains('.inspirations', 'Inspiration aus anderen Stellungnahmen');
+
+        $crawler = $client->clickLink('test@test.com');
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('h1', 'Änderungsvorschlag');
+        $this->assertSelectorTextContains('h2', 'Vorschlag von test@test.com');
+
+        $form = $crawler->selectButton('Übernehmen')->form();
+        $form['accept_refuse[reason]']->setValue('This is the reason');
+        $client->submit($form);
+        $client->followRedirect();
+        $client->followRedirect();
+
+        $this->assertSelectorTextContains('h1', 'Fremde Meinung');
+        $this->assertSelectorTextContains('.related-statement', 'Meine Meinung');
+
+        $crawler = $client->clickLink('Absatz bearbeiten');
+        $form = $crawler->selectButton('Speichern')->form();
+        $form['modification[text]']->setValue('A completely different text');
+        $client->submit($form);
+        $client->followRedirect();
+
+        $crawler = $client->clickLink('admin@test.com');
+        $form = $crawler->selectButton('Übernehmen')->form();
+        $form['accept_refuse[reason]']->setValue('This is another reason');
+        $client->submit($form);
+        $client->followRedirect();
+        $client->followRedirect();
     }
 }

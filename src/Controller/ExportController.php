@@ -8,7 +8,7 @@ use App\Repository\ChosenModificationRepository;
 use App\Repository\DocumentRepository;
 use App\Repository\FreeTextRepository;
 use App\Repository\LegalTextRepository;
-use DiffMatchPatch\DiffMatchPatch;
+use App\Service\WordDiff;
 use PhpOffice\PhpWord\PhpWord;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -20,7 +20,7 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class ExportController extends AbstractController
 {
-    #[Route('/export/{uuid}', name: 'app_word_export')]
+    #[Route('/export/{uuid}', name: 'app_word_export', methods: ['GET', 'POST'])]
     public function export(Statement $statement, Request $request): Response
     {
         $form = $this->createForm(ExportType::class);
@@ -43,7 +43,7 @@ class ExportController extends AbstractController
         ]);
     }
 
-    #[Route('/export/file/{uuid}/{diffOutput}/{reasons}/{freetext}', name: 'app_word_export_file', methods: ['GET', 'POST'])]
+    #[Route('/export/file/{uuid}/{diffOutput}/{reasons}/{freetext}', name: 'app_word_export_file', methods: ['GET'])]
     public function serveFile(
         Statement $statement,
         LegalTextRepository $legalTextRepository,
@@ -93,8 +93,8 @@ class ExportController extends AbstractController
 
                     // Show diff, if $diffOutput is true
                     if ($diffOutput) {
-                        $dmp[$i] = new DiffMatchPatch();
-                        $paragraphs[$i]['chosen']['diff'] = $dmp[$i]->diff_main($paragraph->getText(), $chosen[$i]->getModificationStatement()->getModification()->getText(), false);
+                        $wd[$i] = new WordDiff();
+                        $paragraphs[$i]['chosen']['diff'] = $wd[$i]->diff($paragraph->getText(), $chosen[$i]->getModificationStatement()->getModification()->getText());
 
                         $textRun = $section->addTextRun();
 
