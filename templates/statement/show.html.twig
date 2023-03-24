@@ -251,7 +251,7 @@
                                         {# Foreign inspirations #}
                                         {% if paragraphContainer.foreign|length > 0 %}
 
-                                            <h2 class="mt-4 text-xs text-gray-400 font-medium">Inspiration aus anderen Stellungnahmen</h2>
+                                            <h2 class="inspirations mt-4 text-xs text-gray-400 font-medium">Inspiration aus anderen Stellungnahmen</h2>
                                             {% for foreign in paragraphContainer.foreign %}
                                                 {% if is_granted('view', statement) %}
 
@@ -347,12 +347,12 @@
                                         {% endif %}
 
                                         {% if paragraphContainer.chosen.peers|length > 0 %}
-                                            <div class="text-xs text-gray-400 -mt-1 mb-8">
+                                            <div class="text-xs text-gray-400 mt-2 mb-8">
                                                 Dieser Vorschlag ist auch Teil folgender Stellungnahmen:
                                                 {% for peer in paragraphContainer.chosen.peers %}
                                                     {% if peer.statement != statement %}
                                                         <a href="{{ path('app_statement_show', { 'uuid': peer.statement.uuid }) }}" target="_blank"
-                                                           class="underline hover:no-underline">{{ peer.statement }}</a>
+                                                           class="related-statement underline hover:no-underline">{{ peer.statement }}</a>
                                                     {% endif %}
                                                 {% endfor %}
                                             </div>
