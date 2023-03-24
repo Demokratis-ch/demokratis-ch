@@ -39,6 +39,7 @@ class ConsultationController extends AbstractController
 
     #[Route('s/{filter}', name: 'app_consultation', methods: ['GET'])]
     public function index(ConsultationRepository $consultationRepository, OrganisationRepository $organisationRepository, UserOrganisationRepository $userOrganisationRepository, TagRepository $tagRepository, Request $request, EntityManagerInterface $entityManager, string $filter = 'all'): Response
+
     {
         if (!in_array($filter, ['all', 'ongoing', 'planned', 'done'])) {
             throw new \Exception('Invalid filter');
