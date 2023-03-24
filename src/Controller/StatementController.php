@@ -19,7 +19,7 @@ use App\Repository\ModificationRepository;
 use App\Repository\ModificationStatementRepository;
 use App\Repository\ParagraphRepository;
 use App\Repository\StatementRepository;
-use DiffMatchPatch\DiffMatchPatch;
+use App\Service\WordDiff;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -122,8 +122,8 @@ class StatementController extends AbstractController
             $chosen = $chosens[$paragraph->getId()] ?? null;
             $foreign = $foreignModifications[$paragraph->getId()] ?? [];
             if ($chosen) {
-                $dmp[$i] = new DiffMatchPatch();
-                $diff = $dmp[$i]->diff_main($paragraph->getText(), $chosen->getModificationStatement()->getModification()->getText(), false);
+                $wd[$i] = new WordDiff();
+                $diff = $wd[$i]->diff($paragraph->getText(), $chosen->getModificationStatement()->getModification()->getText());
                 $peers = $peersIndexed[$chosen->getModificationStatement()->getModification()->getId()] ?? [];
 
                 // Remove chosen from foreign modifications
