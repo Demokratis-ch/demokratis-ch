@@ -359,17 +359,11 @@
                                         {% endif %}
 
                                     {% else %}
-
-                                        {# Only show the full paragraph if the user can edit #}
-                                        {% if app.user and is_granted('edit', statement) %}
-                                            <div class="mt-2 mb-0.5 bg-white shadow border">
-                                                <p class="p-4 text-sm md:text-md text-gray-600 border-l-8 border-gray-300">
-                                                    {{ paragraphContainer.paragraph.text|nl2br }}
-                                                </p>
-                                            </div>
-                                        {% else %}
-                                            <p class="mt-2 mb-0.5 p-4 bg-white shadow border text-sm text-gray-300">Keine Änderungsvorschläge</p>
-                                        {% endif %}
+                                        <div class="mt-2 mb-0.5 bg-white shadow border">
+                                            <p class="p-4 text-sm md:text-md text-gray-600 border-l-8 border-gray-300">
+                                                {{ paragraphContainer.paragraph.text|nl2br }}
+                                            </p>
+                                        </div>
                                     {% endif %}
                                 </div>
 
