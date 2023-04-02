@@ -7,6 +7,7 @@ use App\Entity\Comment;
 use App\Entity\Consultation;
 use App\Entity\Discussion;
 use App\Entity\Document;
+use App\Entity\FreeText;
 use App\Entity\LegalText;
 use App\Entity\Media;
 use App\Entity\Modification;
@@ -228,10 +229,18 @@ TEXT
         );
 
         $modification->setParagraph($paragraph1);
+        $modification->setJustification('Ich finde das so besser, da es inklusiver und schwammiger formuliert ist.');
         $manager->persist($modification);
 
         $modificationStatement = new ModificationStatement();
         $modificationStatement->setStatement($statement);
+        $modificationStatement->setModification($modification);
+        $modificationStatement->setRefused(false);
+        $modificationStatement->setDecisionReason('');
+        $manager->persist($modificationStatement);
+
+        $modificationStatement = new ModificationStatement();
+        $modificationStatement->setStatement($statement_foreign);
         $modificationStatement->setModification($modification);
         $modificationStatement->setRefused(false);
         $manager->persist($modificationStatement);
@@ -321,6 +330,21 @@ TEXT
         $comment11->setCreatedAt(new \DateTimeImmutable('-12days'));
         $manager->persist($comment11);
 
+        $manager->flush();
+
+        $freeText1 = new FreeText();
+        $freeText1->setStatement($statement);
+        $freeText1->setParagraph($paragraph1);
+        $freeText1->setPosition('before');
+        $freeText1->setText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat nibh ex, nec suscipit ligula mollis at. Curabitur tincidunt tincidunt mi, vel tincidunt magna elementum ut.');
+        $manager->persist($freeText1);
+
+        $freeText2 = new FreeText();
+        $freeText2->setStatement($statement);
+        $freeText2->setParagraph($paragraph2);
+        $freeText2->setPosition('after');
+        $freeText2->setText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat nibh ex, nec suscipit ligula mollis at. Curabitur tincidunt tincidunt mi, vel tincidunt magna elementum ut.');
+        $manager->persist($freeText2);
         $manager->flush();
     }
 }

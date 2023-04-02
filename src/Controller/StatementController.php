@@ -135,12 +135,6 @@ class StatementController extends AbstractController
                         $paragraphs[$i]['foreign'] = null;
                     }
                 }
-
-                $collapse = false;
-            }
-
-            if (!empty($paragraphs[$i]['modifications']) > 0 || !empty($paragraphs[$i]['refused']) > 0 || !empty($paragraphs[$i]['foreign']) > 0) {
-                $collapse = false;
             }
         }
 
@@ -153,7 +147,6 @@ class StatementController extends AbstractController
             'statement' => $statement,
             'approved' => $approved,
             'approvals' => $approvals,
-            'collapse' => $collapse,
         ]);
     }
 
