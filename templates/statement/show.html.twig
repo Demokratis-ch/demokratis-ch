@@ -195,7 +195,7 @@
                             <div id="{{ paragraphContainer.paragraph.uuid[:8] }}" class="paragraph scroll-mt-20 col-span-5 md:row-start-1 {% if collapse %}md:col-span-4{% else %}md:col-span-3 md:col-start-2{% endif %}">
 
                                 {# Paragraph title #}
-                                <h3 class="text-md pt-6 md:pt-0 text-gray-400 font-light">
+                                <h3 class="text-xl pt-6 md:pt-0 text-gray-400 font-light">
                                     <a href="{{ path('app_statement_show', { 'uuid': statement.uuid, 'lt': legalText.uuid.toBase58, '_fragment': paragraphContainer.paragraph.uuid[:8] }) }}">{{ i+1 }}. Absatz</a>
                                 </h3>
 

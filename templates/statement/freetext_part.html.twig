@@ -26,7 +26,7 @@
     {% endif %}
 
     {% if app.user and is_granted('edit', statement) and collapse == false %}
-        <div class="col-start-1 flex flex-row md:flex-col items-end">
+        <div class="col-start-1 col-span-4 md:col-span-1 flex flex-row md:flex-col items-end -my-3">
             <a href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'p': position }) }}" class="opacity-60 hover:opacity-100 inline-block m-1 nowrap p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                 Text hinzufügen <i class="fa-solid fa-pen ml-2"></i> <i class="fa-solid fa-arrow-right"></i>
             </a>

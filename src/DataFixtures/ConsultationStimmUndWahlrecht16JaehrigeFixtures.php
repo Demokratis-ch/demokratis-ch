@@ -227,10 +227,41 @@ In den Nationalrat, in den Bundesrat und in das Bundesgericht sind alle Stimmber
 
 TEXT
         );
-
         $modification->setParagraph($paragraph1);
         $modification->setJustification('Ich finde das so besser, da es inklusiver und schwammiger formuliert ist.');
         $manager->persist($modification);
+
+        for ($x = 0; $x <= 6; $x++) {
+            $genericModification = new Modification();
+            $genericModification->setCreatedBy($user);
+            $genericModification->setText(
+                <<<TEXT
+I
+
+Die Bundesverfassung wird wie folgt geändert:
+
+Art. 136 Abs. 1
+
+1 
+Die politischen Rechte in Bundessachen stehen allen Schweizer*n zu, die das 16. Altersjahr zurückgelegt haben und die nicht wegen Geisteskrankheit, Geistesschwäche oder anderen Gründen entmündigt sind. Alle haben die gleichen politischen Rechte und Pflichten.
+
+Art. 143
+In den Nationalrat, in den Bundesrat und in das Bundesgericht sind alle Stimmberechtigten wählbar, die das 18. Altersjahr zurückgelegt haben.
+
+TEXT
+            );
+            $genericModification->setParagraph($paragraph1);
+            $genericModification->setJustification('Ich finde das so besser, da es inklusiver und schwammiger formuliert ist.');
+            $genericModification->setCreatedAt(new \DateTimeImmutable('-'.$x.'days'));
+            $manager->persist($genericModification);
+
+            $modificationStatement = new ModificationStatement();
+            $modificationStatement->setStatement($statement);
+            $modificationStatement->setModification($genericModification);
+            $modificationStatement->setRefused(false);
+            $modificationStatement->setDecisionReason('');
+            $manager->persist($modificationStatement);
+        }
 
         $modificationStatement = new ModificationStatement();
         $modificationStatement->setStatement($statement);

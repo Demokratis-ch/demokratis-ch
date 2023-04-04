@@ -1,23 +1,23 @@
 {% set hasChosen = paragraphContainer.chosen|default(null) is not null %}
-{% set hasModifications = paragraphContainer.chosen|default(null) is not null or paragraphContainer.modifications|length > 0 or paragraphContainer.foreign|length > 0 %}
+{% set hasModifications = paragraphContainer.chosen|default(null) is not null or paragraphContainer.modifications|length > 0 %}
+{% set modificationsCount = (paragraphContainer.chosen|default(null) is not null ? 1 : 0) + paragraphContainer.modifications|length %}
 {% set hasJustification = hasChosen and paragraphContainer.chosen.modification.justification|default(null) is not null %}
 {% set hasPeers = hasChosen and paragraphContainer.chosen.peers|length > 0 %}
 
 <div class="grid grid-cols-4 md:gap-x-4">
 
     {% if collapse == false %}
-
         <div class="col-span-4 mb-2 md:col-span-1 md:col-start-1 md:row-start-2 flex flex-row md:flex-col items-end">
 
             {% if app.user and is_granted('edit', statement) %}
+                <a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}" class="opacity-60 hover:opacity-100 inline-block m-1 nowrap p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                    Änderung vorschlagen <i class="fa-solid fa-edit ml-2"></i>
+                </a>
                 {% if paragraphContainer.chosen|default(null) is not null %}
                     <a href="{{ path('app_paragraph_remove_chosen', { 'uuid': paragraphContainer.chosen.modificationStatement.uuid }) }}" class="opacity-60 hover:opacity-100 inline-block m-1 nowrap p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                         Original wiederherstellen <i class="fa-solid fa-undo ml-2"></i>
                     </a>
                 {% endif %}
-                <a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}" class="opacity-60 hover:opacity-100 inline-block m-1 nowrap p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
-                    Änderung vorschlagen <i class="fa-solid fa-edit ml-2"></i>
-                </a>
             {% endif %}
 
         </div>
@@ -30,29 +30,32 @@
 
         {% if hasModifications %}
             <div class="bg-gray-100 border border-gray-200 border-b-0 rounded-t mx-2 p-2">
-                <div class="grid grid-cols-4">
+                <div class="grid grid-cols-2 md:grid-cols-4">
+
+                    {% set itemsCount = 0 %}
 
                     {# Currently chosen #}
                     {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
-                        <div class="relative mx-1 p-2 border bg-white hover:bg-gray-50 rounded-lg border-2 border-green-400 text-sm text-gray-500">
+                        <div class="relative mx-1 p-2 border bg-white hover:bg-gray-50 rounded-lg border-2 border-blue-400 text-sm text-gray-500">
                             <a class="after:absolute after:inset-0" href="{{ path('app_paragraph_diff', { 'modification_uuid': paragraphContainer.chosen.modification.uuid, 'statement_uuid': statement.uuid }) }}">
                                 {{ paragraphContainer.chosen.modification.createdBy }} <span class="text-xs text-gray-300">#{{ paragraphContainer.chosen.modification.uuid[:3] }}</span>
                                 <p class="text-xs text-gray-300">{{ paragraphContainer.chosen.modification.createdAt|ago }}</p>
                             </a>
                         </div>
+                        {% set itemsCount = itemsCount + 1 %}
                     {% endif %}
 
                     {# Proposed modifications #}
-                    {% if paragraphContainer.modifications|length > 0 %}
-                        {% for n, modification in paragraphContainer.modifications %}
-                            <div class="relative m-1 p-2 border bg-gray-50 hover:bg-white rounded-lg border-gray-200 text-sm text-gray-400 hover:text-gray-500">
-                                <a class="after:absolute after:inset-0" href="{{ path('app_paragraph_diff', { 'modification_uuid': modification.uuid, 'statement_uuid': statement.uuid }) }}">
-                                    {{ modification.createdBy }} <span class="text-xs text-gray-300">#{{ modification.uuid[:3] }}</span>
-                                    <p class="text-xs text-gray-300">{{ modification.createdAt|ago }}</p>
-                                </a>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
+                    {% set proposed = paragraphContainer.modifications|slice(1, 4 - itemsCount) %}
+                    {% set itemsCount = itemsCount + proposed|length %}
+                    {% for n, modification in proposed %}
+                        <div class="relative m-1 p-2 border bg-gray-50 hover:bg-white rounded-lg border-gray-200 text-sm text-gray-400 hover:text-gray-500">
+                            <a class="after:absolute after:inset-0" href="{{ path('app_paragraph_diff', { 'modification_uuid': modification.uuid, 'statement_uuid': statement.uuid }) }}">
+                                {{ modification.createdBy }} <span class="text-xs text-gray-300">#{{ modification.uuid[:3] }}</span>
+                                <p class="text-xs text-gray-300">{{ modification.createdAt|ago }}</p>
+                            </a>
+                        </div>
+                    {% endfor %}
 
 
                     {# Refused #}
@@ -73,6 +76,7 @@
 
 
                     {# Foreign inspirations #}
+                    {#
                     {% if paragraphContainer.foreign|length > 0 %}
 
                         <h2 class="inspirations mt-4 text-xs text-gray-400 font-medium">Inspiration aus anderen Stellungnahmen</h2>
@@ -87,7 +91,7 @@
                             {% endif %}
                         {% endfor %}
                     {% endif %}
-
+                    #}
 
                     {#
                     {% if paragraphContainer.former is defined and paragraphContainer.former is not null %}
@@ -113,19 +117,21 @@
 
                 </div>
 
-                {#
+                {% if itemsCount >= 4 %}
                 <div class="">
+                    {# todo: link to the chosen or first modification #}
                     <a href="#" class="mt-2 ml-2 underline hover:no-underline text-xs text-gray-400">
-                        alle anzeigen ({{ paragraphContainer.modifications|length + 1 }}) <i class="fas fa-caret-down"></i>
+                        Alle Änderungsvorschläge ansehen ({{ modificationsCount }}) <i class="fas fa-caret-right"></i>
                     </a>
                 </div>
-                #}
+                {% endif %}
+
             </div>
         {% endif %}
     </div>
 
     {# Display paragraph #}
-    <div class="paragraph scroll-mt-20 col-span-5 md:row-start-2 {% if collapse %}md:col-span-4{% else %}md:col-span-3 md:col-start-2{% endif %}">
+    <div class="paragraph z-10 scroll-mt-20 col-span-5 md:row-start-2 {% if collapse %}md:col-span-4{% else %}md:col-span-3 md:col-start-2{% endif %}">
 
         {% if paragraphContainer.chosen|default(null) is not null %}
             <div class="bg-white shadow border">
@@ -155,17 +161,18 @@
     </div>
 
 
-    {# display justification #}
 
         <div class="scroll-mt-20 col-span-5 md:row-start-3 {% if collapse %}md:col-span-4{% else %}md:col-span-3 md:col-start-2{% endif %}">
 
             {% if hasJustification or hasPeers %}
+                {# display justification #}
                 <div class="bg-gray-100 border border-gray-200 border-t-0 rounded-b mx-2 p-2 text-gray-500 text-sm">
                     {% if hasJustification %}
                         <div>
                             {{ paragraphContainer.chosen.modification.justification }}
                         </div>
                     {% endif %}
+                </div>
 
                     {% if hasJustification %}
                         <div class="text-xs text-gray-400 mt-3">
@@ -179,7 +186,6 @@
                         </div>
                     {% endif %}
 
-                </div>
             {% endif %}
 
         </div>
