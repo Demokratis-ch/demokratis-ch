@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    #[Route('/user', name: 'app_user', methods: ['GET'])]
+    #[Route('/profile', name: 'app_user', methods: ['GET'])]
     public function dashboardAction(): Response
     {
         return $this->render('user/dashboard.html.twig');
