@@ -231,7 +231,7 @@ TEXT
         $modification->setJustification('Ich finde das so besser, da es inklusiver und schwammiger formuliert ist.');
         $manager->persist($modification);
 
-        for ($x = 0; $x <= 6; $x++) {
+        for ($x = 0; $x <= 6; ++$x) {
             $genericModification = new Modification();
             $genericModification->setCreatedBy($user);
             $genericModification->setText(
