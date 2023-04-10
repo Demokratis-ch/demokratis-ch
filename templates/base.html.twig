@@ -34,8 +34,8 @@
         {% endif -%}
 
     </head>
-    <body data-controller="visibility">
-    <nav class="bg-white shadow fixed top-0 w-full z-40">
+    <body>
+    <nav class="bg-white shadow fixed top-0 w-full z-40" data-controller="visibility">
         <div class="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
             <div class="flex h-16 justify-between">
                 <div class="flex px-2 lg:px-0">
@@ -113,8 +113,7 @@
         </div>
 
         <!-- Mobile menu, show/hide based on menu state. -->
-
-        <div data-visibility-target="hideable" class="hidden" id="mobile-menu">
+         <div data-visibility-target="hideable" class="hidden" id="mobile-menu">
             <div class="space-y-1 pt-2 pb-3">
                 {{ knp_menu_render('menu', {'template': 'menu/mobile.html.twig', 'currentClass': 'classname'}) }}
             </div>
