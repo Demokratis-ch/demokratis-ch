@@ -4,10 +4,16 @@
 {% set hasJustification = hasChosen and paragraphContainer.chosen.modification.justification|default(null) is not null %}
 {% set hasPeers = hasChosen and paragraphContainer.chosen.peers|length > 0 %}
 
-<div class="grid grid-cols-4 md:gap-x-4">
+<div class="grid grid-cols-4 lg:gap-x-4">
 
     {% if collapse == false %}
-        <div class="col-span-4 mb-2 md:col-span-1 md:col-start-1 md:row-start-2 flex flex-row md:flex-col items-end">
+        <div class="col-span-4 lg:col-span-1 lg:col-start-1 lg:row-start-1 flex flex-row lg:flex-col items-end">
+            <a href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'p': 'before' }) }}" class="opacity-60 hover:opacity-100 inline-block m-1 nowrap p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                Text hinzufügen <i class="fa-solid fa-pen ml-2"></i> <i class="fa-solid fa-arrow-up-right hidden lg:inline-block"></i>
+            </a>
+        </div>
+
+        <div class="col-span-4 lg:col-span-1 lg:col-start-1 lg:row-start-2 flex flex-row lg:flex-col items-end mb-2 lg:mb-0">
 
             {% if app.user and is_granted('edit', statement) %}
                 <a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}" class="opacity-60 hover:opacity-100 inline-block m-1 nowrap p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
@@ -19,29 +25,31 @@
                     </a>
                 {% endif %}
             {% endif %}
-
         </div>
+
+        <div class="col-span-4 row-start-6 lg:col-span-1 lg:col-start-1 lg:row-start-3 lg:row-span-1 flex flex-row lg:flex-col items-end mt-2 lg:mt-2">
+            <div class="mt-auto">
+
+                <a href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'p': 'after' }) }}" class="opacity-60 hover:opacity-100 inline-block m-1 nowrap p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                    Text hinzufügen <i class="fa-solid fa-pen ml-2"></i> <i class="fa-solid fa-arrow-down-right hidden lg:inline-block"></i>
+                </a>
+            </div>
+        </div>
+
     {% endif %}
 
-
-
     {# Display modifications #}
-    <div class="scroll-mt-20 col-span-5 md:row-start-1 {% if collapse %}md:col-span-4{% else %}md:col-span-3 md:col-start-2{% endif %}">
 
-        {% if hasModifications %}
+    {% if hasModifications %}
+        <div class="scroll-mt-20 col-span-5 lg:row-start-1 {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %}">
             <div class="bg-gray-100 border border-gray-200 border-b-0 rounded-t mx-2 p-2">
-                <div class="grid grid-cols-2 md:grid-cols-4">
+                <div class="grid grid-cols-2 lg:grid-cols-4">
 
                     {% set itemsCount = 0 %}
 
                     {# Currently chosen #}
                     {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
-                        <div class="relative mx-1 p-2 border bg-white hover:bg-gray-50 rounded-lg border-2 border-blue-400 text-sm text-gray-500">
-                            <a class="after:absolute after:inset-0" href="{{ path('app_paragraph_diff', { 'modification_uuid': paragraphContainer.chosen.modification.uuid, 'statement_uuid': statement.uuid }) }}">
-                                {{ paragraphContainer.chosen.modification.createdBy }} <span class="text-xs text-gray-300">#{{ paragraphContainer.chosen.modification.uuid[:3] }}</span>
-                                <p class="text-xs text-gray-300">{{ paragraphContainer.chosen.modification.createdAt|ago }}</p>
-                            </a>
-                        </div>
+                        {% include 'statement/modification_button.html.twig' with { modification: paragraphContainer.chosen.modification, statement, chosen: true } only %}
                         {% set itemsCount = itemsCount + 1 %}
                     {% endif %}
 
@@ -49,14 +57,8 @@
                     {% set proposed = paragraphContainer.modifications|slice(1, 4 - itemsCount) %}
                     {% set itemsCount = itemsCount + proposed|length %}
                     {% for n, modification in proposed %}
-                        <div class="relative m-1 p-2 border bg-gray-50 hover:bg-white rounded-lg border-gray-200 text-sm text-gray-400 hover:text-gray-500">
-                            <a class="after:absolute after:inset-0" href="{{ path('app_paragraph_diff', { 'modification_uuid': modification.uuid, 'statement_uuid': statement.uuid }) }}">
-                                {{ modification.createdBy }} <span class="text-xs text-gray-300">#{{ modification.uuid[:3] }}</span>
-                                <p class="text-xs text-gray-300">{{ modification.createdAt|ago }}</p>
-                            </a>
-                        </div>
+                        {% include 'statement/modification_button.html.twig' with { modification, statement, chosen: false } only %}
                     {% endfor %}
-
 
                     {# Refused #}
                     {#
@@ -127,15 +129,14 @@
                 {% endif %}
 
             </div>
-        {% endif %}
-    </div>
+        </div>
+    {% endif %}
 
     {# Display paragraph #}
-    <div class="paragraph z-10 scroll-mt-20 col-span-5 md:row-start-2 {% if collapse %}md:col-span-4{% else %}md:col-span-3 md:col-start-2{% endif %}">
-
+    <div class="paragraph z-10 col-span-5 {% if hasModifications %}lg:row-start-2 lg:row-span-2 {% else %}lg:row-start-1 lg:row-span-3 {% endif%} {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %} flex flex-col">
         {% if paragraphContainer.chosen|default(null) is not null %}
-            <div class="bg-white shadow border">
-                <p class="p-4 text-sm md:text-md text-gray-600 border-l-8 border-blue-300">
+            <div class="flex-grow bg-white shadow border">
+                <p class="h-full p-4 text-sm lg:text-md text-gray-600 border-l-8 border-blue-300">
                     {% for diff in paragraphContainer.chosen.diff %}
                         <span class="{% if diff[0] == -1 %}
                                                             bg-red-100
@@ -151,44 +152,34 @@
                 </p>
             </div>
         {% else %}
-            <div class="bg-white shadow border">
-                <p class="p-4 text-sm md:text-md text-gray-600 border-l-8 border-gray-300">
+            <div class="flex-grow bg-white shadow border">
+                <p class="h-full p-4 text-sm lg:text-md text-gray-600 border-l-8 border-gray-300">
                     {{ paragraphContainer.paragraph.text|nl2br }}
                 </p>
             </div>
         {% endif %}
 
+        {% if hasJustification %}
+            {# display justification #}
+            <div class="bg-gray-100 border border-gray-200 border-t-0 rounded-b mx-2 p-2 text-gray-500 text-sm">
+                {{ paragraphContainer.chosen.modification.justification }}
+            </div>
+
+        {% endif %}
+
+        {% if hasPeers %}
+            <div class="text-xs text-gray-400 mt-3">
+                Dieser Vorschlag ist auch Teil folgender Stellungnahmen:
+                {% for peer in paragraphContainer.chosen.peers %}
+                    {% if peer.statement != statement %}
+                        <a href="{{ path('app_statement_show', { 'uuid': peer.statement.uuid }) }}" target="_blank"
+                           class="related-statement underline hover:no-underline">{{ peer.statement }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
     </div>
-
-
-
-        <div class="scroll-mt-20 col-span-5 md:row-start-3 {% if collapse %}md:col-span-4{% else %}md:col-span-3 md:col-start-2{% endif %}">
-
-            {% if hasJustification or hasPeers %}
-                {# display justification #}
-                <div class="bg-gray-100 border border-gray-200 border-t-0 rounded-b mx-2 p-2 text-gray-500 text-sm">
-                    {% if hasJustification %}
-                        <div>
-                            {{ paragraphContainer.chosen.modification.justification }}
-                        </div>
-                    {% endif %}
-                </div>
-
-                    {% if hasJustification %}
-                        <div class="text-xs text-gray-400 mt-3">
-                            Dieser Vorschlag ist auch Teil folgender Stellungnahmen:
-                            {% for peer in paragraphContainer.chosen.peers %}
-                                {% if peer.statement != statement %}
-                                    <a href="{{ path('app_statement_show', { 'uuid': peer.statement.uuid }) }}" target="_blank"
-                                       class="related-statement underline hover:no-underline">{{ peer.statement }}</a>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-
-            {% endif %}
-
-        </div>
 
 
 </div>

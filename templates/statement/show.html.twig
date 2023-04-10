@@ -190,41 +190,33 @@
                     {% for i, paragraphContainer in paragraphs %}
 
 
-                        <div class="grid grid-cols-5 md:gap-4 mb-8">
+                        <div class="paragraph grid grid-cols-5 md:gap-4 mb-8">
 
-                            <div id="{{ paragraphContainer.paragraph.uuid[:8] }}" class="paragraph scroll-mt-20 col-span-5 md:row-start-1 {% if collapse %}md:col-span-4{% else %}md:col-span-3 md:col-start-2{% endif %}">
-
-                                {# Paragraph title #}
-                                <h3 class="text-xl pt-6 md:pt-0 text-gray-400 font-light">
+                            {# Paragraph title #}
+                            <div id="{{ paragraphContainer.paragraph.uuid[:8] }}" class="scroll-mt-20 col-span-5 lg:row-start-1 {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %}">
+                                <h3 class="text-xl pt-6 lg:pt-0 text-gray-400 font-light">
                                     <a href="{{ path('app_statement_show', { 'uuid': statement.uuid, 'lt': legalText.uuid.toBase58, '_fragment': paragraphContainer.paragraph.uuid[:8] }) }}">{{ i+1 }}. Absatz</a>
                                 </h3>
-
                             </div>
 
-                            <div class="scroll-mt-20 col-span-5 md:row-start-2 {% if collapse %}md:col-span-4{% else %}md:col-span-4 md:col-start-1{% endif %}">
+                            {# main block #}
+                            <div class="col-span-5 lg:row-start-2 lg:col-start-1 lg:col-span-4 flex flex-col gap-6">
                                 {% include 'statement/freetext_part.html.twig' with {statement, freeTexts: paragraphContainer.freetext.before, position: 'before', collapse} %}
-                            </div>
-
-                            <div class="paragraph scroll-mt-20 col-span-5 md:row-start-3 {% if collapse %}md:col-span-4{% else %}md:col-span-4 md:col-start-1{% endif %}">
                                 {% include 'statement/paragraph_text_part.html.twig' with {statement, paragraphContainer, collapse} %}
-                            </div>
-
-                            <div class="scroll-mt-20 col-span-5 md:row-start-4 {% if collapse %}md:col-span-4{% else %}md:col-span-4 md:col-start-1{% endif %}">
                                 {% include 'statement/freetext_part.html.twig' with {statement, freeTexts: paragraphContainer.freetext.after, position: 'after', collapse} %}
                             </div>
 
-                            {# Right sidebar #}
-                            <div class="col-span-5 md:row-start-1 md:row-span-4 md:col-span-1 md:col-start-5 pb-6 md:pb-8 flex flex-col h-full">
-                                {# Comments #}
-                                <div class="comments md:mt-6 text-gray-700 flex-grow h-0 pr-4 -mr-4">
+                            {# Right sidebar / Comments #}
+                            <div class="col-span-5 lg:row-start-2 lg:row-span-4 lg:col-span-1 lg:col-start-5 pb-6 lg:pb-8 flex flex-col h-full">
+                                <div class="comments text-gray-700 flex-grow h-0 pr-4 -mr-4">
                                     {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
                                         {{ component('paragraph_comments', { 'statement': statement, paragraph: paragraphContainer.paragraph, modification: paragraphContainer.chosen.modification }) }}
                                     {% else %}
                                         {{ component('paragraph_comments', { 'statement': statement, paragraph: paragraphContainer.paragraph }) }}
                                     {% endif %}
                                 </div>
-
                             </div>
+
                         </div>
                     {% endfor %}
                 </div>
