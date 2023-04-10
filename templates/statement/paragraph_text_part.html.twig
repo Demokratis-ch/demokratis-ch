@@ -42,9 +42,8 @@
 
     {% if hasModifications %}
         <div class="scroll-mt-20 col-span-5 lg:row-start-1 {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %}">
-            <div class="bg-gray-100 border border-gray-200 border-b-0 rounded-t mx-2 p-2">
+            <div class="bg-gray-100 border border-gray-200 border-b-0 rounded-t mx-2 p-2" data-controller="visibility">
                 <div class="grid grid-cols-2 lg:grid-cols-4">
-
                     {% set itemsCount = 0 %}
 
                     {# Currently chosen #}
@@ -59,71 +58,23 @@
                     {% for n, modification in proposed %}
                         {% include 'statement/modification_button.html.twig' with { modification, statement, chosen: false } only %}
                     {% endfor %}
+                </div>
 
-                    {# Refused #}
-                    {#
-                    {% if paragraphContainer.refused|length > 0 %}
-                        <div class="mt-2 text-xs text-gray-400">Abgelehnt:
-                            {% for refused in paragraphContainer.refused %}
-                                <a href="{{ path('app_paragraph_diff', { 'modification_uuid': refused.uuid, 'statement_uuid': statement.uuid  }) }}"
-                                   class="">
-                                    <span class="underline hover:no-underline">{{ refused.createdBy }} </span></a> <small>#{{ refused.uuid[:3] }}</small>{% if paragraphContainer.refused|length > 1 and loop.last == false %},{% endif %}
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-
-
-
-                    #}
-
-
-                    {# Foreign inspirations #}
-                    {#
-                    {% if paragraphContainer.foreign|length > 0 %}
-
-                        <h2 class="inspirations mt-4 text-xs text-gray-400 font-medium">Inspiration aus anderen Stellungnahmen</h2>
-                        {% for foreign in paragraphContainer.foreign %}
-                            {% if is_granted('view', statement) %}
-
-                                <div class="relative mt-1 px-4 py-2 border bg-gray-100 hover:bg-white rounded-lg text-sm text-gray-500">
-                                    <a class="after:absolute after:inset-0" href="{{ path('app_paragraph_diff', { 'modification_uuid': foreign.uuid, 'statement_uuid': statement.uuid }) }}">
-                                        {{ foreign.createdBy }} <small>{{ foreign.createdAt|ago }} <span class="text-gray-300">#{{ foreign.uuid[:3] }}</span></small>
-                                    </a>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                    #}
-
-                    {#
-                    {% if paragraphContainer.former is defined and paragraphContainer.former is not null %}
-                        {% if paragraphContainer.chosen.modification.paragraph.forceOriginal == true %}
-                            <small>Previous chosen: <a
-                                        href="{{ path('app_paragraph_diff', { 'uuid': paragraphContainer.chosen.modification.uuid  }) }}"
-                                        class="underline hover:no-underline">#{{ paragraphContainer.chosen.modification.uuid[:8] }}</a></small>
-                        {% endif %}
-
-                        {% if paragraphContainer.former|length > 0 %}
-                            <small>Former:</small>
-                            {% for former in paragraphContainer.former %}
-                                <small><a href="{{ path('app_paragraph_diff', { 'uuid': former.modification.uuid  }) }}"
-                                          class="underline hover:no-underline">#{{ former.modification.uuid[:8] }}</a>{% if paragraphContainer.former|length > 1 and loop.last == false %},{% endif %}
-                                </small>
-                            {% endfor %}
-                        {% endif %}
-                    {% endif %}
-                    #}
-
-
-
-
+                <div class="grid grid-cols-2 lg:grid-cols-4 hidden" data-visibility-target="hideable">
+                    {% set remaining = paragraphContainer.modifications|slice(4 - itemsCount) %}
+                        {% for n, modification in remaining %}
+                            {% include 'statement/modification_button.html.twig' with { modification, statement, chosen: false } only %}
+                    {% endfor %}
                 </div>
 
                 {% if itemsCount >= 4 %}
                 <div class="">
                     {# todo: link to the chosen or first modification #}
-                    <a href="#" class="mt-2 ml-2 underline hover:no-underline text-xs text-gray-400">
+                    <a data-action="visibility#toggleTargets" data-visibility-target="hideable" class="cursor-pointer mt-2 ml-2 underline hover:no-underline text-xs text-gray-400">
                         Alle Änderungsvorschläge ansehen ({{ modificationsCount }}) <i class="fas fa-caret-right"></i>
+                    </a>
+                    <a data-action="visibility#toggleTargets" data-visibility-target="hideable" class="cursor-pointer hidden mt-2 ml-2 underline hover:no-underline text-xs text-gray-400">
+                        Änderungsvorschläge verstecken <i class="fas fa-caret-up"></i>
                     </a>
                 </div>
                 {% endif %}
