@@ -3,6 +3,7 @@
 {% set modificationsCount = (paragraphContainer.chosen|default(null) is not null ? 1 : 0) + paragraphContainer.modifications|length %}
 {% set hasJustification = hasChosen and paragraphContainer.chosen.modification.justification|default(null) is not null %}
 {% set hasPeers = hasChosen and paragraphContainer.chosen.peers|length > 0 %}
+{% set hasForeign = paragraphContainer.foreign|default([])|length > 0 %}
 
 <div class="grid grid-cols-4 lg:gap-x-4">
 
@@ -69,20 +70,32 @@
                         {% endfor %}
                     </div>
 
-                    <div class="inspirations">
-                        <h3 class="text-sm m-2 mt-4 text-gray-500"><i class="fa-regular fa-lightbulb-on"></i> Änderungsvorschläge aus anderen Stellungnahmen:</h3>
-                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-2">
-                            {% for n, modification in paragraphContainer.foreign %}
-                                {% include 'statement/modification_button.html.twig' with { modification, statement, foreign: true } only %}
-                            {% endfor %}
+                    {% if hasForeign %}
+                        <div class="inspirations">
+                            <h3 class="text-sm m-2 mt-4 text-gray-500"><i class="fa-regular fa-lightbulb-on"></i> Änderungsvorschläge aus anderen Stellungnahmen:</h3>
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-2">
+                                {% for n, modification in paragraphContainer.foreign %}
+                                    {% include 'statement/modification_button.html.twig' with { modification, statement, foreign: true } only %}
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
 
-                {% if modificationsCount > itemsDisplayed %}
+                {% set hiddenModificationsCount = modificationsCount - itemsDisplayed %}
+                {% if hiddenModificationsCount > 0 or hasForeign %}
                 <div class="">
                     <a data-action="visibility#toggleTargets" data-visibility-target="hideable" class="cursor-pointer mt-2 underline hover:no-underline text-xs text-gray-400">
-                        Alle Änderungsvorschläge zeigen ({{ modificationsCount }}) <i class="fas fa-caret-down ml-2"></i>
+                        {% if hiddenModificationsCount > 0 %}
+                            Weitere {{ hiddenModificationsCount }} Änderungsvorschläge
+                        {% endif %}
+                        {% if modificationsCount > itemsDisplayed and hasForeign %}
+                            und
+                        {% endif %}
+                        {% if hasForeign %}
+                            {{ paragraphContainer.foreign|length }} Vorschläge aus anderen Stellungnahmen
+                        {% endif %}
+                        anzeigen <i class="fas fa-caret-down ml-2"></i>
                     </a>
                     <a data-action="visibility#toggleTargets" data-visibility-target="hideable" class="cursor-pointer hidden mt-2 ml-2 underline hover:no-underline text-xs text-gray-400">
                         Weniger anzeigen <i class="fas fa-caret-up"></i>
