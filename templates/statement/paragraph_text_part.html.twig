@@ -43,17 +43,17 @@
         <div class="scroll-mt-20 col-span-5 lg:row-start-1 {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %}">
             <div class="bg-gray-100 border border-gray-200 border-b-0 rounded-t mx-2 p-2" data-controller="visibility">
                 <div class="grid grid-cols-2 lg:grid-cols-4">
-                    {% set itemsCount = 0 %}
+                    {% set itemsDisplayed = 0 %}
 
                     {# Currently chosen #}
                     {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
                         {% include 'statement/modification_button.html.twig' with { modification: paragraphContainer.chosen.modification, statement, chosen: true } only %}
-                        {% set itemsCount = itemsCount + 1 %}
+                        {% set itemsDisplayed = itemsDisplayed + 1 %}
                     {% endif %}
 
                     {# Proposed modifications #}
-                    {% set proposed = paragraphContainer.modifications|slice(1, 4 - itemsCount) %}
-                    {% set itemsCount = itemsCount + proposed|length %}
+                    {% set proposed = paragraphContainer.modifications|slice(0, 4 - itemsDisplayed) %}
+                    {% set itemsDisplayed = itemsDisplayed + proposed|length %}
                     {% for n, modification in proposed %}
                         {% include 'statement/modification_button.html.twig' with { modification, statement, chosen: false } only %}
                     {% endfor %}
@@ -61,13 +61,13 @@
 
                 {# Show more #}
                 <div class="grid grid-cols-2 lg:grid-cols-4 hidden" data-visibility-target="hideable">
-                    {% set remaining = paragraphContainer.modifications|slice(itemsCount) %}
+                    {% set remaining = paragraphContainer.modifications|slice(itemsDisplayed) %}
                         {% for n, modification in remaining %}
                             {% include 'statement/modification_button.html.twig' with { modification, statement, chosen: false } only %}
                     {% endfor %}
                 </div>
 
-                {% if itemsCount >= 4 %}
+                {% if modificationsCount > itemsDisplayed %}
                 <div class="">
                     <a data-action="visibility#toggleTargets" data-visibility-target="hideable" class="cursor-pointer mt-2 underline hover:no-underline text-xs text-gray-400">
                         Alle Änderungsvorschläge zeigen ({{ modificationsCount }}) <i class="fas fa-caret-down ml-2"></i>
