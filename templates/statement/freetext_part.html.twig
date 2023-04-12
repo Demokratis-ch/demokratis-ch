@@ -5,13 +5,13 @@
             {% if not collapse %}
                 <div class="col-start-1 col-span-4 lg:col-span-1 flex flex-row lg:flex-col items-end">
                     {% if app.user and is_granted('edit', statement) %}
-                        <a href="{{ path('app_freetext_edit', { 'uuid': freetext.uuid }) }}" class="opacity-60 hover:opacity-100 inline-block m-1 nowrap p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
-                            Bearbeiten <i class="fas fa-edit ml-2"></i>
+                        <a href="{{ path('app_freetext_edit', { 'uuid': freetext.uuid }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                            Bearbeiten <i class="fas fa-edit"></i>
                         </a>
                     {% endif %}
                     {% if app.user and is_granted('own', statement) %}
-                        <a href="{{ path('app_freetext_delete', { 'uuid': freetext.uuid }) }}" class="opacity-60 hover:opacity-100 inline-block m-1 nowrap p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
-                            Entfernen <i class="fas fa-trash ml-2"></i>
+                        <a href="{{ path('app_freetext_delete', { 'uuid': freetext.uuid }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                            Entfernen <i class="fas fa-trash"></i>
                         </a>
                     {% endif %}
                 </div>
