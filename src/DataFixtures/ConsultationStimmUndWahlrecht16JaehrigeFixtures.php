@@ -231,6 +231,21 @@ TEXT
         $modification->setJustification('Ich finde das so besser, da es inklusiver und schwammiger formuliert ist.');
         $manager->persist($modification);
 
+        $modificationStatement = new ModificationStatement();
+        $modificationStatement->setStatement($statement);
+        $modificationStatement->setModification($modification);
+        $modificationStatement->setRefused(false);
+        $modificationStatement->setDecisionReason('');
+        $manager->persist($modificationStatement);
+
+        // modification is also part of another statement
+        $modificationStatement = new ModificationStatement();
+        $modificationStatement->setStatement($statement_foreign);
+        $modificationStatement->setModification($modification);
+        $modificationStatement->setRefused(false);
+        $manager->persist($modificationStatement);
+
+
         for ($x = 0; $x <= 6; ++$x) {
             $genericModification = new Modification();
             $genericModification->setCreatedBy($user);
@@ -263,18 +278,41 @@ TEXT
             $manager->persist($modificationStatement);
         }
 
-        $modificationStatement = new ModificationStatement();
-        $modificationStatement->setStatement($statement);
-        $modificationStatement->setModification($modification);
-        $modificationStatement->setRefused(false);
-        $modificationStatement->setDecisionReason('');
-        $manager->persist($modificationStatement);
+        // modification shown in "inspirations"
+        $foreignModification = new Modification();
+        $foreignModification->setCreatedBy($user3);
+        $foreignModification->setText(
+            <<<TEXT
+I
 
-        $modificationStatement = new ModificationStatement();
-        $modificationStatement->setStatement($statement_foreign);
-        $modificationStatement->setModification($modification);
-        $modificationStatement->setRefused(false);
-        $manager->persist($modificationStatement);
+Die Bundesverfassung wird wie folgt geändert:
+
+Art. 136 Abs. 1
+
+1 
+Die politischen Rechte in Bundessachen stehen allen Schweizer*n zu, die das 16. Altersjahr zurückgelegt haben und die nicht wegen Geisteskrankheit, Geistesschwäche oder anderen Gründen entmündigt sind. Alle haben die gleichen politischen Rechte und Pflichten.
+
+Art. 143
+In den Nationalrat, in den Bundesrat und in das Bundesgericht sind alle Stimmberechtigten wählbar, die das 18. Altersjahr zurückgelegt haben.
+
+TEXT
+        );
+        $foreignModification->setParagraph($paragraph1);
+        $foreignModification->setJustification('Ich finde das so besser, da es inklusiver und schwammiger formuliert ist.');
+        $manager->persist($foreignModification);
+
+        $foreignModificationStatement = new ModificationStatement();
+        $foreignModificationStatement->setStatement($statement_foreign);
+        $foreignModificationStatement->setModification($foreignModification);
+        $foreignModificationStatement->setRefused(false);
+        $manager->persist($foreignModificationStatement);
+
+        $foreignChosen = new ChosenModification();
+        $foreignChosen->setModificationStatement($foreignModificationStatement);
+        $foreignChosen->setParagraph($paragraph1);
+        $foreignChosen->setStatement($statement_foreign);
+        $foreignChosen->setChosenBy($user3);
+        $manager->persist($foreignChosen);
 
         $manager->flush();
 

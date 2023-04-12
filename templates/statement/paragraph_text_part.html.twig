@@ -42,7 +42,7 @@
     {% if hasModifications %}
         <div class="scroll-mt-20 col-span-5 lg:row-start-1 {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %}">
             <div class="bg-gray-100 border border-gray-200 border-b-0 rounded-t mx-2 p-2" data-controller="visibility">
-                <div class="grid grid-cols-2 lg:grid-cols-4">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-2">
                     {% set itemsDisplayed = 0 %}
 
                     {# Currently chosen #}
@@ -57,14 +57,24 @@
                     {% for n, modification in proposed %}
                         {% include 'statement/modification_button.html.twig' with { modification, statement, chosen: false } only %}
                     {% endfor %}
+
                 </div>
 
                 {# Show more #}
-                <div class="grid grid-cols-2 lg:grid-cols-4 hidden" data-visibility-target="hideable">
-                    {% set remaining = paragraphContainer.modifications|slice(itemsDisplayed) %}
+                <div class="hidden" data-visibility-target="hideable">
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-2">
+                        {% set remaining = paragraphContainer.modifications|slice(itemsDisplayed) %}
                         {% for n, modification in remaining %}
-                            {% include 'statement/modification_button.html.twig' with { modification, statement, chosen: false } only %}
-                    {% endfor %}
+                            {% include 'statement/modification_button.html.twig' with { modification, statement } only %}
+                        {% endfor %}
+                    </div>
+
+                    <h3 class="text-sm m-2 mt-4 text-gray-500"><i class="fa-regular fa-lightbulb-on"></i> Änderungsvorschläge aus anderen Stellungnahmen:</h3>
+                    <div class="foreign grid grid-cols-2 lg:grid-cols-4 gap-2 mb-2">
+                        {% for n, modification in paragraphContainer.foreign %}
+                            {% include 'statement/modification_button.html.twig' with { modification, statement, foreign: true } only %}
+                        {% endfor %}
+                    </div>
                 </div>
 
                 {% if modificationsCount > itemsDisplayed %}
