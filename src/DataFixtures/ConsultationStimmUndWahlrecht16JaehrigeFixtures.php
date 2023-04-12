@@ -245,7 +245,6 @@ TEXT
         $modificationStatement->setRefused(false);
         $manager->persist($modificationStatement);
 
-
         for ($x = 0; $x <= 6; ++$x) {
             $genericModification = new Modification();
             $genericModification->setCreatedBy($user);
