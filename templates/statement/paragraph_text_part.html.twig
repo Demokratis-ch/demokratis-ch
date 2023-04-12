@@ -39,7 +39,6 @@
     {% endif %}
 
     {# Display modifications #}
-
     {% if hasModifications %}
         <div class="scroll-mt-20 col-span-5 lg:row-start-1 {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %}">
             <div class="bg-gray-100 border border-gray-200 border-b-0 rounded-t mx-2 p-2" data-controller="visibility">
@@ -60,6 +59,7 @@
                     {% endfor %}
                 </div>
 
+                {# Show more #}
                 <div class="grid grid-cols-2 lg:grid-cols-4 hidden" data-visibility-target="hideable">
                     {% set remaining = paragraphContainer.modifications|slice(itemsCount) %}
                         {% for n, modification in remaining %}
@@ -69,7 +69,6 @@
 
                 {% if itemsCount >= 4 %}
                 <div class="">
-                    {# todo: link to the chosen or first modification #}
                     <a data-action="visibility#toggleTargets" data-visibility-target="hideable" class="cursor-pointer mt-2 underline hover:no-underline text-xs text-gray-400">
                         Alle Änderungsvorschläge zeigen ({{ modificationsCount }}) <i class="fas fa-caret-down ml-2"></i>
                     </a>
@@ -84,12 +83,13 @@
     {% endif %}
 
     {# Display paragraph #}
-    <div class="paragraph z-10 col-span-5 {% if hasModifications %}lg:row-start-2 lg:row-span-2 {% else %}lg:row-start-1 lg:row-span-3 {% endif%} {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %} flex flex-col">
-        {% if paragraphContainer.chosen|default(null) is not null %}
-            <div class="flex-grow bg-white shadow border">
-                <p class="h-full p-4 text-sm lg:text-md text-gray-600 border-l-8 border-blue-300">
-                    {% for diff in paragraphContainer.chosen.diff %}
-                        <span class="{% if diff[0] == -1 %}
+    <div class="paragraph col-span-5 {% if hasModifications %}lg:row-start-2 lg:row-span-2 {% else %}lg:row-start-1 lg:row-span-3 {% endif%} {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %} flex flex-col">
+        <div class="z-10">
+            {% if paragraphContainer.chosen|default(null) is not null %}
+                <div class="flex-grow bg-white shadow border">
+                    <p class="h-full p-4 text-sm lg:text-md text-gray-600 border-l-8 border-blue-300">
+                        {% for diff in paragraphContainer.chosen.diff %}
+                            <span class="{% if diff[0] == -1 %}
                                                             bg-red-100
                                                             line-through
                                                             text-red-800
@@ -99,17 +99,17 @@
                                                         {% endif %}">
                                                         {{ diff[1]|nl2br }}
                                                     </span>
-                    {% endfor %}
-                </p>
-            </div>
-        {% else %}
-            <div class="flex-grow bg-white shadow border">
-                <p class="h-full p-4 text-sm lg:text-md text-gray-600 border-l-8 border-gray-300">
-                    {{ paragraphContainer.paragraph.text|nl2br }}
-                </p>
-            </div>
-        {% endif %}
-
+                        {% endfor %}
+                    </p>
+                </div>
+            {% else %}
+                <div class="flex-grow bg-white shadow border">
+                    <p class="h-full p-4 text-sm lg:text-md text-gray-600 border-l-8 border-gray-300">
+                        {{ paragraphContainer.paragraph.text|nl2br }}
+                    </p>
+                </div>
+            {% endif %}
+        </div>
         {% if hasJustification %}
             {# display justification #}
             <div class="bg-gray-100 border border-gray-200 border-t-0 rounded-b mx-2 p-2 text-gray-500 text-sm">
