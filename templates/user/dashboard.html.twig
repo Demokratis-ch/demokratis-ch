@@ -1,0 +1,50 @@
+{% extends 'layout-default.html.twig' %}
+
+{% block title %}Benutzerprofil{% endblock %}
+
+{% block body %}
+<main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+    <div class="pt-16 pb-6">
+        <div class="mb-8">
+            <h1 class="mb-6 text-2xl sm:text-3xl md:text-4xl xl:text-6xl font-bold tracking-tight text-gray-700">Benutzerprofil</h1>
+            <div class="flex gap-2">
+                <a href="{{ path('app_forgot_password_request') }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
+                    <i class="fa-solid fa-key hidden md:inline-block"></i>
+                    <span class="ml-1">Passwort ändern</span>
+                </a>
+                <a href="{{ path('app_logout') }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
+                    <i class="fa-solid fa-sign-out hidden md:inline-block"></i>
+                    <span class="ml-1">Abmelden</span>
+                </a>
+            </div>
+            <dl class="mt-8 text-base text-gray-500">
+                {% if app.user.person|default(null) is not null %}
+                    <dt class="text-base font-medium text-gray-500">Vorname</dt>
+                    <dd class="mb-2 text-base leading-7 text-gray-600">{{ app.user.person.firstname }}</dd>
+                    <dt class="text-base font-medium text-gray-500">Nachname</dt>
+                    <dd class="mb-2 text-base leading-7 text-gray-600">{{ app.user.person.lastname }}</dd>
+                {% endif %}
+                <dt class="text-base font-medium text-gray-500">E-Mail</dt>
+                <dd class="mb-2 text-base leading-7 text-gray-600">{{ app.user.email }}</dd>
+            </dl>
+        </div>
+
+        {% if app.user.organisations is not empty %}
+        <h2 class="text-3xl mb-4">Meine Organisationen</h2>
+        <div class="mt-12 bg-gray-100 py-4 px-12">
+
+        <ul role="list" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+            {% for organisation_user in app.user.organisations %}
+                {% include('organisation/organisation_item.html.twig') with {organisation: organisation_user.organisation} only %}
+            {% else %}
+                <p class="mx-auto text-gray-400 text-md">Sie sind in keiner Organisation Mitglied</p>
+            {% endfor %}
+        </ul>
+        </div>
+        {% endif %}
+
+    </div>
+</main>
+{% endblock %}
