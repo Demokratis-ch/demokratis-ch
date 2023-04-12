@@ -65,7 +65,7 @@ class StatementControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Pa.Iv. Aktives Stimm- und Wahlrecht für 16-Jährige');
         $client->clickLink('Fremde Meinung');
         $this->assertSelectorTextContains('h1', 'Fremde Meinung');
-        $this->assertSelectorTextContains('.inspirations', 'Inspiration aus anderen Stellungnahmen');
+        $this->assertSelectorTextContains('.inspirations h3', 'Änderungsvorschläge aus anderen Stellungnahmen');
 
         $crawler = $client->clickLink('test@test.com');
         $this->assertResponseIsSuccessful();
@@ -79,7 +79,7 @@ class StatementControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Fremde Meinung');
         $this->assertSelectorTextContains('.related-statement', 'Meine Meinung');
 
-        $crawler = $client->clickLink('Absatz bearbeiten');
+        $crawler = $client->clickLink('Änderung vorschlagen');
         $form = $crawler->selectButton('Speichern')->form();
         $form['modification[text]']->setValue('A completely different text');
         $crawler = $client->submit($form);
