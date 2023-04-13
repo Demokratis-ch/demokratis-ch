@@ -135,6 +135,13 @@ class StatementController extends AbstractController
                         $paragraphs[$i]['foreign'] = null;
                     }
                 }
+
+                // Remove chosen from modifications
+                foreach ($paragraphs[$i]['modifications'] as $j => $modification) {
+                    if ($modification->getUuid() === $chosen[$i]->getModificationStatement()->getModification()->getUuid()) {
+                        unset($paragraphs[$i]['modifications'][$j]);
+                    }
+                }
             }
         }
 
