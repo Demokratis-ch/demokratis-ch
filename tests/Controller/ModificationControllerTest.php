@@ -27,14 +27,14 @@ class ModificationControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
 
-        $modificationsInSidebar = $crawler->filter('.modifications')->first()->children('div');
-        self::assertCount(1, $modificationsInSidebar);
+        $modificationButtons = $crawler->filter('.modifications')->first()->filter('.modification-button');
+        self::assertCount(8, $modificationButtons);
         $commentsInSidebar = $crawler->filter('.comments')->first()->filter('.comment');
         self::assertCount(6, $commentsInSidebar);
 
         // new modification proposal
 
-        $crawler = $client->click($crawler->filter('.paragraph')->first()->selectLink('Absatz bearbeiten')->link());
+        $crawler = $client->click($crawler->filter('.paragraph')->first()->selectLink('Änderung vorschlagen')->link());
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Änderungsvorschlag');
 
@@ -47,12 +47,12 @@ class ModificationControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
         $this->assertStringNotContainsString('Hallihallo', $crawler->filter('.paragraph')->first()->text());
 
-        $modificationsInSidebar = $crawler->filter('.modifications')->first()->children('div');
-        self::assertCount(2, $modificationsInSidebar);
+        $modificationButtons = $crawler->filter('.modifications')->first()->children('div');
+        self::assertCount(2, $modificationButtons);
         $commentsInSidebar = $crawler->filter('.comments')->first()->children('.comment');
         self::assertCount(0, $commentsInSidebar);
 
-        $crawler = $client->click($modificationsInSidebar->eq(1)->filter('a')->link());
+        $crawler = $client->click($modificationButtons->eq(1)->filter('a')->link());
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Änderungsvorschlag');
         $this->assertSelectorTextContains('#diff', 'Hallihallo');
@@ -75,7 +75,7 @@ class ModificationControllerTest extends WebTestCase
 
         // refuse the modification
 
-        $crawler = $client->click($modificationsInSidebar->eq(1)->filter('a')->link());
+        $crawler = $client->click($modificationButtons->eq(1)->filter('a')->link());
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Änderungsvorschlag');
         $this->assertSelectorTextContains('#diff', 'Hallihallo');
@@ -86,21 +86,21 @@ class ModificationControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
 
-        $modificationsInSidebar = $crawler->filter('.modifications')->first()->children('div');
-        self::assertCount(2, $modificationsInSidebar);
-        $this->assertStringContainsString('Abgelehnt', $modificationsInSidebar->eq(1)->text());
+        $modificationButtons = $crawler->filter('.modifications')->first()->children('div');
+        self::assertCount(2, $modificationButtons);
+        $this->assertStringContainsString('Abgelehnt', $modificationButtons->eq(1)->text());
 
         // reopen the modification
 
-        $crawler = $client->click($modificationsInSidebar->eq(1)->filter('a')->link());
+        $crawler = $client->click($modificationButtons->eq(1)->filter('a')->link());
         $this->assertResponseIsSuccessful();
 
         $crawler = $client->clickLink('Erneut öffnen');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
 
-        $modificationsInSidebar = $crawler->filter('.modifications')->first()->children('div');
-        self::assertCount(2, $modificationsInSidebar);
-        $this->assertStringNotContainsString('Abgelehnt', $modificationsInSidebar->eq(1)->text());
+        $modificationButtons = $crawler->filter('.modifications')->first()->children('div');
+        self::assertCount(2, $modificationButtons);
+        $this->assertStringNotContainsString('Abgelehnt', $modificationButtons->eq(1)->text());
     }
 }

@@ -269,12 +269,12 @@ TEXT
             $genericModification->setCreatedAt(new \DateTimeImmutable('-'.$x.'days'));
             $manager->persist($genericModification);
 
-            $modificationStatement = new ModificationStatement();
-            $modificationStatement->setStatement($statement);
-            $modificationStatement->setModification($genericModification);
-            $modificationStatement->setRefused(false);
-            $modificationStatement->setDecisionReason('');
-            $manager->persist($modificationStatement);
+            $genericModificationStatement = new ModificationStatement();
+            $genericModificationStatement->setStatement($statement);
+            $genericModificationStatement->setModification($genericModification);
+            $genericModificationStatement->setRefused(false);
+            $genericModificationStatement->setDecisionReason('');
+            $manager->persist($genericModificationStatement);
         }
 
         // modification shown in "inspirations"
@@ -330,6 +330,7 @@ TEXT
         $thread = new Thread();
         $thread->setIdentifier('statement-'.$statement->getId().'-modification-'.$modification->getId());
         $manager->persist($thread);
+        $manager->flush();
 
         $comment = new Comment();
         $comment->setAuthor($user);
