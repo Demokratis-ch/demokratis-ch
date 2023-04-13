@@ -53,6 +53,7 @@ class ModificationRepository extends ServiceEntityRepository
             ->setParameter('refused', false)
             ->leftJoin('s.chosen', 'x')
             ->andWhere('x.id IS NULL')
+            ->orderBy('m.createdAt', 'desc')
         ;
 
         return $query->getQuery()->getResult();

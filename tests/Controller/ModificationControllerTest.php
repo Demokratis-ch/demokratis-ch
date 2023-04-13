@@ -12,6 +12,8 @@ class ModificationControllerTest extends WebTestCase
 {
     use FunctionalTestHelperTrait;
 
+    private const INITIAL_MODIFICATION_COUNT = 7;
+
     public function testIndexAction(): void
     {
         $client = self::setUpClientWithFixtures([new ConsultationStimmUndWahlrecht16JaehrigeFixtures()]);
@@ -28,7 +30,7 @@ class ModificationControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
 
         $modificationButtons = $crawler->filter('.modifications')->first()->filter('.modification-button');
-        self::assertCount(8, $modificationButtons);
+        self::assertCount(self::INITIAL_MODIFICATION_COUNT, $modificationButtons);
         $commentsInSidebar = $crawler->filter('.comments')->first()->filter('.comment');
         self::assertCount(6, $commentsInSidebar);
 
@@ -39,7 +41,7 @@ class ModificationControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Änderungsvorschlag');
 
         $form = $crawler->selectButton('Speichern')->form();
-        $form['modification[text]'] = $form['modification[text]']->getValue()."\n\n".'Hallihallo';
+        $form['modification[text]'] = 'Hallihallo';
         $form['modification[justification]'] = 'Einfach so';
         $crawler = $client->submit($form);
 
@@ -47,8 +49,8 @@ class ModificationControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
         $this->assertStringNotContainsString('Hallihallo', $crawler->filter('.paragraph')->first()->text());
 
-        $modificationButtons = $crawler->filter('.modifications')->first()->children('div');
-        self::assertCount(2, $modificationButtons);
+        $modificationButtons = $crawler->filter('.modifications')->first()->filter('.modification-button');
+        self::assertCount(self::INITIAL_MODIFICATION_COUNT + 1, $modificationButtons);
         $commentsInSidebar = $crawler->filter('.comments')->first()->children('.comment');
         self::assertCount(0, $commentsInSidebar);
 
@@ -68,6 +70,7 @@ class ModificationControllerTest extends WebTestCase
 
         $crawler = $client->clickLink('Original wiederherstellen');
         $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('h1', 'Meine Meinung');
         $this->assertStringNotContainsString('Hallihallo', $crawler->filter('.paragraph')->first()->text());
 
         $commentsInSidebar = $crawler->filter('.comments')->first()->filter('.comment');
@@ -86,8 +89,8 @@ class ModificationControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
 
-        $modificationButtons = $crawler->filter('.modifications')->first()->children('div');
-        self::assertCount(2, $modificationButtons);
+        $modificationButtons = $crawler->filter('.modifications')->first()->filter('.modification-button');
+        self::assertCount(self::INITIAL_MODIFICATION_COUNT, $modificationButtons);
         $this->assertStringContainsString('Abgelehnt', $modificationButtons->eq(1)->text());
 
         // reopen the modification
