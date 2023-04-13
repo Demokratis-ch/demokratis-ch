@@ -231,19 +231,19 @@ TEXT
         $modification->setJustification('Ich finde das so besser, da es inklusiver und schwammiger formuliert ist.');
         $manager->persist($modification);
 
-        $modificationStatement = new ModificationStatement();
-        $modificationStatement->setStatement($statement);
-        $modificationStatement->setModification($modification);
-        $modificationStatement->setRefused(false);
-        $modificationStatement->setDecisionReason('');
-        $manager->persist($modificationStatement);
+        $modificationStatement1 = new ModificationStatement();
+        $modificationStatement1->setStatement($statement);
+        $modificationStatement1->setModification($modification);
+        $modificationStatement1->setRefused(false);
+        $modificationStatement1->setDecisionReason('');
+        $manager->persist($modificationStatement1);
 
         // modification is also part of another statement
-        $modificationStatement = new ModificationStatement();
-        $modificationStatement->setStatement($statement_foreign);
-        $modificationStatement->setModification($modification);
-        $modificationStatement->setRefused(false);
-        $manager->persist($modificationStatement);
+        $modificationStatement1Foreign = new ModificationStatement();
+        $modificationStatement1Foreign->setStatement($statement_foreign);
+        $modificationStatement1Foreign->setModification($modification);
+        $modificationStatement1Foreign->setRefused(false);
+        $manager->persist($modificationStatement1Foreign);
 
         for ($x = 0; $x <= 6; ++$x) {
             $genericModification = new Modification();
@@ -316,14 +316,13 @@ TEXT
         $manager->flush();
 
         $chosen = new ChosenModification();
-        $chosen->setModificationStatement($modificationStatement);
+        $chosen->setModificationStatement($modificationStatement1);
         $chosen->setParagraph($paragraph1);
         $chosen->setStatement($statement);
         $chosen->setChosenBy($user);
         $manager->persist($chosen);
         $manager->flush();
 
-        $paragraph1->addChosenModification($chosen);
         $manager->persist($paragraph1);
         $manager->flush();
 
