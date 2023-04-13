@@ -82,7 +82,7 @@
                     {% endif %}
                 </div>
 
-                {% set hiddenModificationsCount = modificationsCount - itemsDisplayed %}
+                {% set hiddenModificationsCount = modificationsCount - itemsDisplayed - hasChosen %}
                 {% if hiddenModificationsCount > 0 or hasForeign %}
                 <div class="">
                     <a data-action="visibility#toggleTargets" data-visibility-target="hideable" class="cursor-pointer mt-2 underline hover:no-underline text-xs text-gray-400">
