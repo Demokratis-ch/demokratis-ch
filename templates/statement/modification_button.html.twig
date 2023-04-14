@@ -1,0 +1,13 @@
+<div class="modification-button relative {% if chosen|default(false) %}border-2 border-blue-400 m-[-1px]{% endif %} p-2 border bg-white hover:bg-gray-50 rounded-lg text-sm text-gray-500">
+    <a class="after:absolute after:inset-0" href="{{ path('app_paragraph_diff', { 'modification_uuid': modification.uuid, 'statement_uuid': statement.uuid }) }}">
+        <div class="flex flex-row flex-nowrap">
+            <div class="flex-grow overflow-ellipsis overflow-hidden whitespace-nowrap">
+                {{ modification.createdBy }}
+            </div>
+            <div class="text-xs text-gray-300">#{{ modification.uuid[:3] }}</div>
+        </div>
+        <div class="flex flex-row flex-nowrap">
+            <p class="text-xs text-gray-300">{{ modification.createdAt|ago }}</p>
+        </div>
+    </a>
+</div>
