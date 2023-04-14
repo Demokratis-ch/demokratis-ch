@@ -54,6 +54,7 @@ class ModificationRepository extends ServiceEntityRepository
             ->leftJoin('s.chosen', 'x')
             ->andWhere('x.id IS NULL')
             ->orderBy('m.createdAt', 'desc')
+            ->addOrderBy('m.id', 'desc')
         ;
 
         return $query->getQuery()->getResult();

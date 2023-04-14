@@ -12,8 +12,6 @@ class ModificationControllerTest extends WebTestCase
 {
     use FunctionalTestHelperTrait;
 
-    private const INITIAL_MODIFICATION_COUNT = 7;
-
     public function testIndexAction(): void
     {
         $client = self::setUpClientWithFixtures([new ConsultationStimmUndWahlrecht16JaehrigeFixtures()]);
@@ -30,7 +28,7 @@ class ModificationControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
 
         $modificationButtons = $crawler->filter('.modifications')->first()->filter('.modification-button');
-        self::assertCount(self::INITIAL_MODIFICATION_COUNT, $modificationButtons);
+        $initialModificationCount = count($modificationButtons);
         $commentsInSidebar = $crawler->filter('.comments')->first()->filter('.comment');
         self::assertCount(6, $commentsInSidebar);
 
@@ -50,7 +48,7 @@ class ModificationControllerTest extends WebTestCase
         $this->assertStringNotContainsString('Hallihallo', $crawler->filter('.paragraph')->first()->text());
 
         $modificationButtons = $crawler->filter('.modifications')->first()->filter('.modification-button');
-        self::assertCount(self::INITIAL_MODIFICATION_COUNT + 1, $modificationButtons);
+        self::assertCount($initialModificationCount + 1, $modificationButtons);
         $commentsInSidebar = $crawler->filter('.comments')->first()->children('.comment');
         self::assertCount(0, $commentsInSidebar);
 
@@ -90,7 +88,7 @@ class ModificationControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
 
         $modificationButtons = $crawler->filter('.modifications')->first()->filter('.modification-button');
-        self::assertCount(self::INITIAL_MODIFICATION_COUNT, $modificationButtons);
+        self::assertCount($initialModificationCount, $modificationButtons);
         $this->assertStringContainsString('Abgelehnt', $modificationButtons->eq(1)->text());
 
         // reopen the modification

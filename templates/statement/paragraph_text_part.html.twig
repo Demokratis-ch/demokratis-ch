@@ -1,7 +1,7 @@
 {% set hasChosen = paragraphContainer.chosen|default(null) is not null %}
+{% set modificationsCount = (hasChosen ? 1 : 0) + paragraphContainer.modifications|length %}
+{% set hasModifications = modificationsCount > 0 %}
 {% set hasForeign = paragraphContainer.foreign|default([])|length > 0 %}
-{% set hasModifications = hasChosen or paragraphContainer.modifications|length > 0 %}
-{% set modificationsCount = (paragraphContainer.chosen|default(null) is not null ? 1 : 0) + paragraphContainer.modifications|length %}
 {% set hasJustification = hasChosen and paragraphContainer.chosen.modification.justification|default(null) is not null %}
 {% set hasPeers = hasChosen and paragraphContainer.chosen.peers|length > 0 %}
 
@@ -20,7 +20,7 @@
                 <a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                     Änderung vorschlagen <i class="fa-solid fa-edit"></i>
                 </a>
-                {% if paragraphContainer.chosen|default(null) is not null %}
+                {% if hasChosen %}
                     <a href="{{ path('app_paragraph_remove_chosen', { 'uuid': paragraphContainer.chosen.modificationStatement.uuid }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                         Original wiederherstellen <i class="fa-solid fa-undo"></i>
                     </a>
@@ -44,19 +44,19 @@
         <div class="modifications scroll-mt-20 col-span-5 lg:row-start-1 {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %}">
             <div class="bg-gray-100 border border-gray-200 border-b-0 rounded-t mx-2 p-2" data-controller="visibility">
                 {% set itemsDisplayed = 0 %}
+                {% set firstRowModifications = paragraphContainer.modifications|slice(0, 4 - hasChosen) %}
+                {% set hiddenModifications = paragraphContainer.modifications|slice(firstRowModifications|length) %}
                 {% if hasModifications %}
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-2">
 
                         {# Currently chosen #}
-                        {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
+                        {% if hasChosen %}
                             {% include 'statement/modification_button.html.twig' with { modification: paragraphContainer.chosen.modification, statement, chosen: true } only %}
                             {% set itemsDisplayed = itemsDisplayed + 1 %}
                         {% endif %}
 
                         {# Proposed modifications #}
-                        {% set proposed = paragraphContainer.modifications|slice(0, 4 - itemsDisplayed) %}
-                        {% set itemsDisplayed = itemsDisplayed + proposed|length %}
-                        {% for n, modification in proposed %}
+                        {% for n, modification in firstRowModifications %}
                             {% include 'statement/modification_button.html.twig' with { modification, statement, chosen: false } only %}
                         {% endfor %}
                     </div>
@@ -64,10 +64,9 @@
 
                 {# Show more #}
                 <div class="hidden flex flex-col gap-2" data-visibility-target="hideable">
-                    {% set remaining = paragraphContainer.modifications|slice(itemsDisplayed) %}
-                    {% if remaining|length > 0 %}
+                    {% if hiddenModifications|length > 0 %}
                         <div class="grid grid-cols-2 lg:grid-cols-4 gap-2">
-                            {% for n, modification in remaining %}
+                            {% for n, modification in hiddenModifications %}
                                 {% include 'statement/modification_button.html.twig' with { modification, statement } only %}
                             {% endfor %}
                         </div>
@@ -85,14 +84,13 @@
                     {% endif %}
                 </div>
 
-                {% set hiddenModificationsCount = modificationsCount - itemsDisplayed - hasChosen %}
-                {% if hiddenModificationsCount > 0 or hasForeign %}
+                {% if hiddenModifications|length > 0 or hasForeign %}
                 <div class="">
                     <a data-action="visibility#toggleTargets" data-visibility-target="hideable" class="cursor-pointer underline hover:no-underline text-xs text-gray-400">
-                        {% if hiddenModificationsCount > 0 %}
-                            Weitere {{ hiddenModificationsCount }} Änderungsvorschläge
+                        {% if hiddenModifications|length > 0 %}
+                            Weitere {{ hiddenModifications|length }} Änderungsvorschläge
                         {% endif %}
-                        {% if modificationsCount > itemsDisplayed and hasForeign %}
+                        {% if hiddenModifications|length > 0 and hasForeign %}
                             und
                         {% endif %}
                         {% if hasForeign %}
@@ -113,7 +111,7 @@
     {# Display paragraph #}
     <div class="paragraph col-span-5 {% if hasModifications or hasForeign %}lg:row-start-2 lg:row-span-2 {% else %}lg:row-start-1 lg:row-span-3 {% endif%} {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %} flex flex-col">
         <div class="z-10">
-            {% if paragraphContainer.chosen|default(null) is not null %}
+            {% if hasChosen %}
                 <div class="flex-grow bg-white shadow border">
                     <p class="h-full p-4 text-sm lg:text-md text-gray-600 border-l-8 border-blue-300">
                         {% for diff in paragraphContainer.chosen.diff %}
