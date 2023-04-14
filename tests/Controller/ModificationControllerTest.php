@@ -87,21 +87,23 @@ class ModificationControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
 
-        $modificationButtons = $crawler->filter('.modifications')->first()->filter('.modification-button');
-        self::assertCount($initialModificationCount, $modificationButtons);
-        $this->assertStringContainsString('Abgelehnt', $modificationButtons->eq(1)->text());
+        $refusedModificationButtons = $crawler->filter('.modifications')->first()->filter('.refused .modification-button');
+        self::assertCount(1, $refusedModificationButtons);
 
         // reopen the modification
 
-        $crawler = $client->click($modificationButtons->eq(1)->filter('a')->link());
+        $crawler = $client->click($refusedModificationButtons->first()->filter('a')->link());
         $this->assertResponseIsSuccessful();
 
         $crawler = $client->clickLink('Erneut öffnen');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
 
-        $modificationButtons = $crawler->filter('.modifications')->first()->children('div');
-        self::assertCount(2, $modificationButtons);
+        $modificationButtons = $crawler->filter('.modifications')->first()->filter('.modification-button');
+        self::assertCount($initialModificationCount + 1, $modificationButtons);
         $this->assertStringNotContainsString('Abgelehnt', $modificationButtons->eq(1)->text());
+
+        $refusedPart = $crawler->filter('.modifications')->first()->filter('.refused');
+        self::assertCount(0, $refusedPart);
     }
 }

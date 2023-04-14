@@ -1,9 +1,11 @@
 {% set hasChosen = paragraphContainer.chosen|default(null) is not null %}
-{% set modificationsCount = (hasChosen ? 1 : 0) + paragraphContainer.modifications|length %}
-{% set hasModifications = modificationsCount > 0 %}
+{% set openModificationsCount = (hasChosen ? 1 : 0) + paragraphContainer.modifications|length %}
+{% set hasOpenModifications = openModificationsCount > 0 %}
 {% set hasForeign = paragraphContainer.foreign|default([])|length > 0 %}
+{% set hasRefused = paragraphContainer.refused|default([])|length > 0 %}
 {% set hasJustification = hasChosen and paragraphContainer.chosen.modification.justification|default(null) is not null %}
 {% set hasPeers = hasChosen and paragraphContainer.chosen.peers|length > 0 %}
+{% set showModificationsPanel = hasOpenModifications or hasForeign or hasRefused %}
 
 <div class="grid grid-cols-4 lg:gap-x-4">
 
@@ -40,13 +42,13 @@
     {% endif %}
 
     {# Display modifications #}
-    {% if hasModifications or hasForeign %}
+    {% if hasOpenModifications or hasForeign or hasRefused %}
         <div class="modifications scroll-mt-20 col-span-5 lg:row-start-1 {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %}">
             <div class="bg-gray-100 border border-gray-200 border-b-0 rounded-t mx-2 p-2" data-controller="visibility">
                 {% set itemsDisplayed = 0 %}
                 {% set firstRowModifications = paragraphContainer.modifications|slice(0, 4 - hasChosen) %}
                 {% set hiddenModifications = paragraphContainer.modifications|slice(firstRowModifications|length) %}
-                {% if hasModifications %}
+                {% if hasOpenModifications %}
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-2">
 
                         {# Currently chosen #}
@@ -72,6 +74,17 @@
                         </div>
                     {% endif %}
 
+                    {% if hasRefused %}
+                        <div class="refused">
+                            <h3 class="text-sm mx-2 mb-2 text-gray-500"><i class="fa-regular fa-cancel"></i> Abgelehnte Änderungsvorschläge:</h3>
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                                {% for n, modification in paragraphContainer.refused %}
+                                    {% include 'statement/modification_button.html.twig' with { modification, statement } only %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+
                     {% if hasForeign %}
                         <div class="inspirations">
                             <h3 class="text-sm mx-2 mb-2 text-gray-500"><i class="fa-regular fa-lightbulb-on"></i> Änderungsvorschläge aus anderen Stellungnahmen:</h3>
@@ -84,19 +97,16 @@
                     {% endif %}
                 </div>
 
-                {% if hiddenModifications|length > 0 or hasForeign %}
+                {% if showModificationsPanel %}
                 <div class="">
                     <a data-action="visibility#toggleTargets" data-visibility-target="hideable" class="cursor-pointer underline hover:no-underline text-xs text-gray-400">
-                        {% if hiddenModifications|length > 0 %}
-                            Weitere {{ hiddenModifications|length }} Änderungsvorschläge
-                        {% endif %}
-                        {% if hiddenModifications|length > 0 and hasForeign %}
-                            und
-                        {% endif %}
-                        {% if hasForeign %}
-                            {{ paragraphContainer.foreign|length }} Vorschläge aus anderen Stellungnahmen
-                        {% endif %}
-                        anzeigen <i class="fas fa-caret-down ml-2"></i>
+                        <i class="fas fa-caret-down mx-2"></i>Mehr anzeigen (
+                            {{ [
+                                hiddenModifications|length > 0 ? hiddenModifications|length ~ ' offene' : null,
+                                hasRefused ? paragraphContainer.refused|length ~ ' abgelehnte' : null,
+                                hasForeign ? paragraphContainer.foreign|length ~ ' aus anderen Stellungnahmen' : null,
+                            ]|filter(v => v is not null)|join(', ') }}
+                        )
                     </a>
                     <a data-action="visibility#toggleTargets" data-visibility-target="hideable" class="cursor-pointer hidden mt-2 ml-2 underline hover:no-underline text-xs text-gray-400">
                         Weniger anzeigen <i class="fas fa-caret-up"></i>
@@ -109,7 +119,7 @@
     {% endif %}
 
     {# Display paragraph #}
-    <div class="paragraph col-span-5 {% if hasModifications or hasForeign %}lg:row-start-2 lg:row-span-2 {% else %}lg:row-start-1 lg:row-span-3 {% endif%} {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %} flex flex-col">
+    <div class="paragraph col-span-5 {% if showModificationsPanel %}lg:row-start-2 lg:row-span-2 {% else %}lg:row-start-1 lg:row-span-3 {% endif%} {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %} flex flex-col">
         <div class="z-10">
             {% if hasChosen %}
                 <div class="flex-grow bg-white shadow border">
