@@ -19,9 +19,19 @@
         <div class="col-span-4 lg:col-span-1 lg:col-start-1 lg:row-start-2 flex flex-row lg:flex-col items-end mb-2 lg:mb-0">
 
             {% if app.user and is_granted('edit', statement) %}
-                <a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
-                    Änderung vorschlagen <i class="fa-solid fa-edit"></i>
-                </a>
+                {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
+                    <a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'mod': paragraphContainer.chosen.modification.uuid }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                        Änderung vorschlagen <i class="fa-solid fa-edit"></i>
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                        Änderung vorschlagen <i class="fa-solid fa-edit"></i>
+                    </a>
+                {% endif %}
+
+
+
+
                 {% if hasChosen %}
                     <a href="{{ path('app_paragraph_remove_chosen', { 'uuid': paragraphContainer.chosen.modificationStatement.uuid }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                         Original wiederherstellen <i class="fa-solid fa-undo"></i>
