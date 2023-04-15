@@ -88,6 +88,42 @@ class StatementControllerTest extends WebTestCase
         $crawler = $client->click($link);
         $form = $crawler->selectButton('Übernehmen')->form();
         $form['accept_refuse[reason]']->setValue('This is another reason');
-        $client->submit($form);
+        $crawler = $client->submit($form);
+
+        $this->assertSelectorTextContains('h2', 'Bundesbeschluss über das Stimm- und Wahlrecht ab 16 Jahren');
+
+        // Free text before
+        $crawler = $client->click($crawler->filter('#paragraph-1')->selectLink('Text hinzufügen')->first()->link());
+        $this->assertSelectorTextContains('h2', 'Freitext');
+
+        $form = $crawler->selectButton('Speichern')->form();
+        $form['free_text[text]']->setValue('This is a free text');
+        $crawler = $client->submit($form);
+        $this->assertSelectorTextContains('#paragraph-1 .freetext-before', 'This is a free text');
+
+        // Free text after
+        $crawler = $client->click($crawler->filter('.paragraph')->first()->selectLink('Text hinzufügen')->eq(1)->link());
+        $this->assertSelectorTextContains('h2', 'Freitext');
+
+        $form = $crawler->selectButton('Speichern')->form();
+        $form['free_text[text]']->setValue('This is a free text that comes after');
+        $crawler = $client->submit($form);
+        $this->assertSelectorTextContains('#paragraph-1 .freetext-after', 'This is a free text that comes after');
+
+        // Edit free text
+        $before_edit = $crawler->filter('#paragraph-1 .freetext-before')->selectLink('Bearbeiten')->first();
+        $crawler = $client->click($before_edit->link());
+        $form = $crawler->selectButton('Speichern')->form();
+        $form['free_text[text]']->setValue('This is an updated free text');
+        $crawler = $client->submit($form);
+        $this->assertSelectorTextNotContains('#paragraph-1 .freetext-before', 'This is a free text');
+        $this->assertSelectorTextContains('#paragraph-1 .freetext-before', 'This is an updated free text');
+
+        // Delete free text
+        $before_delete = $crawler->filter('#paragraph-1 .freetext-before')->selectLink('Entfernen')->first();
+        $crawler = $client->click($before_delete->link());
+
+        $deleted = $crawler->filter('#paragraph-1 .freetext-before');
+        self::assertCount(0, $deleted);
     }
 }
