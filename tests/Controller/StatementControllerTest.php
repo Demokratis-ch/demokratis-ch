@@ -15,6 +15,7 @@ class StatementControllerTest extends WebTestCase
     public function testIndexAction(): void
     {
         $client = self::setUpClientWithFixtures([new ConsultationStimmUndWahlrecht16JaehrigeFixtures()]);
+        $client->followRedirects();
         self::logInAs('admin@test.com', $client);
 
         $client->request('GET', '/statements');
@@ -34,33 +35,27 @@ class StatementControllerTest extends WebTestCase
         $form['statement_intro[intro]'] = 'Lorem Ipsum';
         $client->submit($form);
 
-        $client->followRedirect();
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
         $this->assertSelectorTextContains('#intro', 'Lorem Ipsum');
 
         $client->clickLink('Stellungnahme als fertig markieren');
-        $client->followRedirect();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
-        $this->assertSelectorTextContains('#actions > span', 'admin@test.com');
+        $this->assertSelectorTextContains('#actions > span', 'Admin Istrator');
 
         $client->clickLink('Stellungnahme verstecken');
-        $client->followRedirect();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
         $this->assertSelectorTextContains('#actions > a:nth-child(2)', 'Stellungnahme veröffentlichen');
 
         $client->clickLink('Stellungnahme veröffentlichen');
-        $client->followRedirect();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
         $this->assertSelectorTextContains('#actions > a:nth-child(2)', 'Stellungnahme verstecken');
 
         $client->clickLink('Für Beiträge Dritter öffnen');
-        $client->followRedirect();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
         $this->assertSelectorTextContains('#actions > a:nth-child(3)', 'Keine Beiträge Dritter akzeptieren');
 
         $client->clickLink('Keine Beiträge Dritter akzeptieren');
-        $client->followRedirect();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
         $this->assertSelectorTextContains('#actions > a:nth-child(3)', 'Für Beiträge Dritter öffnen');
 
@@ -70,7 +65,7 @@ class StatementControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Pa.Iv. Aktives Stimm- und Wahlrecht für 16-Jährige');
         $client->clickLink('Fremde Meinung');
         $this->assertSelectorTextContains('h1', 'Fremde Meinung');
-        $this->assertSelectorTextContains('.inspirations', 'Inspiration aus anderen Stellungnahmen');
+        $this->assertSelectorTextContains('.inspirations h3', 'Änderungsvorschläge aus anderen Stellungnahmen');
 
         $crawler = $client->clickLink('test@test.com');
         $this->assertResponseIsSuccessful();
@@ -80,19 +75,17 @@ class StatementControllerTest extends WebTestCase
         $form = $crawler->selectButton('Übernehmen')->form();
         $form['accept_refuse[reason]']->setValue('This is the reason');
         $client->submit($form);
-        $client->followRedirect();
-        $client->followRedirect();
 
         $this->assertSelectorTextContains('h1', 'Fremde Meinung');
         $this->assertSelectorTextContains('.related-statement', 'Meine Meinung');
 
-        $crawler = $client->clickLink('Absatz bearbeiten');
+        $crawler = $client->clickLink('Änderung vorschlagen');
         $form = $crawler->selectButton('Speichern')->form();
         $form['modification[text]']->setValue('A completely different text');
-        $client->submit($form);
-        $client->followRedirect();
+        $crawler = $client->submit($form);
 
-        $crawler = $client->clickLink('admin@test.com');
+        $link = $crawler->filter('.modifications')->selectLink('Admin Istrator')->link();
+        $crawler = $client->click($link);
         $form = $crawler->selectButton('Übernehmen')->form();
         $form['accept_refuse[reason]']->setValue('This is another reason');
         $client->submit($form);
@@ -109,8 +102,7 @@ class StatementControllerTest extends WebTestCase
 
         $form = $crawler->selectButton('Speichern')->form();
         $form['free_text[text]']->setValue('This is a free text');
-        $client->submit($form);
-        $crawler = $client->followRedirect();
+        $crawler = $client->submit($form);
         $this->assertSelectorTextContains('#freetext_content_before_0', 'This is a free text');
 
         // Free text after
@@ -122,8 +114,7 @@ class StatementControllerTest extends WebTestCase
 
         $form = $crawler->selectButton('Speichern')->form();
         $form['free_text[text]']->setValue('This is a free text that comes after');
-        $client->submit($form);
-        $crawler = $client->followRedirect();
+        $crawler = $client->submit($form);
         $this->assertSelectorTextContains('#freetext_content_after_0', 'This is a free text that comes after');
 
         // Edit free text
@@ -131,15 +122,13 @@ class StatementControllerTest extends WebTestCase
         $crawler = $client->click($before_edit->link());
         $form = $crawler->selectButton('Speichern')->form();
         $form['free_text[text]']->setValue('This is an updated free text');
-        $client->submit($form);
-        $crawler = $client->followRedirect();
+        $crawler = $client->submit($form);
         $this->assertSelectorTextNotContains('#freetext_content_before_0', 'This is a free text');
         $this->assertSelectorTextContains('#freetext_content_before_0', 'This is an updated free text');
 
         // Delete free text
         $before_delete = $crawler->filter('#freetext_content_before_0 + div > a:nth-child(2)');
-        $client->click($before_delete->link());
-        $crawler = $client->followRedirect();
+        $crawler = $client->click($before_delete->link());
 
         $deleted = $crawler->filter('#freetext_content_before_0');
         self::assertCount(0, $deleted);

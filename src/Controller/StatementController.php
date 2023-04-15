@@ -136,11 +136,12 @@ class StatementController extends AbstractController
                     }
                 }
 
-                $collapse = false;
-            }
-
-            if (!empty($paragraphs[$i]['modifications']) > 0 || !empty($paragraphs[$i]['refused']) > 0 || !empty($paragraphs[$i]['foreign']) > 0) {
-                $collapse = false;
+                // Remove chosen from modifications
+                foreach ($paragraphs[$i]['modifications'] as $j => $modification) {
+                    if ($modification->getUuid() === $chosen[$i]->getModificationStatement()->getModification()->getUuid()) {
+                        unset($paragraphs[$i]['modifications'][$j]);
+                    }
+                }
             }
         }
 
@@ -153,7 +154,6 @@ class StatementController extends AbstractController
             'statement' => $statement,
             'approved' => $approved,
             'approvals' => $approvals,
-            'collapse' => $collapse,
         ]);
     }
 

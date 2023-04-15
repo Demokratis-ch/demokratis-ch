@@ -27,6 +27,11 @@ class Person
 
     public function __toString(): string
     {
+        return $this->getDisplayName();
+    }
+
+    public function getDisplayName(): string
+    {
         if ($this->getFirstname() && $this->getLastname()) {
             return $this->getFirstname().' '.$this->getLastname();
         } elseif ($this->getFirstname()) {
@@ -34,6 +39,7 @@ class Person
         } elseif ($this->getLastname()) {
             return $this->getLastname();
         }
+        throw new \RuntimeException('Person has no name.');
     }
 
     public function getId(): ?int
