@@ -10,7 +10,6 @@ use App\Entity\Statement;
 use App\Form\AcceptRefuseType;
 use App\Form\ModificationType;
 use App\Repository\ChosenModificationRepository;
-use App\Repository\ModificationRepository;
 use App\Repository\ModificationStatementRepository;
 use App\Service\WordDiff;
 use Doctrine\ORM\EntityManagerInterface;

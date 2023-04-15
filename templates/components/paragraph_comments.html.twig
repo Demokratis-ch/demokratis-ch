@@ -1,6 +1,6 @@
 <div{{ attributes }} class="h-full z-50">
     <div class="h-full cursor-pointer opacity-80 hover:opacity-100" data-action="click->live#action" data-action-name="setOverlayOpen(open=1)" onclick="document.body.style.overflowY = 'hidden';">
-        <button class="mt-2 text-xs text-gray-400 font-medium">Kommentare ({{ this.thread is not null ? this.thread.getComments()|length : 0 }})</button>
+        <button class="text-xs text-gray-400 font-medium">Kommentare ({{ this.thread is not null ? this.thread.getComments()|length : 0 }})</button>
 
         {% if this.thread is not null %}
             {% include "comment/paragraph_comments_preview.html.twig" with {thread: this.thread} only %}
