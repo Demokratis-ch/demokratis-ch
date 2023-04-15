@@ -190,7 +190,7 @@
                     {% for i, paragraphContainer in paragraphs %}
 
 
-                        <div class="paragraph grid grid-cols-5 md:gap-4 mb-8">
+                        <div class="paragraph grid grid-cols-5 md:gap-4 mb-8" id="paragraph-{{ i+1 }}">
 
                             {# Paragraph title #}
                             <div id="{{ paragraphContainer.paragraph.uuid[:8] }}" class="scroll-mt-20 col-span-5 lg:row-start-1 {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %}">

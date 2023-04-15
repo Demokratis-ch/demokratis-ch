@@ -88,49 +88,42 @@ class StatementControllerTest extends WebTestCase
         $crawler = $client->click($link);
         $form = $crawler->selectButton('Übernehmen')->form();
         $form['accept_refuse[reason]']->setValue('This is another reason');
-        $client->submit($form);
-        $client->followRedirect();
-        $crawler = $client->followRedirect();
+        $crawler = $client->submit($form);
 
         $this->assertSelectorTextContains('h2', 'Bundesbeschluss über das Stimm- und Wahlrecht ab 16 Jahren');
 
         // Free text before
-        $before = $crawler->filter('#free_text_before_0');
-        self::assertCount(1, $before);
-        $crawler = $client->click($before->link());
+        $crawler = $client->click($crawler->filter('#paragraph-1')->selectLink('Text hinzufügen')->first()->link());
         $this->assertSelectorTextContains('h2', 'Freitext');
 
         $form = $crawler->selectButton('Speichern')->form();
         $form['free_text[text]']->setValue('This is a free text');
         $crawler = $client->submit($form);
-        $this->assertSelectorTextContains('#freetext_content_before_0', 'This is a free text');
+        $this->assertSelectorTextContains('#paragraph-1 .freetext-before', 'This is a free text');
 
         // Free text after
-        $before = $crawler->filter('#free_text_after_0');
-        self::assertCount(1, $before);
-
-        $crawler = $client->click($before->link());
+        $crawler = $client->click($crawler->filter('.paragraph')->first()->selectLink('Text hinzufügen')->eq(1)->link());
         $this->assertSelectorTextContains('h2', 'Freitext');
 
         $form = $crawler->selectButton('Speichern')->form();
         $form['free_text[text]']->setValue('This is a free text that comes after');
         $crawler = $client->submit($form);
-        $this->assertSelectorTextContains('#freetext_content_after_0', 'This is a free text that comes after');
+        $this->assertSelectorTextContains('#paragraph-1 .freetext-after', 'This is a free text that comes after');
 
         // Edit free text
-        $before_edit = $crawler->filter('#freetext_content_before_0 + div > a');
+        $before_edit = $crawler->filter('#paragraph-1 .freetext-before')->selectLink('Bearbeiten')->first();
         $crawler = $client->click($before_edit->link());
         $form = $crawler->selectButton('Speichern')->form();
         $form['free_text[text]']->setValue('This is an updated free text');
         $crawler = $client->submit($form);
-        $this->assertSelectorTextNotContains('#freetext_content_before_0', 'This is a free text');
-        $this->assertSelectorTextContains('#freetext_content_before_0', 'This is an updated free text');
+        $this->assertSelectorTextNotContains('#paragraph-1 .freetext-before', 'This is a free text');
+        $this->assertSelectorTextContains('#paragraph-1 .freetext-before', 'This is an updated free text');
 
         // Delete free text
-        $before_delete = $crawler->filter('#freetext_content_before_0 + div > a:nth-child(2)');
+        $before_delete = $crawler->filter('#paragraph-1 .freetext-before')->selectLink('Entfernen')->first();
         $crawler = $client->click($before_delete->link());
 
-        $deleted = $crawler->filter('#freetext_content_before_0');
+        $deleted = $crawler->filter('#paragraph-1 .freetext-before');
         self::assertCount(0, $deleted);
     }
 }
