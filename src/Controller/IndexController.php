@@ -23,10 +23,10 @@ use Symfony\Component\Routing\RouterInterface;
 
 class IndexController extends AbstractController
 {
-    #[Route('/', name: 'host_route', host: '%shorturl_host%')]
+    #[Route('/', name: 'app_index_shorturl_overview', host: '%shorturl_host%', methods: ['GET', 'POST'])]
     public function mobileHomepage(): Response
     {
-        dd($this->getParameter('shorturl_host'));
+        throw new NotFoundHttpException();
     }
 
     #[Route('/{token}', name: 'app_index_shorturl', host: '%shorturl_host%', methods: ['GET', 'POST'])]
