@@ -30,7 +30,7 @@ class IndexController extends AbstractController
     }
 
     #[Route('/{token}', name: 'app_index_shorturl', host: '%shorturl_host%', methods: ['GET', 'POST'])]
-    public function shortUrl(RedirectRepository $redirectRepository, Request $request, RouterInterface $router, $token = null): Response
+    public function shortUrl(RedirectRepository $redirectRepository, Request $request, RouterInterface $router, string $token = null): Response
     {
         $redirect = $redirectRepository->findOneBy(['token' => $token]);
         $host = 'https://'.$this->getParameter('default_host').'/';
