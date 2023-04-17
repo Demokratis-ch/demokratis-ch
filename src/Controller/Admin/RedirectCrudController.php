@@ -106,19 +106,4 @@ class RedirectCrudController extends AbstractCrudController
             $form->getData()->setPassword($hash);
         };
     }
-
-    public function clearPassword(AdminContext $context)
-    {
-        $redirect = $context->getEntity()->getInstance();
-        $manager = $this->container->get('doctrine')->getManager();
-
-        $redirect->setPassword(null);
-        $manager->persist($redirect);
-        $manager->flush();
-
-        return $this->redirect($this->router->generate('admin', [
-            'crudAction' => 'index',
-            'crudControllerFqcn' => 'App\\Controller\\Admin\\RedirectCrudController',
-        ]));
-    }
 }
