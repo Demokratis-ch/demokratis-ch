@@ -73,42 +73,47 @@
                             <div class="mt-2 flex gap-2 md:mb-2" id="actions">
                                 {# Export in the .odt format #}
                                 <a href="{{ path('app_word_export', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
-                                    <i class="fa-solid fa-file-export hidden md:inline-block"></i>
-                                    <span class="ml-1"><span class="hidden md:inline-block">Stellungnahme</span> exportieren</span>
+                                    <i class="fa-solid fa-file-export"></i>
+                                    <span class="hidden lg:inline-block ml-1">Stellungnahme exportieren</span>
+                                    <span class="lg:hidden ml-1">Exportieren</span>
                                 </a>
 
                                 {# Approve? #}
                                 {% if not approved %}
                                     <a href="{{ path('app_statement_approve', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
-                                        <i class="fa-solid fa-square-check hidden md:inline-block"></i>
-                                        <span class="ml-1"><span class="hidden md:inline-block">Stellungnahme als</span> fertig <span class="hidden md:inline-block">markieren</span></span>
+                                        <i class="fa-solid fa-square-check"></i>
+                                        <span class="hidden lg:inline-block ml-1">Stellungnahme als fertig markieren</span>
+                                        <span class="lg:hidden ml-1">Fertig</span>
                                     </a>
                                 {% endif %}
 
                                 {# Publish #}
                                 {% if not statement.public %}
                                     <a href="{{ path('app_statement_publish', { 'uuid': statement.uuid }) }}" class="group text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
-                                        <i class="fa-solid fa-lock-open hidden md:inline-block"></i>
-                                        <span class="ml-1"><span class="hidden md:inline-block">Stellungnahme</span> veröffentlichen</span>
+                                        <i class="fa-solid fa-lock-open"></i>
+                                        <span class="hidden lg:inline-block ml-1">Stellungnahme veröffentlichen</span>
+                                        <span class="lg:hidden ml-1">Veröffentlichen</span>
                                     </a>
                                 {% else %}
                                     <a href="{{ path('app_statement_retract', { 'uuid': statement.uuid }) }}" class="group text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
-                                        <i class="fa-solid fa-lock hidden md:inline-block"></i>
-                                        <span class="ml-1"><span class="hidden md:inline-block">Stellungnahme</span> verstecken</span>
+                                        <i class="fa-solid fa-lock"></i>
+                                        <span class="hidden lg:inline-block ml-1">Stellungnahme verstecken</span>
+                                        <span class="lg:hidden ml-1">Verstecken</span>
+
                                     </a>
 
                                     {# Make editable #}
                                     {% if not statement.editable %}
                                         <a href="{{ path('app_statement_accept_edits', { 'uuid': statement.uuid }) }}" class="group text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
-                                            <i class="fa-solid fa-user-pen hidden md:inline-block"></i>
-                                            <span class="hidden md:inline-block ml-1">Für Beiträge Dritter öffnen</span>
-                                            <span class="md:hidden ml-1">Dritten öffnen</span>
+                                            <i class="fa-solid fa-user-pen"></i>
+                                            <span class="hidden lg:inline-block ml-1">Für Beiträge Dritter öffnen</span>
+                                            <span class="lg:hidden ml-1">Dritten öffnen</span>
                                         </a>
                                     {% else %}
                                         <a href="{{ path('app_statement_prevent_edits', { 'uuid': statement.uuid }) }}" class="group text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
-                                            <i class="fa-solid fa-ban hidden md:inline-block"></i>
-                                            <span class="hidden md:inline-block ml-1">Keine Beiträge Dritter akzeptieren</span>
-                                            <span class="md:hidden ml-1">Dritten schliessen</span>
+                                            <i class="fa-solid fa-ban"></i>
+                                            <span class="hidden lg:inline-block ml-1">Keine Beiträge Dritter akzeptieren</span>
+                                            <span class="lg:hidden ml-1">Dritten schliessen</span>
                                         </a>
                                     {% endif %}
 
