@@ -18,6 +18,7 @@ use App\Entity\Newsletter;
 use App\Entity\Organisation;
 use App\Entity\Paragraph;
 use App\Entity\Person;
+use App\Entity\Redirect;
 use App\Entity\Statement;
 use App\Entity\Tag;
 use App\Entity\Thread;
@@ -88,6 +89,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Media', 'far fa-image', Media::class);
         yield MenuItem::linkToCrud('Messages', 'far fa-message', ContactRequest::class);
         yield MenuItem::linkToCrud('Membership', 'far fa-user-astronaut', Membership::class);
+        yield MenuItem::linkToCrud('Redirect', 'far fa-diamond-turn-right', Redirect::class);
     }
 
     public function configureAssets(): Assets

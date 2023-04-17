@@ -60,6 +60,9 @@ class Organisation
     #[ORM\OneToMany(mappedBy: 'organisation', targetEntity: Consultation::class)]
     private Collection $consultations;
 
+    #[ORM\OneToMany(mappedBy: 'organisation', targetEntity: Redirect::class)]
+    private Collection $redirects;
+
     public function __construct()
     {
         $this->externalStatements = new ArrayCollection();
@@ -68,6 +71,7 @@ class Organisation
         $this->users = new ArrayCollection();
         $this->invites = new ArrayCollection();
         $this->consultations = new ArrayCollection();
+        $this->redirects = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -352,6 +356,36 @@ class Organisation
             // set the owning side to null (unless already changed)
             if ($consultation->getOrganisation() === $this) {
                 $consultation->setOrganisation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Redirect>
+     */
+    public function getRedirects(): Collection
+    {
+        return $this->redirects;
+    }
+
+    public function addRedirect(Redirect $redirect): self
+    {
+        if (!$this->redirects->contains($redirect)) {
+            $this->redirects->add($redirect);
+            $redirect->setOrganisation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRedirect(Redirect $redirect): self
+    {
+        if ($this->redirects->removeElement($redirect)) {
+            // set the owning side to null (unless already changed)
+            if ($redirect->getOrganisation() === $this) {
+                $redirect->setOrganisation(null);
             }
         }
 
