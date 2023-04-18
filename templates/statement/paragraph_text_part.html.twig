@@ -1,0 +1,183 @@
+{% set hasChosen = paragraphContainer.chosen|default(null) is not null %}
+{% set openModificationsCount = (hasChosen ? 1 : 0) + paragraphContainer.modifications|length %}
+{% set hasOpenModifications = openModificationsCount > 0 %}
+{% set hasForeign = paragraphContainer.foreign|default([])|length > 0 %}
+{% set hasRefused = paragraphContainer.refused|default([])|length > 0 %}
+{% set hasJustification = hasChosen and paragraphContainer.chosen.modification.justification|default(null) is not null %}
+{% set hasPeers = hasChosen and paragraphContainer.chosen.peers|length > 0 %}
+{% set showModificationsPanel = hasChosen or hasOpenModifications or hasForeign or hasRefused %}
+{% set showModificationsPanelShowMore = openModificationsCount > 4 or hasForeign or hasRefused %}
+
+<div class="grid grid-cols-4 lg:gap-x-4">
+
+    {% if collapse == false %}
+        <div class="col-span-4 lg:col-span-1 lg:col-start-1 lg:row-start-1 flex flex-row lg:flex-col items-end">
+            <a href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'p': 'before' }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                Text hinzufügen <i class="fa-solid fa-pen"></i> <i class="fa-solid fa-arrow-up-right hidden lg:inline-block"></i>
+            </a>
+        </div>
+
+        <div class="col-span-4 lg:col-span-1 lg:col-start-1 lg:row-start-2 flex flex-row lg:flex-col items-end mb-2 lg:mb-0">
+
+            {% if app.user and is_granted('edit', statement) %}
+                {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
+                    <a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'mod': paragraphContainer.chosen.modification.uuid }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                        Änderung vorschlagen <i class="fa-solid fa-edit"></i>
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                        Änderung vorschlagen <i class="fa-solid fa-edit"></i>
+                    </a>
+                {% endif %}
+
+
+
+
+                {% if hasChosen %}
+                    <a href="{{ path('app_paragraph_remove_chosen', { 'uuid': paragraphContainer.chosen.modificationStatement.uuid }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                        Original wiederherstellen <i class="fa-solid fa-undo"></i>
+                    </a>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="col-span-4 row-start-6 lg:col-span-1 lg:col-start-1 lg:row-start-3 lg:row-span-1 flex flex-row lg:flex-col items-end mt-2 lg:mt-2">
+            <div class="mt-auto">
+
+                <a href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'p': 'after' }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                    <span>Text hinzufügen</span> <i class="fa-solid fa-pen"></i> <i class="fa-solid fa-arrow-down-right hidden lg:inline-block"></i>
+                </a>
+            </div>
+        </div>
+
+    {% endif %}
+
+    {# Display modifications #}
+    {% if hasOpenModifications or hasForeign or hasRefused %}
+        <div class="modifications scroll-mt-20 col-span-5 lg:row-start-1 {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %}">
+            <div class="bg-gray-100 border border-gray-200 border-b-0 rounded-t mx-2 p-2" data-controller="visibility">
+                {% set itemsDisplayed = 0 %}
+                {% set firstRowModifications = paragraphContainer.modifications|slice(0, 4 - hasChosen) %}
+                {% set hiddenModifications = paragraphContainer.modifications|slice(firstRowModifications|length) %}
+                {% if hasOpenModifications %}
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-2">
+
+                        {# Currently chosen #}
+                        {% if hasChosen %}
+                            {% include 'statement/modification_button.html.twig' with { modification: paragraphContainer.chosen.modification, statement, chosen: true } only %}
+                            {% set itemsDisplayed = itemsDisplayed + 1 %}
+                        {% endif %}
+
+                        {# Proposed modifications #}
+                        {% for n, modification in firstRowModifications %}
+                            {% include 'statement/modification_button.html.twig' with { modification, statement, chosen: false } only %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {# Show more #}
+                <div class="hidden flex flex-col gap-2" data-visibility-target="hideable">
+                    {% if hiddenModifications|length > 0 %}
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                            {% for n, modification in hiddenModifications %}
+                                {% include 'statement/modification_button.html.twig' with { modification, statement } only %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if hasRefused %}
+                        <div class="refused">
+                            <h3 class="text-sm mx-2 mb-2 text-gray-500"><i class="fa-regular fa-cancel"></i> Abgelehnte Änderungsvorschläge:</h3>
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                                {% for n, modification in paragraphContainer.refused %}
+                                    {% include 'statement/modification_button.html.twig' with { modification, statement } only %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if hasForeign %}
+                        <div class="inspirations">
+                            <h3 class="text-sm mx-2 mb-2 text-gray-500"><i class="fa-regular fa-lightbulb-on"></i> Änderungsvorschläge aus anderen Stellungnahmen:</h3>
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                                {% for n, modification in paragraphContainer.foreign %}
+                                    {% include 'statement/modification_button.html.twig' with { modification, statement, foreign: true } only %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% if showModificationsPanelShowMore %}
+                <div class="">
+                    <a data-action="visibility#toggleTargets" data-visibility-target="hideable" class="cursor-pointer underline hover:no-underline text-xs text-gray-400">
+                        <i class="fas fa-caret-down mx-2"></i>Mehr anzeigen (
+                            {{ [
+                                hiddenModifications|length > 0 ? hiddenModifications|length ~ ' offene' : null,
+                                hasRefused ? paragraphContainer.refused|length ~ ' abgelehnte' : null,
+                                hasForeign ? paragraphContainer.foreign|length ~ ' aus anderen Stellungnahmen' : null,
+                            ]|filter(v => v is not null)|join(', ') }}
+                        )
+                    </a>
+                    <a data-action="visibility#toggleTargets" data-visibility-target="hideable" class="cursor-pointer hidden mt-2 ml-2 underline hover:no-underline text-xs text-gray-400">
+                        Weniger anzeigen <i class="fas fa-caret-up"></i>
+                    </a>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    {% endif %}
+
+    {# Display paragraph #}
+    <div class="paragraph col-span-5 {% if showModificationsPanel %}lg:row-start-2 lg:row-span-2 {% else %}lg:row-start-1 lg:row-span-3 {% endif%} {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %} flex flex-col">
+        <div class="z-10">
+            {% if hasChosen %}
+                <div class="flex-grow bg-white shadow border">
+                    <p class="h-full p-4 text-sm lg:text-md text-gray-600 border-l-8 border-blue-300">
+                        {% for diff in paragraphContainer.chosen.diff %}
+                            <span class="{% if diff[0] == -1 %}
+                                                            bg-red-100
+                                                            line-through
+                                                            text-red-800
+                                                        {% elseif diff[0] == 1 %}
+                                                            bg-green-100
+                                                            text-green-800
+                                                        {% endif %}">
+                                                        {{ diff[1]|nl2br }}
+                                                    </span>
+                        {% endfor %}
+                    </p>
+                </div>
+            {% else %}
+                <div class="flex-grow bg-white shadow border">
+                    <p class="h-full p-4 text-sm lg:text-md text-gray-600 border-l-8 border-gray-300">
+                        {{ paragraphContainer.paragraph.text|nl2br }}
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+        {% if hasJustification %}
+            {# display justification #}
+            <div class="bg-gray-100 border border-gray-200 border-t-0 rounded-b mx-2 p-2 text-gray-500 text-sm">
+                {{ paragraphContainer.chosen.modification.justification }}
+            </div>
+
+        {% endif %}
+
+        {% if hasPeers %}
+            <div class="text-xs text-gray-400 mt-3">
+                Dieser Vorschlag ist auch Teil folgender Stellungnahmen:
+                {% for peer in paragraphContainer.chosen.peers %}
+                    {% if peer.statement != statement %}
+                        <a href="{{ path('app_statement_show', { 'uuid': peer.statement.uuid }) }}" target="_blank"
+                           class="related-statement underline hover:no-underline">{{ peer.statement }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+
+
+</div>

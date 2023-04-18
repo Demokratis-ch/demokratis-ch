@@ -50,6 +50,8 @@ class ModificationRepository extends ServiceEntityRepository
             ->setParameter('refused', false)
             ->leftJoin('s.chosen', 'x')
             ->andWhere('x.id IS NULL')
+            ->orderBy('m.createdAt', 'desc')
+            ->addOrderBy('m.id', 'desc')
         ;
 
         return $this->buildIndexedResult($query->getQuery()->getResult());
@@ -63,6 +65,8 @@ class ModificationRepository extends ServiceEntityRepository
             ->setParameter('statement', $statement)
             ->andWhere('s.refused = :refused')
             ->setParameter('refused', true)
+            ->orderBy('m.createdAt', 'desc')
+            ->addOrderBy('m.id', 'desc')
         ;
 
         return $this->buildIndexedResult($query->getQuery()->getResult());
@@ -77,6 +81,8 @@ class ModificationRepository extends ServiceEntityRepository
             ->andWhere('s.refused = :refused')
             ->setParameter('refused', false)
             ->innerJoin('s.chosen', 'x')
+            ->orderBy('m.createdAt', 'desc')
+            ->addOrderBy('m.id', 'desc')
         ;
 
         return $this->buildIndexedResult($query->getQuery()->getResult());

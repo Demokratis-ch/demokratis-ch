@@ -7,6 +7,7 @@ use App\Entity\Comment;
 use App\Entity\Consultation;
 use App\Entity\Discussion;
 use App\Entity\Document;
+use App\Entity\FreeText;
 use App\Entity\LegalText;
 use App\Entity\Media;
 use App\Entity\Modification;
@@ -226,33 +227,109 @@ In den Nationalrat, in den Bundesrat und in das Bundesgericht sind alle Stimmber
 
 TEXT
         );
-
         $modification->setParagraph($paragraph1);
+        $modification->setJustification('Ich finde das so besser, da es inklusiver und schwammiger formuliert ist.');
         $manager->persist($modification);
 
-        $modificationStatement = new ModificationStatement();
-        $modificationStatement->setStatement($statement);
-        $modificationStatement->setModification($modification);
-        $modificationStatement->setRefused(false);
-        $manager->persist($modificationStatement);
+        $modificationStatement1 = new ModificationStatement();
+        $modificationStatement1->setStatement($statement);
+        $modificationStatement1->setModification($modification);
+        $modificationStatement1->setRefused(false);
+        $modificationStatement1->setDecisionReason('');
+        $manager->persist($modificationStatement1);
+
+        // modification is also part of another statement
+        $modificationStatement1Foreign = new ModificationStatement();
+        $modificationStatement1Foreign->setStatement($statement_foreign);
+        $modificationStatement1Foreign->setModification($modification);
+        $modificationStatement1Foreign->setRefused(false);
+        $manager->persist($modificationStatement1Foreign);
+
+        for ($x = 0; $x <= 6; ++$x) {
+            $genericModification = new Modification();
+            $genericModification->setCreatedBy($user);
+            $genericModification->setText(
+                <<<TEXT
+I
+
+Die Bundesverfassung wird wie folgt geändert:
+
+Art. 136 Abs. 1
+
+1 
+Die politischen Rechte in Bundessachen stehen allen Schweizer*n zu, die das 16. Altersjahr zurückgelegt haben und die nicht wegen Geisteskrankheit, Geistesschwäche oder anderen Gründen entmündigt sind. Alle haben die gleichen politischen Rechte und Pflichten.
+
+Art. 143
+In den Nationalrat, in den Bundesrat und in das Bundesgericht sind alle Stimmberechtigten wählbar, die das 18. Altersjahr zurückgelegt haben.
+
+TEXT
+            );
+            $genericModification->setParagraph($paragraph1);
+            $genericModification->setJustification('Ich finde das so besser, da es inklusiver und schwammiger formuliert ist.');
+            $genericModification->setCreatedAt(new \DateTimeImmutable('-'.$x.'days'));
+            $manager->persist($genericModification);
+
+            $genericModificationStatement = new ModificationStatement();
+            $genericModificationStatement->setStatement($statement);
+            $genericModificationStatement->setModification($genericModification);
+            $genericModificationStatement->setRefused(false);
+            $genericModificationStatement->setDecisionReason('');
+            $manager->persist($genericModificationStatement);
+        }
+
+        // modification shown in "inspirations"
+        $foreignModification = new Modification();
+        $foreignModification->setCreatedBy($user3);
+        $foreignModification->setText(
+            <<<TEXT
+I
+
+Die Bundesverfassung wird wie folgt geändert:
+
+Art. 136 Abs. 1
+
+1 
+Die politischen Rechte in Bundessachen stehen allen Schweizer*n zu, die das 16. Altersjahr zurückgelegt haben und die nicht wegen Geisteskrankheit, Geistesschwäche oder anderen Gründen entmündigt sind. Alle haben die gleichen politischen Rechte und Pflichten.
+
+Art. 143
+In den Nationalrat, in den Bundesrat und in das Bundesgericht sind alle Stimmberechtigten wählbar, die das 18. Altersjahr zurückgelegt haben.
+
+TEXT
+        );
+        $foreignModification->setParagraph($paragraph1);
+        $foreignModification->setJustification('Ich finde das so besser, da es inklusiver und schwammiger formuliert ist.');
+        $manager->persist($foreignModification);
+
+        $foreignModificationStatement = new ModificationStatement();
+        $foreignModificationStatement->setStatement($statement_foreign);
+        $foreignModificationStatement->setModification($foreignModification);
+        $foreignModificationStatement->setRefused(false);
+        $manager->persist($foreignModificationStatement);
+
+        $foreignChosen = new ChosenModification();
+        $foreignChosen->setModificationStatement($foreignModificationStatement);
+        $foreignChosen->setParagraph($paragraph1);
+        $foreignChosen->setStatement($statement_foreign);
+        $foreignChosen->setChosenBy($user3);
+        $manager->persist($foreignChosen);
 
         $manager->flush();
 
         $chosen = new ChosenModification();
-        $chosen->setModificationStatement($modificationStatement);
+        $chosen->setModificationStatement($modificationStatement1);
         $chosen->setParagraph($paragraph1);
         $chosen->setStatement($statement);
         $chosen->setChosenBy($user);
         $manager->persist($chosen);
         $manager->flush();
 
-        $paragraph1->addChosenModification($chosen);
         $manager->persist($paragraph1);
         $manager->flush();
 
         $thread = new Thread();
         $thread->setIdentifier('statement-'.$statement->getId().'-modification-'.$modification->getId());
         $manager->persist($thread);
+        $manager->flush();
 
         $comment = new Comment();
         $comment->setAuthor($user);
@@ -321,6 +398,21 @@ TEXT
         $comment11->setCreatedAt(new \DateTimeImmutable('-12days'));
         $manager->persist($comment11);
 
+        $manager->flush();
+
+        $freeText1 = new FreeText();
+        $freeText1->setStatement($statement);
+        $freeText1->setParagraph($paragraph1);
+        $freeText1->setPosition('before');
+        $freeText1->setText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat nibh ex, nec suscipit ligula mollis at. Curabitur tincidunt tincidunt mi, vel tincidunt magna elementum ut.');
+        $manager->persist($freeText1);
+
+        $freeText2 = new FreeText();
+        $freeText2->setStatement($statement);
+        $freeText2->setParagraph($paragraph2);
+        $freeText2->setPosition('after');
+        $freeText2->setText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat nibh ex, nec suscipit ligula mollis at. Curabitur tincidunt tincidunt mi, vel tincidunt magna elementum ut.');
+        $manager->persist($freeText2);
         $manager->flush();
     }
 }

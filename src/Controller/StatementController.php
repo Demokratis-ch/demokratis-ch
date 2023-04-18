@@ -128,11 +128,9 @@ class StatementController extends AbstractController
 
                 // Remove chosen from foreign modifications
                 $foreign = array_filter($foreign, fn (Modification $mod) => $mod->getUuid() !== $chosen->getModificationStatement()->getModification()->getUuid());
-
-                $collapse = false;
             }
 
-            $paragraphs[] = $aggregate = new ParagraphAggregate(
+            $paragraphs[] = new ParagraphAggregate(
                 $paragraph,
                 $freeTexts[$paragraph->getId()][FreeText::POSITION_BEFORE] ?? [],
                 $freeTexts[$paragraph->getId()][FreeText::POSITION_AFTER] ?? [],
@@ -143,10 +141,6 @@ class StatementController extends AbstractController
                 $peers ?? [],
                 $diff ?? null,
             );
-
-            if (count($aggregate->getAllModifications()) === 0) {
-                $collapse = false;
-            }
         }
 
         return $this->render('statement/show.html.twig', [
@@ -158,7 +152,6 @@ class StatementController extends AbstractController
             'statement' => $statement,
             'approved' => $approved,
             'approvals' => $approvals,
-            'collapse' => $collapse,
         ]);
     }
 

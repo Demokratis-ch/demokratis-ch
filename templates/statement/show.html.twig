@@ -1,5 +1,7 @@
 {% extends 'layout-default.html.twig' %}
 
+{% set collapse = app.user is null or not is_granted('edit', statement) %}
+
 {% block title %}Vernehmlassungsantwort{% endblock %}
 
 {% block body %}
@@ -71,42 +73,47 @@
                             <div class="mt-2 flex gap-2 md:mb-2" id="actions">
                                 {# Export in the .odt format #}
                                 <a href="{{ path('app_word_export', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
-                                    <i class="fa-solid fa-file-export hidden md:inline-block"></i>
-                                    <span class="ml-1"><span class="hidden md:inline-block">Stellungnahme</span> exportieren</span>
+                                    <i class="fa-solid fa-file-export"></i>
+                                    <span class="hidden lg:inline-block ml-1">Stellungnahme exportieren</span>
+                                    <span class="lg:hidden ml-1">Exportieren</span>
                                 </a>
 
                                 {# Approve? #}
                                 {% if not approved %}
                                     <a href="{{ path('app_statement_approve', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
-                                        <i class="fa-solid fa-square-check hidden md:inline-block"></i>
-                                        <span class="ml-1"><span class="hidden md:inline-block">Stellungnahme als</span> fertig <span class="hidden md:inline-block">markieren</span></span>
+                                        <i class="fa-solid fa-square-check"></i>
+                                        <span class="hidden lg:inline-block ml-1">Stellungnahme als fertig markieren</span>
+                                        <span class="lg:hidden ml-1">Fertig</span>
                                     </a>
                                 {% endif %}
 
                                 {# Publish #}
                                 {% if not statement.public %}
                                     <a href="{{ path('app_statement_publish', { 'uuid': statement.uuid }) }}" class="group text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
-                                        <i class="fa-solid fa-lock-open hidden md:inline-block"></i>
-                                        <span class="ml-1"><span class="hidden md:inline-block">Stellungnahme</span> veröffentlichen</span>
+                                        <i class="fa-solid fa-lock-open"></i>
+                                        <span class="hidden lg:inline-block ml-1">Stellungnahme veröffentlichen</span>
+                                        <span class="lg:hidden ml-1">Veröffentlichen</span>
                                     </a>
                                 {% else %}
                                     <a href="{{ path('app_statement_retract', { 'uuid': statement.uuid }) }}" class="group text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
-                                        <i class="fa-solid fa-lock hidden md:inline-block"></i>
-                                        <span class="ml-1"><span class="hidden md:inline-block">Stellungnahme</span> verstecken</span>
+                                        <i class="fa-solid fa-lock"></i>
+                                        <span class="hidden lg:inline-block ml-1">Stellungnahme verstecken</span>
+                                        <span class="lg:hidden ml-1">Verstecken</span>
+
                                     </a>
 
                                     {# Make editable #}
                                     {% if not statement.editable %}
                                         <a href="{{ path('app_statement_accept_edits', { 'uuid': statement.uuid }) }}" class="group text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
-                                            <i class="fa-solid fa-user-pen hidden md:inline-block"></i>
-                                            <span class="hidden md:inline-block ml-1">Für Beiträge Dritter öffnen</span>
-                                            <span class="md:hidden ml-1">Dritten öffnen</span>
+                                            <i class="fa-solid fa-user-pen"></i>
+                                            <span class="hidden lg:inline-block ml-1">Für Beiträge Dritter öffnen</span>
+                                            <span class="lg:hidden ml-1">Dritten öffnen</span>
                                         </a>
                                     {% else %}
                                         <a href="{{ path('app_statement_prevent_edits', { 'uuid': statement.uuid }) }}" class="group text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
-                                            <i class="fa-solid fa-ban hidden md:inline-block"></i>
-                                            <span class="hidden md:inline-block ml-1">Keine Beiträge Dritter akzeptieren</span>
-                                            <span class="md:hidden ml-1">Dritten schliessen</span>
+                                            <i class="fa-solid fa-ban"></i>
+                                            <span class="hidden lg:inline-block ml-1">Keine Beiträge Dritter akzeptieren</span>
+                                            <span class="lg:hidden ml-1">Dritten schliessen</span>
                                         </a>
                                     {% endif %}
 
@@ -178,223 +185,43 @@
                         </div>
                     {% else %}
                         <div class="md:-mt-6 pt-4 pb-4 md:pt-0">
-                            <a href="{{ path('app_statement_intro_add', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-gray-50 hover:bg-gray-100 border border-gray-300 hover:border-gray-400 rounded-md">
+                            <a href="{{ path('app_statement_intro_add', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-gray-50 border border-gray-300 hover:border-gray-400 rounded-md">
                                 <i class="fa-solid fa-pencil hidden md:inline-block"></i>
                                 <span class="ml-1">Intro Text hinzufügen</span>
                             </a>
                         </div>
                     {% endif %}
 
-                    {% for i, paragraphAggregate in paragraphs %}
+                    {% for i, paragraphContainer in paragraphs %}
 
 
-                        <div class="grid grid-cols-5 md:gap-4 ">
+                        <div class="paragraph grid grid-cols-5 md:gap-4 mb-8" id="paragraph-{{ i+1 }}">
 
-                            {% if
-                                statement.modificationStatements|length > 0
-                                or
-                                paragraphAggregate.foreignModifications|length > 0
-                                or
-                                collapse == false
-                            %}
-
-                                <div class="col-span-4 md:col-span-1">
-                                    <div class="modifications md:mb-2 opacity-40 hover:opacity-100 transition-opacity duration-500 ease-out">
-
-
-                                        {# Currently chosen #}
-                                        {% if paragraphAggregate.chosenModification is defined and paragraphAggregate.chosenModification is not null %}
-                                            <h2 class="mt-2 text-xs text-gray-400 font-medium">Akzeptierte Änderung</h2>
-
-                                            <div class="relative mt-1 px-4 py-2 border bg-white hover:bg-gray-50 rounded-lg border-gray-200 text-sm text-gray-500">
-                                                <a class="after:absolute after:inset-0" href="{{ path('app_paragraph_diff', { 'modification_uuid': paragraphAggregate.chosenModification.modification.uuid, 'statement_uuid': statement.uuid }) }}">
-                                                    {{ paragraphAggregate.chosenModification.modification.createdBy }} <span class="text-xs text-gray-300">#{{ paragraphAggregate.chosenModification.modification.uuid[:3] }}</span>
-                                                    <p class="text-xs text-gray-300">{{ paragraphAggregate.chosenModification.modification.createdAt|ago }}</p>
-                                                </a>
-                                            </div>
-
-                                            {% if app.user and is_granted('edit', statement) %}
-                                                <a href="{{ path('app_paragraph_remove_chosen', { 'uuid': paragraphAggregate.chosenModification.modificationStatement.uuid }) }}" class="mt-2 ml-2 underline hover:no-underline text-xs text-gray-400">Original wiederherstellen</a>
-                                            {% endif %}
-                                        {% endif %}
-
-                                        {% if
-                                            (paragraphAggregate.openModifications|length > 0)
-                                            or
-                                            (paragraphAggregate.refusedModifications|length > 0)
-                                        %}
-                                            <h2 class="mt-2 text-xs text-gray-400 font-medium">Änderungsvorschläge</h2>
-                                        {% endif %}
-
-                                        {# Proposed modifications #}
-                                        {% if paragraphAggregate.openModifications|length > 0 %}
-                                            {% for n, modification in paragraphAggregate.openModifications %}
-                                                <div class="relative mt-1 px-4 py-2 border bg-gray-100 hover:bg-white rounded-lg border-gray-200 text-sm text-gray-400 hover:text-gray-500">
-                                                    <a class="after:absolute after:inset-0" href="{{ path('app_paragraph_diff', { 'modification_uuid': modification.uuid, 'statement_uuid': statement.uuid }) }}">
-                                                        {{ modification.createdBy }} <span class="text-xs text-gray-300">#{{ modification.uuid[:3] }}</span>
-                                                        <p class="text-xs text-gray-300">{{ modification.createdAt|ago }}</p>
-                                                    </a>
-                                                </div>
-                                            {% endfor %}
-                                        {% endif %}
-
-                                        {# Refused #}
-                                        {% if paragraphAggregate.refusedModifications|length > 0 %}
-                                            <div class="mt-2 text-xs text-gray-400">Abgelehnt:
-                                                {% for refused in paragraphAggregate.refusedModifications %}
-                                                    <a href="{{ path('app_paragraph_diff', { 'modification_uuid': refused.uuid, 'statement_uuid': statement.uuid  }) }}"
-                                                       class="">
-                                                        <span class="underline hover:no-underline">{{ refused.createdBy }} </span></a> <small>#{{ refused.uuid[:3] }}</small>{% if paragraphAggregate.refusedModifications|length > 1 and loop.last == false %},{% endif %}
-                                                {% endfor %}
-                                            </div>
-                                        {% endif %}
-
-                                        {# Foreign inspirations #}
-                                        {% if paragraphAggregate.foreignModifications|length > 0 %}
-
-                                            <h2 class="inspirations mt-4 text-xs text-gray-400 font-medium">Inspiration aus anderen Stellungnahmen</h2>
-                                            {% for foreign in paragraphAggregate.foreignModifications %}
-
-                                                {% if is_granted('view', statement) %}
-
-                                                    <div class="relative mt-1 px-4 py-2 border bg-gray-100 hover:bg-white rounded-lg text-sm text-gray-500">
-                                                        <a class="after:absolute after:inset-0" href="{{ path('app_paragraph_diff', { 'modification_uuid': foreign.uuid, 'statement_uuid': statement.uuid }) }}">
-                                                            {{ foreign.createdBy }} <small>{{ foreign.createdAt|ago }} <span class="text-gray-300">#{{ foreign.uuid[:3] }}</span></small>
-                                                        </a>
-                                                    </div>
-                                                {% endif %}
-                                            {% endfor %}
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            {% endif %}
-
-
-                            {# Display paragraph #}
-                            <div id="{{ paragraphAggregate.paragraph.uuid[:8] }}" class="paragraph md:pb-12 scroll-mt-20 col-span-5 {% if collapse %}md:col-span-4{% else %}md:col-span-3{% endif %}">
-
-                                {# Paragraph title + edit #}
-                                <h3 class="text-md pt-6 md:pt-0 text-gray-400 font-light">
-                                    <a href="{{ path('app_statement_show', { 'uuid': statement.uuid, 'lt': legalText.uuid.toBase58, '_fragment': paragraphAggregate.paragraph.uuid[:8] }) }}">{{ i+1 }}. Absatz</a>
+                            {# Paragraph title #}
+                            <div id="{{ paragraphContainer.paragraph.uuid[:8] }}" class="scroll-mt-20 col-span-5 lg:row-start-1 {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %}">
+                                <h3 class="text-xl pt-6 lg:pt-0 text-gray-400 font-light">
+                                    <a href="{{ path('app_statement_show', { 'uuid': statement.uuid, 'lt': legalText.uuid.toBase58, '_fragment': paragraphContainer.paragraph.uuid[:8] }) }}">{{ i+1 }}. Absatz</a>
                                 </h3>
-
-                                {% if paragraphAggregate.freetextBefore|length > 0 %}
-                                    {% for freetext in paragraphAggregate.freetext.before %}
-                                        <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-md flex">
-                                            <div class="flex-grow">
-                                                {{ freetext.text }}
-                                            </div>
-                                            {% if app.user %}
-                                                <div class="whitespace-nowrap flex-grow-0">
-                                                    {% if is_granted('edit', statement) %}<a href="{{ path('app_freetext_edit', { 'uuid': freetext.uuid }) }}" class="p-1 m-1 text-gray-400 hover:text-gray-600"><i class="fas fa-edit text-xs"></i></a>{% endif %}
-                                                    {% if is_granted('own', statement) %}<a href="{{ path('app_freetext_delete', { 'uuid': freetext.uuid }) }}" class="p-1 m-1 text-gray-400 hover:text-gray-600"><i class="fas fa-trash text-xs"></i></a>{% endif %}
-                                                </div>
-                                            {% endif %}
-
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
-
-                                {% if app.user and is_granted('edit', statement) %}
-                                    <div class="flex gap-2">
-                                        <a href="{{ path('app_paragraph_edit', { 'uuid': paragraphAggregate.paragraph.uuid, 'statement': statement.id }) }}" class="opacity-60 hover:opacity-100 inline-block mt-2 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
-                                            <i class="fa-solid fa-edit"></i> Absatz bearbeiten
-                                        </a>
-                                        <a href="{{ path('app_freetext_new', { 'uuid': paragraphAggregate.paragraph.uuid, 'statement': statement.id }) }}" class="opacity-60 hover:opacity-100 inline-block mt-2 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
-                                            <i class="fa-solid fa-plus"></i> Text hinzufügen
-                                        </a>
-                                    </div>
-                                {% endif %}
-
-                                <div class="my-2">
-                                    {% if paragraphAggregate.chosenModification is defined and paragraphAggregate.chosenModification is not null %}
-                                        <div class="mt-2 mb-0.5 bg-white shadow border border-l-8 border-l-blue-300">
-                                            <p class="p-4 text-sm md:text-md text-gray-600">
-                                                {% for diff in paragraphAggregate.chosenDiff %}
-                                                    <span class="{% if diff[0] == -1 %}
-                                                            bg-red-100
-                                                            line-through
-                                                            text-red-800
-                                                        {% elseif diff[0] == 1 %}
-                                                            bg-green-100
-                                                            text-green-800
-                                                        {% endif %}">
-                                                        {{ diff[1]|nl2br }}
-                                                    </span>
-                                                {% endfor %}
-                                            </p>
-                                            {% if paragraphAggregate.chosenModification.modification.justification is defined and paragraphAggregate.chosenModification.modification.justification is not null %}
-                                                <div class="bg-gray-100 shadow px-4 py-2 text-gray-400 text-sm">
-                                                    {{ paragraphAggregate.chosenModification.modification.justification }}
-                                                </div>
-                                            {% endif %}
-
-                                        </div>
-
-                                        {% if paragraphAggregate.peers|length > 0 %}
-                                            <div class="text-xs text-gray-400 mt-1 mb-8">
-                                                Dieser Vorschlag ist auch Teil folgender Stellungnahmen:
-                                                {% for peer in paragraphAggregate.peers %}
-                                                    {% if peer.statement != statement %}
-                                                        <a href="{{ path('app_statement_show', { 'uuid': peer.statement.uuid }) }}" target="_blank"
-                                                           class="related-statement underline hover:no-underline">{{ peer.statement }}</a>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </div>
-                                        {% endif %}
-
-
-                                    {% else %}
-
-                                        {# Only show the full paragraph if the user can edit #}
-                                        {% if app.user and is_granted('edit', statement) %}
-                                            <div class="mt-2 mb-0.5 bg-white shadow border">
-                                                <p class="p-4 text-sm md:text-md text-gray-600 border-l-8 border-gray-300">
-                                                    {{ paragraphAggregate.paragraph.text|nl2br }}
-                                                </p>
-                                            </div>
-                                        {% else %}
-                                            <p class="mt-2 mb-0.5 p-4 bg-white shadow border text-sm text-gray-300">Keine Änderungsvorschläge</p>
-                                        {% endif %}
-                                    {% endif %}
-                                </div>
-
-                                {% if paragraphAggregate.freetextAfter|length > 0 %}
-                                    {% for freetext in paragraphAggregate.freetextAfter %}
-                                        <div class="opacity-75 mt-2 p-2 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-mdf flex">
-                                            <div class="flex-grow">
-                                                {{ freetext.text }}
-                                            </div>
-                                            {% if app.user %}
-                                                <div class="whitespace-nowrap flex-grow-0">
-                                                    {% if is_granted('edit', statement) %}<a href="{{ path('app_freetext_edit', { 'uuid': freetext.uuid }) }}" class="p-1 m-1 text-gray-400 hover:text-gray-600"><i class="fas fa-edit text-xs"></i></a>{% endif %}
-                                                    {% if is_granted('own', statement) %}<a href="{{ path('app_freetext_delete', { 'uuid': freetext.uuid }) }}" class="p-1 m-1 text-gray-400 hover:text-gray-600"><i class="fas fa-trash text-xs"></i></a>{% endif %}
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
-
-                                {% if app.user and is_granted('edit', statement) %}
-                                    <a href="{{ path('app_freetext_new', { 'uuid': paragraphAggregate.paragraph.uuid, 'statement': statement.id, 'p': 'after' }) }}" class="opacity-60 hover:opacity-100 inline-block mt-2 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
-                                        <i class="fa-solid fa-plus"></i> Text hinzufügen
-                                    </a>
-                                {% endif %}
-
                             </div>
 
-                            {# Right sidebar #}
-                            <div class="col-span-5 pb-6 md:pb-8 md:col-span-1 flex flex-col h-full">
-                                {# Comments #}
-                                <div class="comments md:mt-6 text-gray-700 flex-grow h-0 pr-4 -mr-4">
-                                    {% if paragraphAggregate.chosenModification is defined and paragraphAggregate.chosenModification is not null %}
-                                        {{ component('paragraph_comments', { 'statement': statement, paragraph: paragraphAggregate.paragraph, modification: paragraphAggregate.chosenModification.modification }) }}
+                            {# main block #}
+                            <div class="col-span-5 lg:row-start-2 lg:col-start-1 lg:col-span-4 flex flex-col gap-6">
+                                {% include 'statement/freetext_part.html.twig' with {statement, freeTexts: paragraphContainer.freetext.before, position: 'before', collapse} %}
+                                {% include 'statement/paragraph_text_part.html.twig' with {statement, paragraphContainer, collapse} %}
+                                {% include 'statement/freetext_part.html.twig' with {statement, freeTexts: paragraphContainer.freetext.after, position: 'after', collapse} %}
+                            </div>
+
+                            {# Right sidebar / Comments #}
+                            <div class="col-span-5 lg:row-start-2 lg:row-span-4 lg:col-span-1 lg:col-start-5 pb-6 lg:pb-8 flex flex-col h-full">
+                                <div class="comments text-gray-700 flex-grow h-0 pr-4 -mr-4">
+                                    {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
+                                        {{ component('paragraph_comments', { 'statement': statement, paragraph: paragraphContainer.paragraph, modification: paragraphContainer.chosen.modification }) }}
                                     {% else %}
-                                        {{ component('paragraph_comments', { 'statement': statement, paragraph: paragraphAggregate.paragraph }) }}
+                                        {{ component('paragraph_comments', { 'statement': statement, paragraph: paragraphContainer.paragraph }) }}
                                     {% endif %}
                                 </div>
-
                             </div>
+
                         </div>
                     {% endfor %}
                 </div>
