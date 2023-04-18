@@ -103,12 +103,12 @@ class Modification
         return $this;
     }
 
-    public function getParagraph(): ?Paragraph
+    public function getParagraph(): Paragraph
     {
         return $this->paragraph;
     }
 
-    public function setParagraph(?Paragraph $paragraph): self
+    public function setParagraph(Paragraph $paragraph): self
     {
         $this->paragraph = $paragraph;
 

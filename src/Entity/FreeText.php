@@ -12,6 +12,9 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\HasLifecycleCallbacks]
 class FreeText
 {
+    public const POSITION_BEFORE = 'before';
+    public const POSITION_AFTER = 'after';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

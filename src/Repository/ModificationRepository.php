@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Modification;
-use App\Entity\Paragraph;
 use App\Entity\Statement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -41,11 +40,9 @@ class ModificationRepository extends ServiceEntityRepository
         }
     }
 
-    public function findOpenModifications(Paragraph $paragraph, Statement $statement): array
+    public function findOpenModificationsIndexed(Statement $statement): array
     {
         $query = $this->createQueryBuilder('m')
-            ->andWhere('m.paragraph = :paragraph')
-            ->setParameter('paragraph', $paragraph)
             ->leftJoin('m.modificationStatements', 's')
             ->andWhere('s.statement = :statement')
             ->setParameter('statement', $statement)
@@ -57,14 +54,12 @@ class ModificationRepository extends ServiceEntityRepository
             ->addOrderBy('m.id', 'desc')
         ;
 
-        return $query->getQuery()->getResult();
+        return $this->buildIndexedResult($query->getQuery()->getResult());
     }
 
-    public function findRefusedModifications(Paragraph $paragraph, Statement $statement): array
+    public function findRefusedModificationsIndexed(Statement $statement): array
     {
         $query = $this->createQueryBuilder('m')
-            ->andWhere('m.paragraph = :paragraph')
-            ->setParameter('paragraph', $paragraph)
             ->leftJoin('m.modificationStatements', 's')
             ->andWhere('s.statement = :statement')
             ->setParameter('statement', $statement)
@@ -74,14 +69,12 @@ class ModificationRepository extends ServiceEntityRepository
             ->addOrderBy('m.id', 'desc')
         ;
 
-        return $query->getQuery()->getResult();
+        return $this->buildIndexedResult($query->getQuery()->getResult());
     }
 
-    public function findForeignModifications(Paragraph $paragraph, Statement $statement): array
+    public function findForeignModificationsIndexed(Statement $statement): array
     {
         $query = $this->createQueryBuilder('m')
-            ->andWhere('m.paragraph = :paragraph')
-            ->setParameter('paragraph', $paragraph)
             ->leftJoin('m.modificationStatements', 's')
             ->andWhere('s.statement != :statement')
             ->setParameter('statement', $statement)
@@ -92,6 +85,22 @@ class ModificationRepository extends ServiceEntityRepository
             ->addOrderBy('m.id', 'desc')
         ;
 
-        return $query->getQuery()->getResult();
+        return $this->buildIndexedResult($query->getQuery()->getResult());
+    }
+
+    /**
+     * @param Modification[] $rows
+     *
+     * @return array<int, Modification[]>
+     */
+    private function buildIndexedResult(array $rows): array
+    {
+        $results = [];
+
+        foreach ($rows as $modification) {
+            $results[$modification->getParagraph()->getId()][] = $modification;
+        }
+
+        return $results;
     }
 }

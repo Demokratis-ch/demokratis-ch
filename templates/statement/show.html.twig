@@ -206,16 +206,16 @@
 
                             {# main block #}
                             <div class="col-span-5 lg:row-start-2 lg:col-start-1 lg:col-span-4 flex flex-col gap-6">
-                                {% include 'statement/freetext_part.html.twig' with {statement, freeTexts: paragraphContainer.freetext.before, position: 'before', collapse} %}
+                                {% include 'statement/freetext_part.html.twig' with {statement, freeTexts: paragraphContainer.freetextBefore, position: 'before', collapse} %}
                                 {% include 'statement/paragraph_text_part.html.twig' with {statement, paragraphContainer, collapse} %}
-                                {% include 'statement/freetext_part.html.twig' with {statement, freeTexts: paragraphContainer.freetext.after, position: 'after', collapse} %}
+                                {% include 'statement/freetext_part.html.twig' with {statement, freeTexts: paragraphContainer.freetextAfter, position: 'after', collapse} %}
                             </div>
 
                             {# Right sidebar / Comments #}
                             <div class="col-span-5 lg:row-start-2 lg:row-span-4 lg:col-span-1 lg:col-start-5 pb-6 lg:pb-8 flex flex-col h-full">
                                 <div class="comments text-gray-700 flex-grow h-0 pr-4 -mr-4">
-                                    {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
-                                        {{ component('paragraph_comments', { 'statement': statement, paragraph: paragraphContainer.paragraph, modification: paragraphContainer.chosen.modification }) }}
+                                    {% if paragraphContainer.chosenModification is not null %}
+                                        {{ component('paragraph_comments', { 'statement': statement, paragraph: paragraphContainer.paragraph, modification: paragraphContainer.chosenModification.modification }) }}
                                     {% else %}
                                         {{ component('paragraph_comments', { 'statement': statement, paragraph: paragraphContainer.paragraph }) }}
                                     {% endif %}

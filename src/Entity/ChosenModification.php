@@ -105,6 +105,11 @@ class ChosenModification
         return $this->modificationStatement;
     }
 
+    public function getModification(): ?Modification
+    {
+        return $this->getModificationStatement()?->getModification();
+    }
+
     public function setModificationStatement(?ModificationStatement $modificationStatement): self
     {
         // unset the owning side of the relation if necessary

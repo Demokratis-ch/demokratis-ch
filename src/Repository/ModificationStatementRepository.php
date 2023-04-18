@@ -2,9 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\Modification;
+use App\Entity\ChosenModification;
 use App\Entity\ModificationStatement;
-use App\Entity\Paragraph;
 use App\Entity\Statement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -42,28 +41,17 @@ class ModificationStatementRepository extends ServiceEntityRepository
         }
     }
 
-    public function findOpenModifications(Paragraph $paragraph, Statement $statement): array
+    /**
+     * @param ChosenModification[] $chosenModifications
+     *
+     * @return array<int, ModificationStatement[]>
+     */
+    public function findPeers(Statement $statement, array $chosenModifications): array
     {
         $query = $this->createQueryBuilder('m')
-            ->andWhere('m.paragraph = :paragraph')
-            ->setParameter('paragraph', $paragraph)
-            ->leftJoin('m.modificationStatements', 's')
-            ->andWhere('s.statement = :statement')
-            ->setParameter('statement', $statement)
-            ->andWhere('s.refused = :refused')
-            ->setParameter('refused', false)
-            ->leftJoin('m.chosenModifications', 'c')
-            ->andWhere('c.chosenAt IS NULL')
-        ;
-
-        return $query->getQuery()->getResult();
-    }
-
-    public function findPeers(Modification $modification, Statement $statement): array
-    {
-        $query = $this->createQueryBuilder('m')
-            ->andWhere('m.modification = :modification')
-            ->setParameter('modification', $modification)
+            ->addSelect('s')
+            ->andWhere('m.modification in (:modification)')
+            ->setParameter('modification', array_map(fn (ChosenModification $chosen) => $chosen->getModification(), $chosenModifications))
             ->andWhere('m.statement != :statement')
             ->setParameter('statement', $statement)
             ->leftJoin('m.statement', 's')
@@ -71,6 +59,14 @@ class ModificationStatementRepository extends ServiceEntityRepository
             ->setParameter('public', true)
         ;
 
-        return $query->getQuery()->getResult();
+        /** @var ModificationStatement[] $rows */
+        $rows = $query->getQuery()->getResult();
+
+        $results = [];
+        foreach ($rows as $modificationStatement) {
+            $results[$modificationStatement->getModification()->getId()][] = $modificationStatement;
+        }
+
+        return $results;
     }
 }
