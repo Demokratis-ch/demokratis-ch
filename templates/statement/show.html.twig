@@ -206,9 +206,9 @@
 
                             {# main block #}
                             <div class="col-span-5 lg:row-start-2 lg:col-start-1 lg:col-span-4 flex flex-col gap-6">
-                                {% include 'statement/freetext_part.html.twig' with {statement, freeTexts: paragraphContainer.freetext.before, position: 'before', collapse} %}
+                                {% include 'statement/freetext_part.html.twig' with {statement, freeTexts: paragraphContainer.freetextBefore, position: 'before', collapse} %}
                                 {% include 'statement/paragraph_text_part.html.twig' with {statement, paragraphContainer, collapse} %}
-                                {% include 'statement/freetext_part.html.twig' with {statement, freeTexts: paragraphContainer.freetext.after, position: 'after', collapse} %}
+                                {% include 'statement/freetext_part.html.twig' with {statement, freeTexts: paragraphContainer.freetextAfter, position: 'after', collapse} %}
                             </div>
 
                             {# Right sidebar / Comments #}

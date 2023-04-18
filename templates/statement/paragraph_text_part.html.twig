@@ -1,10 +1,10 @@
-{% set hasChosen = paragraphContainer.chosen|default(null) is not null %}
-{% set openModificationsCount = (hasChosen ? 1 : 0) + paragraphContainer.modifications|length %}
+{% set hasChosen = paragraphContainer.chosenModification is not null %}
+{% set openModificationsCount = (hasChosen ? 1 : 0) + paragraphContainer.openModifications|length %}
 {% set hasOpenModifications = openModificationsCount > 0 %}
-{% set hasForeign = paragraphContainer.foreign|default([])|length > 0 %}
-{% set hasRefused = paragraphContainer.refused|default([])|length > 0 %}
-{% set hasJustification = hasChosen and paragraphContainer.chosen.modification.justification|default(null) is not null %}
-{% set hasPeers = hasChosen and paragraphContainer.chosen.peers|length > 0 %}
+{% set hasForeign = paragraphContainer.foreignModifications|length > 0 %}
+{% set hasRefused = paragraphContainer.refusedModifications|length > 0 %}
+{% set hasJustification = hasChosen and paragraphContainer.chosenModification.justification|default(null) is not null %}
+{% set hasPeers = hasChosen and paragraphContainer.peers|length > 0 %}
 {% set showModificationsPanel = hasChosen or hasOpenModifications or hasForeign or hasRefused %}
 {% set showModificationsPanelShowMore = openModificationsCount > 4 or hasForeign or hasRefused %}
 
@@ -20,8 +20,8 @@
         <div class="col-span-4 lg:col-span-1 lg:col-start-1 lg:row-start-2 flex flex-row lg:flex-col items-end mb-2 lg:mb-0">
 
             {% if app.user and is_granted('edit', statement) %}
-                {% if paragraphContainer.chosen is defined and paragraphContainer.chosen is not null %}
-                    <a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'mod': paragraphContainer.chosen.modification.uuid }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                {% if hasChosen %}
+                    <a href="{{ path('app_paragraph_edit', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'mod': paragraphContainer.chosenModification.modification.uuid }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                         Änderung vorschlagen <i class="fa-solid fa-edit"></i>
                     </a>
                 {% else %}
@@ -34,7 +34,7 @@
 
 
                 {% if hasChosen %}
-                    <a href="{{ path('app_paragraph_remove_chosen', { 'uuid': paragraphContainer.chosen.modificationStatement.uuid }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                    <a href="{{ path('app_paragraph_remove_chosen', { 'uuid': paragraphContainer.chosenModification.modificationStatement.uuid }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 inline-block m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                         Original wiederherstellen <i class="fa-solid fa-undo"></i>
                     </a>
                 {% endif %}
@@ -57,14 +57,14 @@
         <div class="modifications scroll-mt-20 col-span-5 lg:row-start-1 {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %}">
             <div class="bg-gray-100 border border-gray-200 border-b-0 rounded-t mx-2 p-2" data-controller="visibility">
                 {% set itemsDisplayed = 0 %}
-                {% set firstRowModifications = paragraphContainer.modifications|slice(0, 4 - hasChosen) %}
-                {% set hiddenModifications = paragraphContainer.modifications|slice(firstRowModifications|length) %}
+                {% set firstRowModifications = paragraphContainer.openModifications|slice(0, 4 - hasChosen) %}
+                {% set hiddenModifications = paragraphContainer.openModifications|slice(firstRowModifications|length) %}
                 {% if hasOpenModifications %}
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-2">
 
                         {# Currently chosen #}
                         {% if hasChosen %}
-                            {% include 'statement/modification_button.html.twig' with { modification: paragraphContainer.chosen.modification, statement, chosen: true } only %}
+                            {% include 'statement/modification_button.html.twig' with { modification: paragraphContainer.chosenModification.modification, statement, chosen: true } only %}
                             {% set itemsDisplayed = itemsDisplayed + 1 %}
                         {% endif %}
 
@@ -89,7 +89,7 @@
                         <div class="refused">
                             <h3 class="text-sm mx-2 mb-2 text-gray-500"><i class="fa-regular fa-cancel"></i> Abgelehnte Änderungsvorschläge:</h3>
                             <div class="grid grid-cols-2 lg:grid-cols-4 gap-2">
-                                {% for n, modification in paragraphContainer.refused %}
+                                {% for n, modification in paragraphContainer.refusedModifications %}
                                     {% include 'statement/modification_button.html.twig' with { modification, statement } only %}
                                 {% endfor %}
                             </div>
@@ -100,7 +100,7 @@
                         <div class="inspirations">
                             <h3 class="text-sm mx-2 mb-2 text-gray-500"><i class="fa-regular fa-lightbulb-on"></i> Änderungsvorschläge aus anderen Stellungnahmen:</h3>
                             <div class="grid grid-cols-2 lg:grid-cols-4 gap-2">
-                                {% for n, modification in paragraphContainer.foreign %}
+                                {% for n, modification in paragraphContainer.foreignModifications %}
                                     {% include 'statement/modification_button.html.twig' with { modification, statement, foreign: true } only %}
                                 {% endfor %}
                             </div>
@@ -114,8 +114,8 @@
                         <i class="fas fa-caret-down mx-2"></i>Mehr anzeigen (
                             {{ [
                                 hiddenModifications|length > 0 ? hiddenModifications|length ~ ' offene' : null,
-                                hasRefused ? paragraphContainer.refused|length ~ ' abgelehnte' : null,
-                                hasForeign ? paragraphContainer.foreign|length ~ ' aus anderen Stellungnahmen' : null,
+                                hasRefused ? paragraphContainer.refusedModifications|length ~ ' abgelehnte' : null,
+                                hasForeign ? paragraphContainer.foreignModifications|length ~ ' aus anderen Stellungnahmen' : null,
                             ]|filter(v => v is not null)|join(', ') }}
                         )
                     </a>
@@ -135,7 +135,7 @@
             {% if hasChosen %}
                 <div class="flex-grow bg-white shadow border">
                     <p class="h-full p-4 text-sm lg:text-md text-gray-600 border-l-8 border-blue-300">
-                        {% for diff in paragraphContainer.chosen.diff %}
+                        {% for diff in paragraphContainer.chosenDiff %}
                             <span class="{% if diff[0] == -1 %}
                                                             bg-red-100
                                                             line-through
@@ -160,7 +160,7 @@
         {% if hasJustification %}
             {# display justification #}
             <div class="bg-gray-100 border border-gray-200 border-t-0 rounded-b mx-2 p-2 text-gray-500 text-sm">
-                {{ paragraphContainer.chosen.modification.justification }}
+                {{ paragraphContainer.chosenModification.modification.justification }}
             </div>
 
         {% endif %}
@@ -168,7 +168,7 @@
         {% if hasPeers %}
             <div class="text-xs text-gray-400 mt-3">
                 Dieser Vorschlag ist auch Teil folgender Stellungnahmen:
-                {% for peer in paragraphContainer.chosen.peers %}
+                {% for peer in paragraphContainer.peers %}
                     {% if peer.statement != statement %}
                         <a href="{{ path('app_statement_show', { 'uuid': peer.statement.uuid }) }}" target="_blank"
                            class="related-statement underline hover:no-underline">{{ peer.statement }}</a>
