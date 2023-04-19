@@ -4,15 +4,12 @@ namespace App\Menu;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class MenuBuilder
 {
     public function __construct(
         private FactoryInterface $factory,
-        RequestStack $requestStack
     ) {
-        $this->requestStack = $requestStack;
     }
 
     public function createMainMenu(array $options): ItemInterface

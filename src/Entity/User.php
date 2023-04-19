@@ -140,12 +140,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    #[ORM\PrePersist]
-    public function setCreatedAtValue(): void
-    {
-        $this->createdAt = null;
-    }
-
     public function getEmail(): ?string
     {
         return $this->email;
