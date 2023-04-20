@@ -53,24 +53,18 @@ class WordDiff extends DiffToolkit
      */
     protected function linesToWordsMunge(string $text, array &$lineArray, array &$lineHash): string
     {
+        // different line break types mess up the diff
+        $text = preg_replace('~\R~u', "\n", $text);
+
         // Simple string concat is even faster than implode() in PHP.
         $chars = '';
 
-        $delimiter = iconv('UTF-8', mb_internal_encoding(), ' ');
-
         // explode('\n', $text) would temporarily double our memory footprint,
         // but mb_strpos() and mb_substr() work too slow
-        $lines = explode($delimiter, $text);
-
-        $last_line_has_delimiter = end($lines) === '';
-        if ($last_line_has_delimiter) {
-            array_pop($lines);
-        }
+        // preg_split may be even slower, but it rocks :)
+        $lines = preg_split('/\b/', $text);
 
         foreach ($lines as $i => $line) {
-            if (isset($lines[$i + 1]) || $last_line_has_delimiter) {
-                $line .= $delimiter;
-            }
             if (!isset($lineHash[$line])) {
                 $lineArray[] = $line;
                 $lineHash[$line] = count($lineArray) - 1;

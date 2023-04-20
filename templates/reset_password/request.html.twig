@@ -11,9 +11,15 @@
             </h2>
             <p class="mt-2 text-center text-sm text-gray-600">
                 Oder zurück zum
-                <a href="{{ path('app_login') }}" class="text-blue-600 hover:text-blue-500">
-                    Login
-                </a>
+                {% if app.user %}
+                    <a href="{{ path('app_user') }}" class="text-blue-600 hover:text-blue-500">
+                        Profil
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="text-blue-600 hover:text-blue-500">
+                        Login
+                    </a>
+                {% endif %}
             </p>
         </div>
 

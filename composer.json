@@ -44,6 +44,7 @@
         "symfony/proxy-manager-bridge": "6.2.*",
         "symfony/runtime": "6.2.*",
         "symfony/security-bundle": "6.2.*",
+        "symfony/sendgrid-mailer": "6.2.*",
         "symfony/serializer": "6.2.*",
         "symfony/string": "6.2.*",
         "symfony/translation": "6.2.*",
@@ -85,7 +86,8 @@
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
             "symfony/flex": true,
-            "symfony/runtime": true
+            "symfony/runtime": true,
+            "php-http/discovery": true
         },
         "optimize-autoloader": true,
         "preferred-install": {

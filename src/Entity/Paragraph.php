@@ -130,18 +130,6 @@ class Paragraph
         return $this;
     }
 
-    public function removeModification(Modification $modification): self
-    {
-        if ($this->modifications->removeElement($modification)) {
-            // set the owning side to null (unless already changed)
-            if ($modification->getParagraph() === $this) {
-                $modification->setParagraph(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getUuid(): ?Uuid
     {
         return $this->uuid;

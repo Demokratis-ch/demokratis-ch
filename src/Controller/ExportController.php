@@ -8,7 +8,10 @@ use App\Repository\ChosenModificationRepository;
 use App\Repository\DocumentRepository;
 use App\Repository\FreeTextRepository;
 use App\Repository\LegalTextRepository;
+use App\Repository\ThreadRepository;
 use App\Service\WordDiff;
+use PhpOffice\PhpWord\Element\Comment;
+use PhpOffice\PhpWord\Element\TrackChange;
 use PhpOffice\PhpWord\PhpWord;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -34,6 +37,7 @@ class ExportController extends AbstractController
                 'diffOutput' => $data['colored'] ? 1 : 0,
                 'reasons' => $data['reasons'] ? 1 : 0,
                 'freetext' => $data['freetext'] ? 1 : 0,
+                'comments' => $data['comments'],
             ]);
         }
 
@@ -43,16 +47,18 @@ class ExportController extends AbstractController
         ]);
     }
 
-    #[Route('/export/file/{uuid}/{diffOutput}/{reasons}/{freetext}', name: 'app_word_export_file', methods: ['GET'])]
+    #[Route('/export/file/{uuid}/{diffOutput}/{reasons}/{freetext}/{comments}', name: 'app_word_export_file', methods: ['GET'])]
     public function serveFile(
         Statement $statement,
         LegalTextRepository $legalTextRepository,
         DocumentRepository $documentRepository,
         ChosenModificationRepository $chosenModificationRepository,
         FreeTextRepository $freeTextRepository,
+        ThreadRepository $threadRepository,
         bool $diffOutput = true,
         bool $reasons = false,
         bool $freetext = true,
+        int $comments = 0,
     ): BinaryFileResponse {
         $phpWord = new PhpWord();
 
@@ -88,6 +94,8 @@ class ExportController extends AbstractController
                     }
                 }
 
+                $textRun = $section->addTextRun();
+
                 if ($chosen[$i]) {
                     $paragraphs[$i]['chosen']['modification'] = $chosen[$i]->getModificationStatement()->getModification();
 
@@ -96,19 +104,46 @@ class ExportController extends AbstractController
                         $wd[$i] = new WordDiff();
                         $paragraphs[$i]['chosen']['diff'] = $wd[$i]->diff($paragraph->getText(), $chosen[$i]->getModificationStatement()->getModification()->getText());
 
-                        $textRun = $section->addTextRun();
-
                         foreach ($paragraphs[$i]['chosen']['diff'] as $diff) {
+                            $text = str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $diff[1]);
+                            $text = str_replace("\r\n", '</w:t><w:br/><w:t xml:space="preserve">', $text);
+
                             if ($diff[0] == 0) {
-                                $textRun->addText($diff[1]);
+                                $textRun->addText($text);
                             } elseif ($diff[0] == -1) {
-                                $textRun->addText($diff[1], ['color' => '991B1B', 'bgColor' => 'FEE2E2']);
+                                $textRun->addText($text, ['color' => '991B1B', 'bgColor' => 'FEE2E2']);
                             } elseif ($diff[0] == 1) {
-                                $textRun->addText($diff[1], ['color' => '206D3D', 'bgColor' => 'DCFCE7']);
+                                $textRun->addText($text, ['color' => '206D3D', 'bgColor' => 'DCFCE7']);
                             }
                         }
                     } else {
-                        $section->addText($paragraphs[$i]['chosen']['modification']->getText());
+                        $text = str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $paragraphs[$i]['chosen']['modification']->getText());
+                        $text = str_replace("\r\n", '</w:t><w:br/><w:t xml:space="preserve">', $text);
+
+                        $textRun->addText($text);
+                    }
+                    $textRun->addText('</w:t><w:br/><w:t xml:space="preserve">');
+
+                    if ($comments !== 1) {
+                        $thread[$i] = $threadRepository->findOneBy(['identifier' => 'statement-'.$statement->getId().'-modification-'.$paragraphs[$i]['chosen']['modification']->getId()]);
+
+                        foreach ($thread[$i]->getComments() as $j => $comment) {
+                            if ($comments === 2) {
+                                $commentRun[$j] = $section->addTextRun('');
+
+                                $wordComment[$j] = new Comment($comment->getAuthor(), new \DateTime());
+                                $wordComment[$j]->addText($comment->getText());
+
+                                $phpWord->addComment($wordComment[$j]);
+
+                                $commentRun[$j]->setCommentStart($wordComment[$j]);
+                                $commentRun[$j]->setCommentRangeEnd($wordComment[$j]);
+                            } elseif ($comments === 3) {
+                                $textRun->addText('</w:t><w:br/><w:t xml:space="preserve">');
+                                $textRun->addText('</w:t><w:br/><w:t xml:space="preserve">');
+                                $textRun->addText($comment->getText());
+                            }
+                        }
                     }
 
                     // Show reasons, if $reasons is true
@@ -129,6 +164,21 @@ class ExportController extends AbstractController
                 $section->addTextBreak(2);
             }
         }
+
+        // New portrait section
+        $section = $phpWord->addSection();
+        $textRun = $section->addTextRun();
+
+        $text = $textRun->addText('Hello World! Time to ');
+
+        $text = $textRun->addText('wake ', ['bold' => true]);
+        $text->setChangeInfo(TrackChange::INSERTED, 'Fred', time() - 1800);
+
+        $text = $textRun->addText('up');
+        $text->setTrackChange(new TrackChange(TrackChange::INSERTED, 'Fred'));
+
+        $text = $textRun->addText('go to sleep');
+        $text->setChangeInfo(TrackChange::DELETED, 'Barney', new \DateTime('@'.(time() - 3600)));
 
         // Preparing and serving the file
         $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\ChosenModification;
+use App\Entity\Statement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,5 +38,30 @@ class ChosenModificationRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @return array<int, ChosenModification>
+     */
+    public function findByStatementIndexed(Statement $statement): array
+    {
+        /** @var ChosenModification[] $rows */
+        $rows = $this->createQueryBuilder('c')
+            ->addSelect('ms')
+            ->addSelect('m')
+            ->leftJoin('c.modificationStatement', 'ms')
+            ->leftJoin('ms.modification', 'm')
+            ->where('c.statement = :statement')
+            ->setParameter('statement', $statement)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $results = [];
+        foreach ($rows as $chosenModification) {
+            $results[$chosenModification->getParagraph()->getId()] = $chosenModification;
+        }
+
+        return $results;
     }
 }
