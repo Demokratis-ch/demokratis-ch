@@ -25,6 +25,9 @@ use Symfony\Component\Uid\Uuid;
 
 class ConsultationStimmUndWahlrecht16JaehrigeFixtures extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {
+    public const CONSULTATION = 'consultation';
+    public const STATEMENT = 'statement';
+
     public static function getGroups(): array
     {
         return ['dummy'];
@@ -58,6 +61,7 @@ class ConsultationStimmUndWahlrecht16JaehrigeFixtures extends Fixture implements
         $consultation->setOffice('Parlamentarische Kommissionen');
 
         $manager->persist($consultation);
+        $this->addReference(self::CONSULTATION, $consultation);
 
         $document = new Document();
         $document->setConsultation($consultation);
@@ -198,6 +202,7 @@ TEXT
         $statement->setConsultation($consultation);
         $statement->setName('Meine Meinung');
         $manager->persist($statement);
+        $this->addReference(self::STATEMENT, $statement);
 
         $statement_foreign = new Statement();
         $statement_foreign->setPublic(true);
