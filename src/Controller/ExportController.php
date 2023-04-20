@@ -11,6 +11,7 @@ use App\Repository\LegalTextRepository;
 use App\Repository\ThreadRepository;
 use App\Service\WordDiff;
 use PhpOffice\PhpWord\Element\Comment;
+use PhpOffice\PhpWord\Element\TrackChange;
 use PhpOffice\PhpWord\PhpWord;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -163,6 +164,21 @@ class ExportController extends AbstractController
                 $section->addTextBreak(2);
             }
         }
+
+        // New portrait section
+        $section = $phpWord->addSection();
+        $textRun = $section->addTextRun();
+
+        $text = $textRun->addText('Hello World! Time to ');
+
+        $text = $textRun->addText('wake ', ['bold' => true]);
+        $text->setChangeInfo(TrackChange::INSERTED, 'Fred', time() - 1800);
+
+        $text = $textRun->addText('up');
+        $text->setTrackChange(new TrackChange(TrackChange::INSERTED, 'Fred'));
+
+        $text = $textRun->addText('go to sleep');
+        $text->setChangeInfo(TrackChange::DELETED, 'Barney', new \DateTime('@'.(time() - 3600)));
 
         // Preparing and serving the file
         $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
