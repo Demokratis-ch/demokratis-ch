@@ -2,12 +2,15 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\TimestampedEntityTrait;
 use App\Repository\DiscussionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DiscussionRepository::class)]
 class Discussion
 {
+    use TimestampedEntityTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -15,9 +18,6 @@ class Discussion
 
     #[ORM\Column(length: 255)]
     private ?string $topic = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'discussions')]
     #[ORM\JoinColumn(nullable: false)]
@@ -44,18 +44,6 @@ class Discussion
     public function setTopic(string $topic): self
     {
         $this->topic = $topic;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }
