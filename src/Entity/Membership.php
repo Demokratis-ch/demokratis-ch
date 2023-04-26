@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Entity\Trait\TimestampedEntityTrait;
 use App\Repository\MembershipRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: MembershipRepository::class)]
 class Membership

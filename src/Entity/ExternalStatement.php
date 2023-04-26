@@ -6,7 +6,6 @@ use App\Entity\Trait\TimestampedEntityTrait;
 use App\Repository\ExternalStatementRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ExternalStatementRepository::class)]
