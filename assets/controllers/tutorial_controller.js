@@ -6,7 +6,6 @@ export default class extends Controller {
 
     initialize() {
         this.steps = document.getElementsByClassName('tutorialStep');
-        console.log(this.steps);
     }
 
     start() {
