@@ -1,0 +1,46 @@
+{% set styles = {
+    'right': ' after:border-t-transparent after:border-r-blue-400 after:border-b-transparent after:border-l-transparent after:mx-[-30px] after:my-3 left-full right-auto',
+    'left': ' after:border-t-transparent after:border-r-transparent after:border-b-transparent after:border-l-blue-400 after:mx-[-30px] after:my-3 left-auto right-full',
+    'bottom': ' after:border-t-transparent after:border-r-transparent after:border-b-blue-400 after:border-l-transparent after:my-[-30px] after:mx-8 left-auto right-auto',
+} %}
+<div class="relative">
+    <div data-tutorial-target="tutorialStep"
+         class="tutorialStep hidden absolute z-50 bg-white w-[30em] shadow-lg shadow-gray-400 m-4 flex flex-col
+        after:border-[16px] after:absolute after:w-0 after:h-0
+        after:border-t-transparent after:border-r-transparent after:border-b-blue-400 after:border-l-transparent after:my-[-30px] after:mx-8
+        left-auto right-auto top-0 bottom-auto
+        {% if positionLg|default == 'right' %}
+            lg:after:border-t-transparent lg:after:border-r-blue-400 lg:after:border-b-transparent lg:after:border-l-transparent lg:after:mx-[-30px] lg:after:my-3 lg:left-full lg:right-auto top-auto bottom-auto
+        {% endif %}
+    "
+    >
+        <div class="bg-blue-400 text-white font-bold p-4 flex flex-row">
+            <div>
+                <i class="fa-solid fa-fw fa-question-circle"></i> Einführung
+            </div>
+            <button type="button" data-action="tutorial#close" class="hover:bg-blue-300 p-2 -m-2 rounded-md ml-auto">
+                <i class="fa-regular fa-fw fa-close"></i>
+            </button>
+
+        </div>
+        <div class="p-4">
+            {% block content %}{% endblock %}
+        </div>
+        <div class="p-4 flex flex-row-reverse gap-2">
+            {% if not isLast|default %}
+                <button type="button" data-action="tutorial#next" class="bg-blue-400 hover:bg-blue-300 text-white p-2 rounded-md">
+                    Weiter <i class="fa-regular fa-fw fa-chevron-right"></i>
+                </button>
+            {% else %}
+                <button type="button" data-action="tutorial#close" class="bg-blue-400 hover:bg-blue-300 text-white p-2 rounded-md">
+                    Fertig
+                </button>
+            {% endif %}
+            {% if not isFirst|default %}
+                <button type="button" data-action="tutorial#prev" class="hover:bg-gray-100 p-2 rounded-md">
+                    <i class="fa-regular fa-fw fa-chevron-left"></i>
+                </button>
+            {% endif %}
+        </div>
+    </div>
+</div>

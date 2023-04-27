@@ -1,3 +1,4 @@
+{% set showTutorial = true %}
 {% extends 'layout-default.html.twig' %}
 
 {% set collapse = app.user is null or not is_granted('edit', statement) %}
@@ -48,6 +49,7 @@
             <h1 class="md:mt-2 text-2xl sm:text-3xl md:text-4xl xl:text-6xl font-bold tracking-tight text-gray-700">
                 {{ statement.name }}
             </h1>
+            {{ block('step1', 'tutorials/statement_show.tutorial.html.twig') }}
             {% if statement.public %}
                 {% if app.user %}
                     {% if is_granted('own', statement) %}
@@ -135,6 +137,7 @@
                                 #}
 
                             </div>
+                            {{ block('step2', 'tutorials/statement_show.tutorial.html.twig') }}
                         {% endif %}
                     {% endif %}
                 </div>
@@ -189,6 +192,7 @@
                                 <i class="fa-solid fa-pencil hidden md:inline-block"></i>
                                 <span class="ml-1">Intro Text hinzufügen</span>
                             </a>
+                            {{ block('step3', 'tutorials/statement_show.tutorial.html.twig') }}
                         </div>
                     {% endif %}
 
