@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Trait\TimestampedEntityTrait;
+use App\Entity\Traits\TimestampedEntityTrait;
 use App\Repository\ConsultationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

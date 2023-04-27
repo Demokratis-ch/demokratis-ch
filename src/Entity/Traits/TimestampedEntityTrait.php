@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Trait;
+namespace App\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;

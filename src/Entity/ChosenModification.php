@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Trait\TimestampedEntityTrait;
+use App\Entity\Traits\TimestampedEntityTrait;
 use App\Repository\ChosenModificationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;

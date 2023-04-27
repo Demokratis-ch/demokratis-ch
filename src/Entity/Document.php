@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Trait\TimestampedEntityTrait;
+use App\Entity\Traits\TimestampedEntityTrait;
 use App\Repository\DocumentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;

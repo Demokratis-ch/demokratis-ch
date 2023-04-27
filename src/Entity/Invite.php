@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Trait\TimestampedEntityTrait;
+use App\Entity\Traits\TimestampedEntityTrait;
 use App\Repository\InviteRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
