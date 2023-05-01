@@ -179,6 +179,10 @@ class ConsultationController extends AbstractController
             return $this->redirectToRoute('app_consultation_import_paragraphs', ['slug' => $consultation->getSlug()]);
         }
 
+        if ($consultation->getSingleStatement()) {
+            return $this->redirectToRoute('app_statement_show', ['uuid' => $consultation->getSingleStatement()->getUuid()]);
+        }
+
         return $this->render('consultation/statements.html.twig', [
             'consultation' => $consultation,
             'statements' => $consultation->getStatements(),

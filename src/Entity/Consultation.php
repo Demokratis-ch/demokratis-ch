@@ -85,6 +85,9 @@ class Consultation
     #[ORM\ManyToOne(inversedBy: 'consultations')]
     private ?Organisation $organisation = null;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Statement $singleStatement = null;
+
     public function __toString(): string
     {
         return substr($this->getTitle(), 0, 65).' ('.substr($this->getUuid(), 0, 8).')';
@@ -470,6 +473,18 @@ class Consultation
     public function setOrganisation(?Organisation $organisation): self
     {
         $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    public function getSingleStatement(): ?Statement
+    {
+        return $this->singleStatement;
+    }
+
+    public function setSingleStatement(?Statement $singleStatement): self
+    {
+        $this->singleStatement = $singleStatement;
 
         return $this;
     }
