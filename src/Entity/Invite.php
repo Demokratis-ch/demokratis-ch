@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\TimestampedEntityTrait;
 use App\Repository\InviteRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -13,6 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 class Invite
 {
+    use TimestampedEntityTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -31,9 +34,6 @@ class Invite
 
     #[ORM\OneToOne(inversedBy: 'invite', cascade: ['persist', 'remove'])]
     private ?Person $person = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $invitedAt = null;
@@ -101,21 +101,6 @@ class Invite
     public function setPerson(?Person $person): self
     {
         $this->person = $person;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    #[ORM\PrePersist]
-    public function setCreatedAt(): self
-    {
-        if ($this->getCreatedAt() === null) {
-            $this->createdAt = new \DateTimeImmutable();
-        }
 
         return $this;
     }
