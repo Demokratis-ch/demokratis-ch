@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\TimestampedEntityTrait;
 use App\Repository\ModificationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,6 +13,8 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\HasLifecycleCallbacks]
 class Modification
 {
+    use TimestampedEntityTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -25,9 +28,6 @@ class Modification
 
     #[ORM\ManyToOne(inversedBy: 'modifications')]
     private ?User $createdBy = null;
-
-    #[ORM\Column]
-    private \DateTimeImmutable $createdAt;
 
     #[ORM\ManyToOne(inversedBy: 'modifications')]
     #[ORM\JoinColumn(nullable: false)]
@@ -46,7 +46,6 @@ class Modification
 
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
         $this->modificationStatements = new ArrayCollection();
     }
 
@@ -87,18 +86,6 @@ class Modification
     public function setCreatedBy(?User $createdBy): self
     {
         $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }

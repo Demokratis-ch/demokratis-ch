@@ -1,3 +1,4 @@
+{% set showTutorial = true %}
 {% extends 'layout-default.html.twig' %}
 
 {% block title %}Vernehmlassungsverfahren{% endblock %}
@@ -6,6 +7,8 @@
     <div class="bg-white">
         <div>
             <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                {{ block('step1', 'tutorials/consultations_index.tutorial.html.twig') }}
+
                 <div class="flex items-baseline justify-between pt-20 md:pt-16 pb-6">
                     <a href="{{ path('app_consultation') }}"><h1 class="text-2xl sm:text-3xl md:text-4xl xl:text-6xl font-bold tracking-tight text-gray-700 hover:text-gray-600">{{ 'consultation.procedures'|trans }}</h1></a>
                 </div>
@@ -13,6 +16,7 @@
                 {# Search #}
                 <div>
                     {{ component('search_consultations') }}
+                    {{ block('step2', 'tutorials/consultations_index.tutorial.html.twig') }}
                 </div>
 
 
@@ -43,6 +47,7 @@
                             </ul>
 
                             <div class="border-b border-gray-200 py-4 text-sm text-gray-600">
+                                {{ block('step3', 'tutorials/consultations_index.tutorial.html.twig') }}
                                 {% if currentTag is not null %}
                                     <p><a href="{{ path('app_consultation', { 'filter': filter, 'cp': app.request.get('cp') }) }}" class="mr-2 pb-2 underline hover:no-underline text-gray-400 text-xs">Auswahl aufheben</a></p>
                                 {% endif %}

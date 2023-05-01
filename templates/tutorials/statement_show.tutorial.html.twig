@@ -1,0 +1,39 @@
+{% block step1 %}
+    {% embed "tutorials/tutorialBubble.html.twig" with {isFirst: true} %}
+        {% block content %}
+            In dieser Ansicht können Sie gemeinsam mit anderen eine Stellungnahme erarbeiten. Diese Einführung gibt Ihnen einen kurzen Überblick über die verfügbaren Funktionen.
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
+
+{% block step2 %}
+    {% embed "tutorials/tutorialBubble.html.twig" with {} %}
+        {% block content %}
+            Hier können Sie allgemeine Einstellungen zur Stellungnahme vornehmen und diese als Word-Datei exportieren.
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
+
+{% block step3 %}
+    {% embed "tutorials/tutorialBubble.html.twig" with {} %}
+        {% block content %}
+            Verfassen Sie einen einleitenden Text für Ihre Stellungnahme.
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
+
+{% block step4 %}
+    {% embed "tutorials/tutorialBubble.html.twig" with {positionLg: 'right'} %}
+        {% block content %}
+            Schlagen Sie eine Änderung für diesen Absatz vor. Andere Nutzer können diese Änderungen dann diskutieren und dann einen Vorschlag für die Stellungnahme auswählen.
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
+
+{% block step5 %}
+    {% embed "tutorials/tutorialBubble.html.twig" with {isLast: true} %}
+        {% block content %}
+            Lesen Sie die Änderungsvorschläge, die bereits von anderen Nutzern gemacht wurden.
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

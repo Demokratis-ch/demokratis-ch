@@ -1,0 +1,23 @@
+{% block step1 %}
+    {% embed "tutorials/tutorialBubble.html.twig" with {isFirst: true} %}
+        {% block content %}
+            Willkommen bei Demokratis. Dies ist eine kurze Einführung in die Funktionalitäten der Übersichtsseite für Vernehmlassungen.
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
+
+{% block step2 %}
+    {% embed "tutorials/tutorialBubble.html.twig" with {} %}
+        {% block content %}
+            Geben Sie hier einen Suchbegriff ein, um nach einem Vernehmlassungsverfahren zu suchen.
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
+
+{% block step3 %}
+    {% embed "tutorials/tutorialBubble.html.twig" with {isLast: true, positionLg: 'right'} %}
+        {% block content %}
+            Klicken Sie auf ein Schlagwort, um dazu passende Vernehmlassungen anzuzeigen.
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
