@@ -9,6 +9,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 trait TimestampedEntityTrait
 {
+    /*
     #[ORM\Column(nullable: false)]
     #[Gedmo\Timestampable(on: 'create')]
     private ?\DateTimeImmutable $createdAt = null;
@@ -36,4 +37,5 @@ trait TimestampedEntityTrait
     {
         $this->updatedAt = $updatedAt;
     }
+    */
 }
