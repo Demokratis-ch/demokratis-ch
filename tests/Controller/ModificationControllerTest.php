@@ -18,28 +18,31 @@ class ModificationControllerTest extends WebTestCase
         $client->followRedirects();
         self::logInAs('admin@test.com', $client);
 
+        // Statements list
         $client->request('GET', '/statements');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Stellungnahmen');
         $this->assertSelectorTextContains('#statements p', 'Meine Meinung');
 
+        // Statement "Meine Meinung"
         $crawler = $client->clickLink('Meine Meinung');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
 
-        $modificationsInSidebar = $crawler->filter('.modifications')->first()->children('div');
-        self::assertCount(1, $modificationsInSidebar);
+        $modificationButtons = $crawler->filter('.modifications')->first()->filter('.modification-button');
+        $initialModificationCount = count($modificationButtons);
+
+        // Check if comments are present
         $commentsInSidebar = $crawler->filter('.comments')->first()->filter('.comment');
         self::assertCount(6, $commentsInSidebar);
 
-        // new modification proposal
-
-        $crawler = $client->click($crawler->filter('.paragraph')->first()->selectLink('Absatz bearbeiten')->link());
+        // Create new modification proposal
+        $crawler = $client->click($crawler->filter('.paragraph')->first()->selectLink('Änderung vorschlagen')->link());
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Änderungsvorschlag');
 
         $form = $crawler->selectButton('Speichern')->form();
-        $form['modification[text]'] = $form['modification[text]']->getValue()."\n\n".'Hallihallo';
+        $form['modification[text]'] = 'Hallihallo';
         $form['modification[justification]'] = 'Einfach so';
         $crawler = $client->submit($form);
 
@@ -47,35 +50,36 @@ class ModificationControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
         $this->assertStringNotContainsString('Hallihallo', $crawler->filter('.paragraph')->first()->text());
 
-        $modificationsInSidebar = $crawler->filter('.modifications')->first()->children('div');
-        self::assertCount(2, $modificationsInSidebar);
+        // Check that the new modification proposal is present
+        $modificationButtons = $crawler->filter('.modifications')->first()->filter('.modification-button');
+        self::assertCount($initialModificationCount + 1, $modificationButtons);
         $commentsInSidebar = $crawler->filter('.comments')->first()->children('.comment');
         self::assertCount(0, $commentsInSidebar);
 
-        $crawler = $client->click($modificationsInSidebar->eq(1)->filter('a')->link());
+        $crawler = $client->click($modificationButtons->eq(1)->filter('a')->link());
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Änderungsvorschlag');
         $this->assertSelectorTextContains('#diff', 'Hallihallo');
         $this->assertSelectorTextContains('#justification', 'Einfach so');
 
+        // Accept the new modification proposal
         $form = $crawler->selectButton('Übernehmen')->form();
         $crawler = $client->submit($form);
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
         $this->assertStringContainsString('Hallihallo', $crawler->filter('.paragraph')->first()->text());
 
-        // reset to original paragraph
-
+        // Reset to original paragraph
         $crawler = $client->clickLink('Original wiederherstellen');
         $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('h1', 'Meine Meinung');
         $this->assertStringNotContainsString('Hallihallo', $crawler->filter('.paragraph')->first()->text());
 
         $commentsInSidebar = $crawler->filter('.comments')->first()->filter('.comment');
         self::assertCount(1, $commentsInSidebar);
 
-        // refuse the modification
-
-        $crawler = $client->click($modificationsInSidebar->eq(1)->filter('a')->link());
+        // Refuse the modification
+        $crawler = $client->click($modificationButtons->eq(1)->filter('a')->link());
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Änderungsvorschlag');
         $this->assertSelectorTextContains('#diff', 'Hallihallo');
@@ -86,21 +90,22 @@ class ModificationControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
 
-        $modificationsInSidebar = $crawler->filter('.modifications')->first()->children('div');
-        self::assertCount(2, $modificationsInSidebar);
-        $this->assertStringContainsString('Abgelehnt', $modificationsInSidebar->eq(1)->text());
+        $refusedModificationButtons = $crawler->filter('.modifications')->first()->filter('.refused .modification-button');
+        self::assertCount(1, $refusedModificationButtons);
 
-        // reopen the modification
-
-        $crawler = $client->click($modificationsInSidebar->eq(1)->filter('a')->link());
+        // Reopen the modification
+        $crawler = $client->click($refusedModificationButtons->first()->filter('a')->link());
         $this->assertResponseIsSuccessful();
 
         $crawler = $client->clickLink('Erneut öffnen');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
 
-        $modificationsInSidebar = $crawler->filter('.modifications')->first()->children('div');
-        self::assertCount(2, $modificationsInSidebar);
-        $this->assertStringNotContainsString('Abgelehnt', $modificationsInSidebar->eq(1)->text());
+        $modificationButtons = $crawler->filter('.modifications')->first()->filter('.modification-button');
+        self::assertCount($initialModificationCount + 1, $modificationButtons);
+        $this->assertStringNotContainsString('Abgelehnt', $modificationButtons->eq(1)->text());
+
+        $refusedPart = $crawler->filter('.modifications')->first()->filter('.refused');
+        self::assertCount(0, $refusedPart);
     }
 }

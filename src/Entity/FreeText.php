@@ -2,16 +2,21 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\TimestampedEntityTrait;
 use App\Repository\FreeTextRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: FreeTextRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class FreeText
 {
+    use TimestampedEntityTrait;
+
+    public const POSITION_BEFORE = 'before';
+    public const POSITION_AFTER = 'after';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -22,10 +27,6 @@ class FreeText
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $text = null;
-
-    #[ORM\Column]
-    #[Gedmo\Timestampable(on: 'create')]
-    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'freeTexts')]
     #[ORM\JoinColumn(nullable: false)]
@@ -71,18 +72,6 @@ class FreeText
     public function setText(?string $text): self
     {
         $this->text = $text;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }

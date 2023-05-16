@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\TimestampedEntityTrait;
 use App\Repository\ConsultationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,6 +18,8 @@ use whatwedo\SearchBundle\Annotation\Index;
 #[ORM\HasLifecycleCallbacks]
 class Consultation
 {
+    use TimestampedEntityTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -81,6 +84,9 @@ class Consultation
 
     #[ORM\ManyToOne(inversedBy: 'consultations')]
     private ?Organisation $organisation = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Statement $singleStatement = null;
 
     public function __toString(): string
     {
@@ -467,6 +473,18 @@ class Consultation
     public function setOrganisation(?Organisation $organisation): self
     {
         $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    public function getSingleStatement(): ?Statement
+    {
+        return $this->singleStatement;
+    }
+
+    public function setSingleStatement(?Statement $singleStatement): self
+    {
+        $this->singleStatement = $singleStatement;
 
         return $this;
     }

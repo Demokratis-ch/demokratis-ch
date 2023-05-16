@@ -27,6 +27,7 @@ class ConsultationCrudController extends AbstractCrudController
             SlugField::new('slug')->setTargetFieldName('title')->hideOnIndex(),
             TextField::new('fedlexId')->hideOnIndex(),
             AssociationField::new('organisation')->setRequired(false),
+            AssociationField::new('singleStatement')->setRequired(false),
             TextField::new('humanTitle')->hideOnIndex(),
             TextField::new('description')->hideOnIndex(),
             ChoiceField::new('status')->setChoices([

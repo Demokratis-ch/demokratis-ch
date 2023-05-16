@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\TimestampedEntityTrait;
 use App\Repository\ChosenModificationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -15,6 +16,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 )]
 class ChosenModification
 {
+    use TimestampedEntityTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -103,6 +106,11 @@ class ChosenModification
     public function getModificationStatement(): ?ModificationStatement
     {
         return $this->modificationStatement;
+    }
+
+    public function getModification(): ?Modification
+    {
+        return $this->getModificationStatement()?->getModification();
     }
 
     public function setModificationStatement(?ModificationStatement $modificationStatement): self

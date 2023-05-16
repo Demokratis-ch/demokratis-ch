@@ -4,6 +4,7 @@ namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -33,6 +34,15 @@ class ExportType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'checked' => 'checked',
+                ],
+            ])
+            ->add('comments', ChoiceType::class, [
+                'label' => 'Kommentare',
+                'help' => 'Verschachtelte Kommentare erscheinen als normale Kommentare der ersten Ebene.',
+                'choices' => [
+                    'Nicht exportieren' => 1,
+                    'Als Word-Kommentare' => 2,
+                    'Als Fliesstext' => 3,
                 ],
             ])
 

@@ -6,6 +6,8 @@
 parameters:
     app.fontawesome_key: '%env(FONTAWESOME_KEY)%'
     file_directory: '%kernel.project_dir%/public/uploads'
+    default_host: '%env(DEFAULT_HOST)%'
+    shorturl_host: '%env(SHORTURL_HOST)%'
 
 services:
     # default configuration for services in *this* file

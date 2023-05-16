@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\TimestampedEntityTrait;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,6 +18,8 @@ use Symfony\Component\Uid\Uuid;
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use TimestampedEntityTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -111,10 +114,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
     }
 
-    public function getName(): string|Person|null
+    public function getName(): string|null
     {
         if ($this->getPerson()) {
-            return $this->getPerson();
+            return $this->getPerson()->getDisplayName();
         } else {
             return $this->getEmail();
         }
@@ -138,12 +141,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
-    }
-
-    #[ORM\PrePersist]
-    public function setCreatedAtValue(): void
-    {
-        $this->createdAt = null;
     }
 
     public function getEmail(): ?string

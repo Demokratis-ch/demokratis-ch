@@ -39,7 +39,7 @@
                                 {% if statement.organisation.logo is defined and statement.organisation.logo is not null %}
                                     <img class="mx-auto h-12 w-12 flex-shrink-0 rounded-full border border-solid" src="{{ asset('uploads/'~statement.organisation.logo) }}" alt="">
                                 {% else %}
-                                    <div class="mx-auto h-12 w-12 bg-gray-50 group-hover:bg-gray-100 flex items-center justify-center h-screen rounded-full border border-solid">
+                                    <div class="mx-auto h-12 w-12 bg-gray-50 group-hover:bg-gray-100 flex items-center justify-center rounded-full border border-solid">
                                         <span class="text-sm text-gray-300">{{ statement.organisation.name|u.truncate(1) }}</span>
                                     </div>
                                 {% endif %}

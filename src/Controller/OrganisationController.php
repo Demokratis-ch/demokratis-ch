@@ -50,7 +50,7 @@ class OrganisationController extends AbstractController
     }
 
     #[Route('/{slug}/edit', name: 'app_organisation_edit', methods: ['GET', 'POST'])]
-    #[isGranted('own', subject: 'organisation')]
+    #[isGranted('view', subject: 'organisation')]
     public function edit(
         #[MapEntity(mapping: ['slug' => 'slug'])]
         Organisation $organisation,
