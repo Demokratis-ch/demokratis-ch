@@ -103,16 +103,22 @@ class PullConsultationsCommand extends Command
 
                 $output->writeln('<info>Added '.$fetchedConsultation->id.' to the database</info>');
             } else {
-                if ($existingConsultation->getStatus() !== $fetchedStatus) {
-                    $consultation[$i] = $existingConsultation;
-                    $consultation[$i]->setStatus($fetchedStatus);
-
-                    $this->entityManager->persist($consultation[$i]);
-
-                    $output->writeln('<info>'.$fetchedConsultation->id.' updated to "'.$fetchedStatus.'"</info>');
-                } else {
-                    $output->writeln('<comment>'.$fetchedConsultation->id.' already exists</comment>');
+                $consultation[$i] = $existingConsultation;
+                $consultation[$i]->setStatus($fetchedStatus);
+                $consultation[$i]->setDescription($fetchedConsultation->desc);
+                $consultation[$i]->setTitle($fetchedConsultation->title);
+                if (isset($fetchedConsultation->startDate)) {
+                    $consultation[$i]->setStartDate(\DateTimeImmutable::createFromMutable($fetchedConsultation->startDate->getValue()));
                 }
+                if (isset($fetchedConsultation->endDate)) {
+                    $consultation[$i]->setEndDate(\DateTimeImmutable::createFromMutable($fetchedConsultation?->endDate->getValue()));
+                }
+                $consultation[$i]->setOffice($fetchedConsultation->officeLabel);
+                $consultation[$i]->setInstitution($fetchedConsultation->institutionLabel);
+
+                $this->entityManager->persist($consultation[$i]);
+
+                $output->writeln('<info>'.$fetchedConsultation->id.', Status: "'.$fetchedStatus.'"</info>');
             }
         }
 
