@@ -4,7 +4,6 @@
 {% set hasForeign = paragraphContainer.foreignModifications|length > 0 %}
 {% set hasRefused = paragraphContainer.refusedModifications|length > 0 %}
 {% set hasJustification = hasChosen and paragraphContainer.chosenModification.justification|default(null) is not null %}
-{% set hasPeers = hasChosen and paragraphContainer.peers|length > 0 %}
 {% set showModificationsPanel = hasChosen or hasOpenModifications or hasForeign or hasRefused %}
 {% set showModificationsPanelShowMore = openModificationsCount > 4 or hasForeign or hasRefused %}
 
@@ -69,17 +68,18 @@
 
                         {# Proposed modifications #}
                         {% for n, modification in firstRowModifications %}
-                            {% include 'statement/modification_button.html.twig' with { modification, statement, chosen: false } only %}
+                            {% include 'statement/modification_button.html.twig' with { modification, statement, chosen: false, selected: (modification.id == this.getSelectedModification().id) } only %}
                         {% endfor %}
                     </div>
                 {% endif %}
 
                 {# Show more #}
-                <div class="hidden flex flex-col gap-2" data-visibility-target="hideable">
+                {% if this.showMoreModifications %}
+                <div class="flex flex-col gap-2">
                     {% if hiddenModifications|length > 0 %}
                         <div class="grid grid-cols-2 lg:grid-cols-4 gap-2">
                             {% for n, modification in hiddenModifications %}
-                                {% include 'statement/modification_button.html.twig' with { modification, statement } only %}
+                                {% include 'statement/modification_button.html.twig' with { modification, statement, selected: (modification.id == this.getSelectedModification().id) } only %}
                             {% endfor %}
                         </div>
                     {% endif %}
@@ -89,7 +89,7 @@
                             <h3 class="text-sm mx-2 mb-2 text-gray-500"><i class="fa-regular fa-cancel"></i> Abgelehnte Änderungsvorschläge:</h3>
                             <div class="grid grid-cols-2 lg:grid-cols-4 gap-2">
                                 {% for n, modification in paragraphContainer.refusedModifications %}
-                                    {% include 'statement/modification_button.html.twig' with { modification, statement } only %}
+                                    {% include 'statement/modification_button.html.twig' with { modification, statement, selected: (modification.id == this.getSelectedModification().id) } only %}
                                 {% endfor %}
                             </div>
                         </div>
@@ -100,16 +100,18 @@
                             <h3 class="text-sm mx-2 mb-2 text-gray-500"><i class="fa-regular fa-lightbulb-on"></i> Änderungsvorschläge aus anderen Stellungnahmen:</h3>
                             <div class="grid grid-cols-2 lg:grid-cols-4 gap-2">
                                 {% for n, modification in paragraphContainer.foreignModifications %}
-                                    {% include 'statement/modification_button.html.twig' with { modification, statement, foreign: true } only %}
+                                    {% include 'statement/modification_button.html.twig' with { modification, statement, foreign: true, selected: (modification.id == this.getSelectedModification().id) } only %}
                                 {% endfor %}
                             </div>
                         </div>
                     {% endif %}
                 </div>
+                {% endif %}
 
                 {% if showModificationsPanelShowMore %}
                 <div class="">
-                    <a data-action="visibility#toggleTargets" data-visibility-target="hideable" class="cursor-pointer underline hover:no-underline text-xs text-gray-400">
+                    {% if not this.showMoreModifications %}
+                    <a data-action="live#action" data-action-name="toggleShowMoreModifications(showMore=1)" class="cursor-pointer underline hover:no-underline text-xs text-gray-400">
                         <i class="fas fa-caret-down mx-2"></i>Mehr anzeigen (
                             {{ [
                                 hiddenModifications|length > 0 ? hiddenModifications|length ~ ' offene' : null,
@@ -118,9 +120,11 @@
                             ]|filter(v => v is not null)|join(', ') }}
                         )
                     </a>
-                    <a data-action="visibility#toggleTargets" data-visibility-target="hideable" class="cursor-pointer hidden mt-2 ml-2 underline hover:no-underline text-xs text-gray-400">
+                    {% else %}
+                    <a data-action="live#action" data-action-name="toggleShowMoreModifications(showMore=0)" class="cursor-pointer mt-2 ml-2 underline hover:no-underline text-xs text-gray-400">
                         Weniger anzeigen <i class="fas fa-caret-up"></i>
                     </a>
+                    {% endif %}
                 </div>
                 {% endif %}
 
@@ -133,19 +137,20 @@
     {# Display paragraph #}
     <div class="paragraph col-span-5 {% if showModificationsPanel %}lg:row-start-2 lg:row-span-2 {% else %}lg:row-start-1 lg:row-span-3 {% endif%} {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %} flex flex-col">
         <div class="z-10">
-            {% if hasChosen %}
+            {% set diff = this.getDiff() %}
+            {% if diff is not null %}
                 <div class="flex-grow bg-white shadow border">
                     <p class="h-full p-4 text-sm lg:text-md text-gray-600 border-l-8 border-blue-300">
-                        {% for diff in paragraphContainer.chosenDiff %}
-                            <span class="{% if diff[0] == -1 %}
+                        {% for diffSpan in diff %}
+                            <span class="{% if diffSpan[0] == -1 %}
                                                             bg-red-100
                                                             line-through
                                                             text-red-800
-                                                        {% elseif diff[0] == 1 %}
+                                                        {% elseif diffSpan[0] == 1 %}
                                                             bg-green-100
                                                             text-green-800
                                                         {% endif %}">
-                                                        {{ diff[1]|nl2br }}
+                                                        {{ diffSpan[1]|nl2br }}
                                                     </span>
                         {% endfor %}
                     </p>
@@ -166,10 +171,11 @@
 
         {% endif %}
 
-        {% if hasPeers %}
+        {% set peers = this.getPeers() %}
+        {% if peers %}
             <div class="text-xs text-gray-400 mt-3">
                 Dieser Vorschlag ist auch Teil folgender Stellungnahmen:
-                {% for peer in paragraphContainer.peers %}
+                {% for peer in peers %}
                     {% if peer.statement != statement %}
                         <a href="{{ path('app_statement_show', { 'uuid': peer.statement.uuid }) }}" target="_blank"
                            class="related-statement underline hover:no-underline">{{ peer.statement }}</a>

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Aggregate\ParagraphAggregate;
+use App\Entity\ChosenModification;
 use App\Entity\Consultation;
 use App\Entity\FreeText;
 use App\Entity\Modification;
@@ -116,16 +117,15 @@ class StatementController extends AbstractController
         $refusedModifications = $modificationRepository->findRefusedModificationsIndexed($statement);
         $foreignModifications = $modificationRepository->findForeignModificationsIndexed($statement);
         $chosens = $chosenModificationRepository->findByStatementIndexed($statement);
-        $peersIndexed = $modificationStatementRepository->findPeers($statement, array_values($chosens));
+        $peersIndexed = $modificationStatementRepository->findPeers($statement, array_map(fn (ChosenModification $chosen) => $chosen->getModification(), array_values($chosens)));
 
         foreach ($paragraphsInLegalText as $i => $paragraph) {
             $chosen = $chosens[$paragraph->getId()] ?? null;
             $foreign = $foreignModifications[$paragraph->getId()] ?? [];
-            if ($chosen) {
-                $wd[$i] = new WordDiff();
-                $diff = $wd[$i]->diff($paragraph->getText(), $chosen->getModificationStatement()->getModification()->getText());
-                $peers = $peersIndexed[$chosen->getModificationStatement()->getModification()->getId()] ?? [];
+            $diff = $chosen === null ? null : (new WordDiff())->diff($paragraph->getText(), $chosen->getModificationStatement()->getModification()->getText());
+            $peers = $chosen === null ? null : $peersIndexed[$chosen->getModificationStatement()->getModification()->getId()] ?? [];
 
+            if ($chosen !== null) {
                 // Remove chosen from foreign modifications
                 $foreign = array_filter($foreign, fn (Modification $mod) => $mod->getUuid() !== $chosen->getModificationStatement()->getModification()->getUuid());
             }
