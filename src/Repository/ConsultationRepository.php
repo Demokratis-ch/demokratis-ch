@@ -32,7 +32,8 @@ class ConsultationRepository extends ServiceEntityRepository
     public function getPaginator(int $offset, string $filter = null, Tag $tag = null, Organisation $organisation = null): Paginator
     {
         $query = $this->createQueryBuilder('c')
-            ->orderBy('c.startDate', 'DESC')
+            ->orderBy('CASE WHEN c.startDate IS NULL THEN 0 ELSE 1 END', 'ASC')
+            ->addOrderBy('c.startDate', 'DESC')
             ->setMaxResults(self::PAGINATOR_PER_PAGE)
             ->setFirstResult($offset)
             ->leftJoin('c.tags', 't')

@@ -34,11 +34,11 @@
                                 </li>
 
                                 <li>
-                                    <a href="{{ path('app_consultation', { 'filter': 'ongoing', 't': app.request.get('t'), 'cp': app.request.get('cp') }) }}" class="{% if filter == 'ongoing' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.ongoing'|trans }} <span class="ml-1 {% if filter == 'ongoing' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ ongoingCount }}</span></a>
+                                    <a href="{{ path('app_consultation', { 'filter': 'planned', 't': app.request.get('t'), 'cp': app.request.get('cp') }) }}" class="{% if filter == 'planned' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.planned'|trans }} <span class="ml-1 {% if filter == 'planned' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ plannedCount }}</a>
                                 </li>
 
                                 <li>
-                                    <a href="{{ path('app_consultation', { 'filter': 'planned', 't': app.request.get('t'), 'cp': app.request.get('cp') }) }}" class="{% if filter == 'planned' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.planned'|trans }} <span class="ml-1 {% if filter == 'planned' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ plannedCount }}</a>
+                                    <a href="{{ path('app_consultation', { 'filter': 'ongoing', 't': app.request.get('t'), 'cp': app.request.get('cp') }) }}" class="{% if filter == 'ongoing' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.ongoing'|trans }} <span class="ml-1 {% if filter == 'ongoing' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ ongoingCount }}</span></a>
                                 </li>
 
                                 <li>
