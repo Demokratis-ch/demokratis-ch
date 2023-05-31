@@ -101,7 +101,7 @@ class PullConsultationsCommand extends Command
 
                 $this->entityManager->persist($consultation[$i]);
 
-                $output->writeln('<info>Added '.$fetchedConsultation->id.' to the database</info>');
+                $output->writeln('Added <info>'.$fetchedConsultation->id.'</info> to the database');
             } else {
                 $consultation[$i] = $existingConsultation;
                 $consultation[$i]->setStatus($fetchedStatus);
@@ -118,7 +118,7 @@ class PullConsultationsCommand extends Command
 
                 $this->entityManager->persist($consultation[$i]);
 
-                $output->writeln('<info>'.$fetchedConsultation->id.', Status: "'.$fetchedStatus.'"</info>');
+                $output->writeln('Updated <info>'.$fetchedConsultation->id.'</info>, Status: "'.$fetchedStatus.'"');
             }
         }
 
