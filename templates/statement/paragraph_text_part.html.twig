@@ -43,7 +43,7 @@
 
                 {% if this.isNonChosenModificationSelected() %}
                     <a data-action="live#action" data-action-name="acceptSelectedModification()" class="cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
-                        Diese Änderung akzeptieren <i class="fa-solid fa-check"></i>
+                        Diese Änderung akzeptieren <i class="fa-solid fa-circle-check"></i>
                     </a>
                 {% endif %}
             {% endif %}
@@ -72,7 +72,7 @@
 
                         {# Currently chosen #}
                         {% if hasChosen %}
-                            {% include 'statement/modification_button.html.twig' with { modification: paragraphContainer.chosenModification.modification, statement, chosen: true } only %}
+                            {% include 'statement/modification_button.html.twig' with { modification: paragraphContainer.chosenModification.modification, statement, chosen: true, selected: this.isSelectedModification(paragraphContainer.chosenModification.modification) } only %}
                             {% set itemsDisplayed = itemsDisplayed + 1 %}
                         {% endif %}
 
@@ -155,15 +155,20 @@
                 }}) }}
             </div>
             {% endif %}
-            <div class="w-full">
+            <div class="w-full flex flex-col bg-white shadow border">
                 {% if this.getSelectedModification() is not null %}
-                <div class="flex-grow bg-white shadow border h-full">
+                <div class="flex-grow">
                     <p class="h-full p-4 text-sm lg:text-md text-gray-600 border-l-8 border-blue-300">
+                        {% if hasChosen and this.isSelectedModification(paragraphContainer.chosenModification.modification) %}
+                            <span class="float-right">
+                                <i class="fa-regular fa-circle-check fa-lg text-blue-400 float-right"></i>
+                            </span>
+                        {% endif %}
                         {{ wordDiff(paragraphContainer.paragraph.text, this.getSelectedModification().getText()) }}
                     </p>
                 </div>
             {% else %}
-                <div class="flex-grow bg-white shadow border">
+                <div class="flex-grow">
                     <p class="h-full p-4 text-sm lg:text-md text-gray-600 border-l-8 border-gray-300">
                         {{ paragraphContainer.paragraph.text|nl2br }}
                     </p>
