@@ -12,6 +12,7 @@ use App\Entity\Statement;
 use App\Form\ModificationType;
 use App\Repository\ModificationRepository;
 use App\Repository\ModificationStatementRepository;
+use App\Service\ModificationService;
 use App\Service\WordDiff;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -58,6 +59,7 @@ class ParagraphComponent extends AbstractController
         private ModificationRepository $modificationRepository,
         private ModificationStatementRepository $modificationStatementRepository,
         private EntityManagerInterface $entityManager,
+        private ModificationService $modificationService,
     ) {
     }
 
@@ -88,7 +90,17 @@ class ParagraphComponent extends AbstractController
         if ($selected === null) {
             return false;
         }
+
         return $selected->getId() === $modification->getId();
+    }
+
+    public function isNonChosenModificationSelected(): bool
+    {
+        if ($this->selectedModificationId === null) {
+            return false;
+        }
+
+        return $this->paragraphContainer->chosenModification?->getModification()?->getId() !== $this->selectedModificationId;
     }
 
     public function getDiff(): array|null
@@ -175,5 +187,40 @@ class ParagraphComponent extends AbstractController
             ?? $this->paragraphContainer->chosenModification?->getModification()?->getText()
             ?? $this->paragraphContainer->paragraph->getText()
         );
+    }
+
+    #[LiveAction]
+    public function acceptSelectedModification(): void
+    {
+        $selectedModification = $this->getSelectedModification();
+        $modificationStatement = $this->modificationStatementRepository->findOneBy([
+            'modification' => $selectedModification->getId(),
+            'statement' => $this->statement->getId(),
+        ]);
+
+        if ($modificationStatement === null) {
+            // todo: allow accepting foreign modifications?
+            return;
+        }
+
+        $oldModification = $this->paragraphContainer->chosenModification?->getModification();
+
+        $newChosen = $this->modificationService->accept($modificationStatement);
+
+        $this->paragraphContainer->changeChosenModification($newChosen, $oldModification);
+        $this->selectedModificationId = null;
+    }
+
+    #[LiveAction]
+    public function resetParagraph(): void
+    {
+        $chosenModification = $this->paragraphContainer->chosenModification;
+        if ($chosenModification === null) {
+            throw new \LogicException('Trying to reset a paragraph with no chosen modification.');
+        }
+
+        $this->modificationService->resetParagraph($chosenModification);
+        $this->paragraphContainer->changeChosenModification(null, $chosenModification->getModification());
+        $this->selectedModificationId = null;
     }
 }

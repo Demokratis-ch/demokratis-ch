@@ -35,9 +35,15 @@
                     Änderung vorschlagen <i class="fa-solid fa-edit"></i>
                 </a>
 
-                {% if hasChosen %}
-                    <a href="{{ path('app_paragraph_remove_chosen', { 'uuid': paragraphContainer.chosenModification.modificationStatement.uuid }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                {% if hasChosen and not this.isNonChosenModificationSelected() %}
+                    <a data-action="live#action" data-action-name="resetParagraph()" class="cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                         Original wiederherstellen <i class="fa-solid fa-undo"></i>
+                    </a>
+                {% endif %}
+
+                {% if this.isNonChosenModificationSelected() %}
+                    <a data-action="live#action" data-action-name="acceptSelectedModification()" class="cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                        Diese Änderung akzeptieren <i class="fa-solid fa-check"></i>
                     </a>
                 {% endif %}
             {% endif %}
