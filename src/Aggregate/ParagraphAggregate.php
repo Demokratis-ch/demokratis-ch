@@ -9,7 +9,6 @@ use App\Entity\FreeText;
 use App\Entity\Modification;
 use App\Entity\ModificationStatement;
 use App\Entity\Paragraph;
-use App\Service\WordDiff;
 
 class ParagraphAggregate
 {
@@ -20,7 +19,6 @@ class ParagraphAggregate
      * @param array<Modification>          $refusedModifications
      * @param array<Modification>          $foreignModifications
      * @param array<ModificationStatement> $peers
-     * @param array<string>|null           $chosenDiff
      */
     public function __construct(
         public Paragraph $paragraph,
@@ -31,7 +29,6 @@ class ParagraphAggregate
         public array $foreignModifications,
         public ?ChosenModification $chosenModification,
         public array $peers, // statements where this modification has been chosen
-        public ?array $chosenDiff,
     ) {
     }
 
@@ -64,13 +61,5 @@ class ParagraphAggregate
 
         usort($this->openModifications, fn (Modification $a, Modification $b) => $b->getCreatedAt() <=> $a->getCreatedAt());
         $this->openModifications = array_values($this->openModifications);
-
-        // update chosen diff
-        // todo: diff should be done on the fly. currently it is being serialized and sent between the server and client every time
-        if ($newChosenModification === null) {
-            $this->chosenDiff = null;
-        } else {
-            $this->chosenDiff = (new WordDiff())->diff($this->paragraph->getText(), $this->chosenModification->getModificationStatement()->getModification()->getText());
-        }
     }
 }

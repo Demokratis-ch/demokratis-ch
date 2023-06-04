@@ -11,11 +11,7 @@
         <div class="fixed top-0 left-0 right-0 bottom-0 bg-black/75 flex z-50">
             <div class="hidden md:block w-2/3 z-20 overflow-y-scroll">
                 <p class="m-20 mb-30 p-6 bg-white border shadow text-md text-gray-600">
-                    {% for diff in this.getDiff() %}
-                        <span class="{% if diff[0] == -1 %}bg-red-100 line-through text-red-800{% elseif diff[0] == 1 %}bg-green-100 text-green-800{% endif %}">
-                            {{ diff[1]|nl2br }}
-                        </span>
-                    {% endfor %}
+                    {{ wordDiff(paragraph.text, this.modification.getText()) }}
                 </p>
             </div>
 

@@ -13,7 +13,6 @@ use App\Form\ModificationType;
 use App\Repository\ModificationRepository;
 use App\Repository\ModificationStatementRepository;
 use App\Service\ModificationService;
-use App\Service\WordDiff;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -101,19 +100,6 @@ class ParagraphComponent extends AbstractController
         }
 
         return $this->paragraphContainer->chosenModification?->getModification()?->getId() !== $this->selectedModificationId;
-    }
-
-    public function getDiff(): array|null
-    {
-        $selectedModification = $this->getSelectedModification();
-        if ($selectedModification === null) {
-            return $this->paragraphContainer->chosenDiff;
-        }
-
-        return (new WordDiff())->diff(
-            $this->paragraphContainer->paragraph->getText(),
-            $selectedModification->getText(),
-        );
     }
 
     public function getPeers(): array

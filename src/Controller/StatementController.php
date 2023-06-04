@@ -20,7 +20,6 @@ use App\Repository\ModificationRepository;
 use App\Repository\ModificationStatementRepository;
 use App\Repository\ParagraphRepository;
 use App\Repository\StatementRepository;
-use App\Service\WordDiff;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -122,7 +121,6 @@ class StatementController extends AbstractController
         foreach ($paragraphsInLegalText as $i => $paragraph) {
             $chosen = $chosens[$paragraph->getId()] ?? null;
             $foreign = $foreignModifications[$paragraph->getId()] ?? [];
-            $diff = $chosen === null ? null : (new WordDiff())->diff($paragraph->getText(), $chosen->getModificationStatement()->getModification()->getText());
             $peers = $chosen === null ? null : $peersIndexed[$chosen->getModificationStatement()->getModification()->getId()] ?? [];
 
             if ($chosen !== null) {
@@ -139,7 +137,6 @@ class StatementController extends AbstractController
                 $foreign,
                 $chosen,
                 $peers ?? [],
-                $diff ?? null,
             );
         }
 

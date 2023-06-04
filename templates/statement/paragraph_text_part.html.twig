@@ -156,22 +156,10 @@
             </div>
             {% endif %}
             <div class="w-full">
-            {% set diff = this.getDiff() %}
-            {% if diff is not null %}
+                {% if this.getSelectedModification() is not null %}
                 <div class="flex-grow bg-white shadow border h-full">
                     <p class="h-full p-4 text-sm lg:text-md text-gray-600 border-l-8 border-blue-300">
-                        {% for diffSpan in diff %}
-                            <span class="{% if diffSpan[0] == -1 %}
-                                                            bg-red-100
-                                                            line-through
-                                                            text-red-800
-                                                        {% elseif diffSpan[0] == 1 %}
-                                                            bg-green-100
-                                                            text-green-800
-                                                        {% endif %}">
-                                                        {{ diffSpan[1]|nl2br }}
-                                                    </span>
-                        {% endfor %}
+                        {{ wordDiff(paragraphContainer.paragraph.text, this.getSelectedModification().getText()) }}
                     </p>
                 </div>
             {% else %}
