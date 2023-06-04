@@ -45,13 +45,10 @@ class ParagraphAggregate
         $this->chosenModification = $newChosenModification;
 
         if ($newChosenModification !== null) {
-            // remove new chosen from open
-            foreach ($this->openModifications as $key => $openModification) {
-                if ($openModification->getId() === $this->chosenModification->getModification()->getId()) {
-                    unset($this->openModifications[$key]);
-                    break;
-                }
-            }
+            // remove new chosen from lists
+            $this->removeModificationFromList($this->openModifications, $newChosenModification->getModification());
+            $this->removeModificationFromList($this->refusedModifications, $newChosenModification->getModification());
+            $this->removeModificationFromList($this->foreignModifications, $newChosenModification->getModification());
         }
 
         // add old chosen to open
@@ -61,5 +58,19 @@ class ParagraphAggregate
 
         usort($this->openModifications, fn (Modification $a, Modification $b) => $b->getCreatedAt() <=> $a->getCreatedAt());
         $this->openModifications = array_values($this->openModifications);
+    }
+
+    /**
+     * @param Modification[] $haystack
+     * @param Modification $needle
+     */
+    private function removeModificationFromList(array &$haystack, Modification $needle): void
+    {
+        foreach ($haystack as $key => $modification) {
+            if ($modification->getId() === $needle->getId()) {
+                unset($haystack[$key]);
+                break;
+            }
+        }
     }
 }

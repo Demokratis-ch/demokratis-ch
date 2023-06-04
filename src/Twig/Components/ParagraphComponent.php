@@ -179,19 +179,14 @@ class ParagraphComponent extends AbstractController
     public function acceptSelectedModification(): void
     {
         $selectedModification = $this->getSelectedModification();
-        $modificationStatement = $this->modificationStatementRepository->findOneBy([
-            'modification' => $selectedModification->getId(),
-            'statement' => $this->statement->getId(),
-        ]);
 
-        if ($modificationStatement === null) {
-            // todo: allow accepting foreign modifications?
-            return;
+        if ($selectedModification === null) {
+            throw new \LogicException('No modification selected');
         }
 
         $oldModification = $this->paragraphContainer->chosenModification?->getModification();
 
-        $newChosen = $this->modificationService->accept($modificationStatement);
+        $newChosen = $this->modificationService->accept($selectedModification, $this->statement);
 
         $this->paragraphContainer->changeChosenModification($newChosen, $oldModification);
         $this->selectedModificationId = null;
