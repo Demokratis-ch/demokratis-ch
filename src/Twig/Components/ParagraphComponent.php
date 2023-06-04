@@ -7,27 +7,33 @@ namespace App\Twig\Components;
 use App\Aggregate\ParagraphAggregate;
 use App\Entity\LegalText;
 use App\Entity\Modification;
+use App\Entity\ModificationStatement;
 use App\Entity\Statement;
+use App\Form\ModificationType;
 use App\Repository\ModificationRepository;
 use App\Repository\ModificationStatementRepository;
 use App\Service\WordDiff;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
+use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent('paragraph')]
 class ParagraphComponent extends AbstractController
 {
     use DefaultActionTrait;
+    use ComponentWithFormTrait;
 
     // i, paragraphContainer, collapse, statement, legalText
     #[LiveProp(writable: false)]
     public int $i;
 
-    #[LiveProp(writable: false)]
+    #[LiveProp(writable: true)]
     public ParagraphAggregate $paragraphContainer;
 
     #[LiveProp(writable: false)]
@@ -45,9 +51,13 @@ class ParagraphComponent extends AbstractController
     #[LiveProp(writable: true)]
     public bool $showMoreModifications = false;
 
+    #[LiveProp(writable: true)]
+    public bool $editMode = false;
+
     public function __construct(
         private ModificationRepository $modificationRepository,
         private ModificationStatementRepository $modificationStatementRepository,
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -72,6 +82,15 @@ class ParagraphComponent extends AbstractController
         return $this->modificationRepository->find($this->selectedModificationId);
     }
 
+    public function isSelectedModification(Modification $modification): bool
+    {
+        $selected = $this->getSelectedModification();
+        if ($selected === null) {
+            return false;
+        }
+        return $selected->getId() === $modification->getId();
+    }
+
     public function getDiff(): array|null
     {
         $selectedModification = $this->getSelectedModification();
@@ -93,5 +112,68 @@ class ParagraphComponent extends AbstractController
         }
 
         return $this->modificationStatementRepository->findPeers($this->statement, [$this->getSelectedModification()])[$this->getSelectedModification()->getId()] ?? [];
+    }
+
+    #[LiveAction]
+    public function createModification(): void
+    {
+        $this->editMode = true;
+    }
+
+    #[LiveAction]
+    public function cancelModification(): void
+    {
+        $this->editMode = false;
+    }
+
+    #[LiveAction]
+    public function formSubmit(): void
+    {
+        $this->saveModification();
+    }
+
+    private function saveModification(): void
+    {
+        $this->submitForm();
+
+        /** @var Modification $modification */
+        $modification = $this->getFormInstance()->getData();
+
+        if (!($modification instanceof Modification)) {
+            throw new \RuntimeException('Not a modification object');
+        }
+
+        $modification->setParagraph($this->paragraphContainer->paragraph);
+        $modification->setCreatedBy($this->getUser());
+
+        $modificationStatement = new ModificationStatement();
+        $modificationStatement->setModification($modification);
+        $modificationStatement->setStatement($this->statement);
+        $modificationStatement->setRefused(false);
+
+        $this->entityManager->persist($modification);
+        $this->entityManager->persist($modificationStatement);
+        $this->entityManager->flush();
+
+        $this->editMode = false;
+        $this->selectedModificationId = $modification->getId();
+        array_unshift($this->paragraphContainer->openModifications, $modification);
+    }
+
+    protected function instantiateForm(): FormInterface
+    {
+        $modification = new Modification();
+        $modification->setText($this->getTextForNewModification());
+
+        return $this->createForm(ModificationType::class, $modification);
+    }
+
+    private function getTextForNewModification(): string
+    {
+        return (string) (
+            $this->getSelectedModification()?->getText()
+            ?? $this->paragraphContainer->chosenModification?->getModification()?->getText()
+            ?? $this->paragraphContainer->paragraph->getText()
+        );
     }
 }

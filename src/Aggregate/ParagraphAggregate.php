@@ -22,15 +22,15 @@ class ParagraphAggregate
      * @param array<string>|null           $chosenDiff
      */
     public function __construct(
-        public readonly Paragraph $paragraph,
-        public readonly array $freetextBefore,
-        public readonly array $freetextAfter,
-        public readonly array $openModifications,
-        public readonly array $refusedModifications,
-        public readonly array $foreignModifications,
-        public readonly ?ChosenModification $chosenModification,
-        public readonly array $peers, // statements where this modification has been chosen
-        public readonly ?array $chosenDiff,
+        public Paragraph $paragraph,
+        public array $freetextBefore,
+        public array $freetextAfter,
+        public array $openModifications,
+        public array $refusedModifications,
+        public array $foreignModifications,
+        public ?ChosenModification $chosenModification,
+        public array $peers, // statements where this modification has been chosen
+        public ?array $chosenDiff,
     ) {
     }
 
