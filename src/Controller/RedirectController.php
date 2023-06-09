@@ -31,6 +31,8 @@ class RedirectController extends AbstractController
                 $statement_route = $host.$router->generate('app_statement_show', ['uuid' => $redirect->getStatement()->getUuid()], Router::RELATIVE_PATH);
             } elseif ($redirect->getConsultation()) {
                 $consultation_route = $host.$router->generate('app_consultation_show_statements', ['slug' => $redirect->getConsultation()->getSlug()], Router::RELATIVE_PATH);
+            } elseif ($redirect->getUrl()) {
+                return $this->redirect($redirect->getUrl());
             } else {
                 throw new NotFoundHttpException('No target');
             }

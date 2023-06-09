@@ -14,6 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -53,6 +54,7 @@ class RedirectCrudController extends AbstractCrudController
             TextField::new('token'),
             AssociationField::new('consultation')->setRequired(false),
             AssociationField::new('statement')->setRequired(false),
+            UrlField::new('url'),
             AssociationField::new('createdBy'),
             DateTimeField::new('createdAt'),
         ];

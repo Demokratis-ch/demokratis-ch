@@ -45,6 +45,9 @@ class Redirect
     #[ORM\ManyToOne(inversedBy: 'redirects')]
     private ?Organisation $organisation = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $url = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -133,6 +136,18 @@ class Redirect
     public function setOrganisation(?Organisation $organisation): self
     {
         $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(?string $url): self
+    {
+        $this->url = $url;
 
         return $this;
     }
