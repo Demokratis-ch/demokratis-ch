@@ -54,8 +54,8 @@
                                     {% set i = i + 1 %}
                                     <a href="{{ path('app_statement_show', { 'uuid': statement.uuid }) }}"
                                        class="col-span-3 hover:bg-gray-50 md:col-span-1 relative block w-full rounded-lg border-2 border-solid border-gray-300 p-4 text-center hover:border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                        <p class="mt-2 block text-sm text-gray-700">{{ statement.name|u.truncate(35, ' ...') }}</p>
-                                        <p class="block text-sm text-gray-500">{{ statement.justification|u.truncate(35, ' ...') }}</p>
+                                        <p class="mt-2 block text-sm text-gray-700">{{ statement.name|u.truncate(35, ' ...', false) }}</p>
+                                        <p class="block text-sm text-gray-500">{{ statement.justification|u.truncate(35, ' ...', false) }}</p>
                                     </a>
                                 {% endif %}
                             {% endfor %}
@@ -64,8 +64,8 @@
                                     {% set i = i + 1 %}
                                     <a href="{{ path('app_external_statement_show', { 'uuid': externalStatement.uuid }) }}"
                                        class="col-span-3 hover:bg-gray-50 md:col-span-1 relative block w-full rounded-lg border-2 border-solid border-gray-300 p-4 text-center hover:border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                        <p class="mt-2 block text-sm text-gray-700">{{ externalStatement.name|u.truncate(35, ' ...') }}</p>
-                                        <p class="block text-sm text-gray-500">{{ externalStatement.description|u.truncate(35, ' ...') }}</p>
+                                        <p class="mt-2 block text-sm text-gray-700">{{ externalStatement.name|u.truncate(35, ' ...', false) }}</p>
+                                        <p class="block text-sm text-gray-500">{{ externalStatement.description|u.truncate(35, ' ...', false) }}</p>
                                     </a>
                                 {% endif %}
                             {% endfor %}

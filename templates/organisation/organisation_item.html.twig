@@ -4,7 +4,7 @@
             {% if organisation.logo is defined and organisation.logo is not null %}
                 <img class="mx-auto h-32 w-32 flex-shrink-0 rounded-full border border-solid" src="{{ asset('uploads/'~organisation.logo) }}" alt="">
             {% else %}
-                <div class="mx-auto h-32 w-32 bg-gray-50 group-hover:bg-gray-100 flex items-center justify-center h-screen rounded-full border border-solid">
+                <div class="mx-auto h-32 w-32 bg-gray-50 group-hover:bg-gray-100 flex items-center justify-center rounded-full border border-solid">
                     <span class="text-2xl text-gray-300">{{ organisation.name|u.truncate(1) }}</span>
                 </div>
             {% endif %}

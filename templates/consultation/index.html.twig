@@ -34,11 +34,11 @@
                                 </li>
 
                                 <li>
-                                    <a href="{{ path('app_consultation', { 'filter': 'ongoing', 't': app.request.get('t'), 'cp': app.request.get('cp') }) }}" class="{% if filter == 'ongoing' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.ongoing'|trans }} <span class="ml-1 {% if filter == 'ongoing' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ ongoingCount }}</span></a>
+                                    <a href="{{ path('app_consultation', { 'filter': 'planned', 't': app.request.get('t'), 'cp': app.request.get('cp') }) }}" class="{% if filter == 'planned' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.planned'|trans }} <span class="ml-1 {% if filter == 'planned' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ plannedCount }}</a>
                                 </li>
 
                                 <li>
-                                    <a href="{{ path('app_consultation', { 'filter': 'planned', 't': app.request.get('t'), 'cp': app.request.get('cp') }) }}" class="{% if filter == 'planned' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.planned'|trans }} <span class="ml-1 {% if filter == 'planned' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ plannedCount }}</a>
+                                    <a href="{{ path('app_consultation', { 'filter': 'ongoing', 't': app.request.get('t'), 'cp': app.request.get('cp') }) }}" class="{% if filter == 'ongoing' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.ongoing'|trans }} <span class="ml-1 {% if filter == 'ongoing' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ ongoingCount }}</span></a>
                                 </li>
 
                                 <li>
@@ -96,13 +96,13 @@
                                                     <!-- Extend touch target to entire panel -->
                                                     <span class="absolute inset-0" aria-hidden="true"></span>
                                                     {% if consultation.humantitle is defined and consultation.humantitle is not null %}
-                                                        {{ consultation.humantitle|u.truncate(110, ' ...') }}
+                                                        {{ consultation.humantitle|u.truncate(110, ' ...', false) }}
                                                     {% else %}
-                                                        {{ consultation.title|u.truncate(110, ' ...') }}
+                                                        {{ consultation.title|u.truncate(110, ' ...', false) }}
                                                     {% endif %}
                                                 </a>
                                             </h3>
-                                            <p class="mt-2 text-sm text-gray-500">{{ consultation.description|u.truncate(185, ' ...') }}</p>
+                                            <p class="mt-2 text-sm text-gray-500">{{ consultation.description|u.truncate(185, ' ...', false) }}</p>
                                         </div>
                                         <span class="pointer-events-none absolute top-6 right-6 text-gray-300 group-hover:text-gray-400" aria-hidden="true">
                                           <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
