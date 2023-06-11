@@ -23,12 +23,14 @@
         <div class="relative col-span-4 lg:col-span-1 lg:col-start-1 lg:row-start-2 flex flex-row lg:flex-col items-end mb-2 lg:mb-0">
 
             {% if this.editMode %}
-                <a data-action="live#action" data-action-name="cancelModification()" class="cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-80 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
-                    Abbrechen <i class="fa-solid fa-close"></i>
-                </a>
-                <button type="submit" class="cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-80 hover:opacity-100 m-1 p-1.5 bg-blue-400 hover:bg-gray-500 text-white border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
-                    Speichern <i class="fa-solid fa-check"></i>
-                </button>
+                <div class="flex">
+                    <button type="submit" class="cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-80 hover:opacity-100 m-1 p-1.5 bg-blue-400 hover:bg-gray-500 text-white border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                        Speichern <i class="fa-solid fa-check"></i>
+                    </button>
+                    <a data-action="live#action" data-action-name="cancelModification()" class="cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-80 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                        Abbrechen <i class="fa-solid fa-close"></i>
+                    </a>
+                </div>
             {% elseif app.user and is_granted('edit', statement) %}
                 {{ block('step4', 'tutorials/statement_show.tutorial.html.twig') }}
                 <a data-action="live#action" data-action-name="createModification()" class="cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
