@@ -20,7 +20,11 @@
         <div class="fixed top-0 left-0 right-0 bottom-0 bg-black/75 flex z-50">
             <div class="hidden md:block w-2/3 z-20 overflow-y-scroll">
                 <p class="m-20 mb-30 p-6 bg-white border shadow text-md text-gray-600">
-                    {{ wordDiff(paragraph.text, this.modification.getText()) }}
+                    {% if this.modification is defined and this.modification is not null %}
+                        {{ wordDiff(paragraph.text, this.modification.getText()) }}
+                    {% else %}
+                        {{ paragraph.text|nl2br }}
+                    {% endif %}
                 </p>
             </div>
 
