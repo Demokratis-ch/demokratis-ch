@@ -149,7 +149,7 @@
     <div class="paragraph col-span-5 {% if showModificationsPanel %}lg:row-start-2 lg:row-span-2 {% else %}lg:row-start-1 lg:row-span-3 {% endif%} {% if collapse %}lg:col-span-4{% else %}lg:col-span-3 lg:col-start-2{% endif %} flex flex-col overflow-x-hidden">
         <div class="z-10 flex flex-row align-items-stretch" {% if this.editMode %}style="width: 200%"{% endif %}>
             {% if this.editMode %}
-            <div class="shadow border w-full">
+            <div class="shadow border w-full pl-2">
                 {{ form_widget(form.text, {'attr': {
                     class: 'h-full w-full border-none shadow-inner text-sm lg:text-md text-gray-600 p-4'
                 }}) }}
