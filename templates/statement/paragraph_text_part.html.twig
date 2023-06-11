@@ -10,12 +10,12 @@
 {{ form_start(form, {'attr': {
     'data-action': 'live#action',
     'data-action-name': 'prevent|formSubmit',
-    'class': "grid grid-cols-4 lg:gap-x-4",
+    'class': "grid grid-cols-4 lg:gap-x-4 group",
 }}) }}
 
     {% if collapse == false %}
         <div class="col-span-4 lg:col-span-1 lg:col-start-1 lg:row-start-1 flex flex-row lg:flex-col items-end">
-            <a href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'p': 'before' }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+            <a href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'p': 'before' }) }}" class="md:opacity-30 group-hover:opacity-100 flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                 Text hinzufügen <i class="fa-solid fa-pen"></i> <i class="fa-solid fa-arrow-up-right hidden lg:inline-block"></i>
             </a>
         </div>
@@ -33,18 +33,18 @@
                 </div>
             {% elseif app.user and is_granted('edit', statement) %}
                 {{ block('step4', 'tutorials/statement_show.tutorial.html.twig') }}
-                <a data-action="live#action" data-action-name="createModification()" class="cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                <a data-action="live#action" data-action-name="createModification()" class="md:opacity-30 group-hover:opacity-100 cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                     Änderung vorschlagen <i class="fa-solid fa-edit"></i>
                 </a>
 
                 {% if hasChosen and not this.isNonChosenModificationSelected() %}
-                    <a data-action="live#action" data-action-name="resetParagraph()" class="cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                    <a data-action="live#action" data-action-name="resetParagraph()" class="md:opacity-30 group-hover:opacity-100 cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                         Original wiederherstellen <i class="fa-solid fa-undo"></i>
                     </a>
                 {% endif %}
 
                 {% if this.isNonChosenModificationSelected() %}
-                    <a data-action="live#action" data-action-name="acceptSelectedModification()" class="cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                    <a data-action="live#action" data-action-name="acceptSelectedModification()" class="md:opacity-30 group-hover:opacity-100 cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                         Diese Änderung akzeptieren <i class="fa-solid fa-circle-check"></i>
                     </a>
                 {% endif %}
@@ -54,7 +54,7 @@
         <div class="col-span-4 row-start-6 lg:col-span-1 lg:col-start-1 lg:row-start-3 lg:row-span-1 flex flex-row lg:flex-col items-end mt-2 lg:mt-2">
             <div class="mt-auto">
 
-                <a href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'p': 'after' }) }}" class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                <a href="{{ path('app_freetext_new', { 'uuid': paragraphContainer.paragraph.uuid, 'statement': statement.id, 'p': 'after' }) }}" class="md:opacity-30 group-hover:opacity-100 flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                     <span>Text hinzufügen</span> <i class="fa-solid fa-pen"></i> <i class="fa-solid fa-arrow-down-right hidden lg:inline-block"></i>
                 </a>
             </div>
