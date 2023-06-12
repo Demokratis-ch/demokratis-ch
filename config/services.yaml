@@ -30,4 +30,5 @@ services:
         arguments: ["@knp_menu.factory"]
         tags:
             - { name: knp_menu.menu_builder, method: createMainMenu, alias: menu } # The alias is what is used to retrieve the menu
+            - { name: knp_menu.menu_builder, method: createMobileMenu, alias: mobile } # The alias is what is used to retrieve the menu
             #- { name: knp_menu.menu_builder, method: createHeadMenu, alias: head }

@@ -30,4 +30,27 @@ class MenuBuilder
 
         return $menu;
     }
+
+    public function createMobileMenu(array $options): ItemInterface
+    {
+        $menu = $this->factory->createItem('root');
+
+        $menu->addChild('Geplante Vernehmlassungen', [
+            'route' => 'app_consultation',
+            'routeParameters' => ['filter' => 'planned'],
+        ]);
+
+        $menu->addChild('Laufende Vernehmlassungen', [
+            'route' => 'app_consultation',
+            'routeParameters' => ['filter' => 'ongoing'],
+        ]);
+
+        $menu->addChild('Abgeschlossene Vernehmlassungen', [
+            'route' => 'app_consultation',
+            'routeParameters' => ['filter' => 'done'],
+        ]);
+
+        return $menu;
+    }
+
 }
