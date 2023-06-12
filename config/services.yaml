@@ -8,6 +8,7 @@ parameters:
     file_directory: '%kernel.project_dir%/public/uploads'
     default_host: '%env(DEFAULT_HOST)%'
     shorturl_host: '%env(SHORTURL_HOST)%'
+    alt_host: '%env(ALTERNATIVE_HOST)%'
 
 services:
     # default configuration for services in *this* file

@@ -15,12 +15,14 @@ use Symfony\Component\Routing\RouterInterface;
 class RedirectController extends AbstractController
 {
     #[Route('/', name: 'app_redirect', host: '%shorturl_host%', methods: ['GET', 'POST'], priority: 1)]
+    #[Route('/', name: 'app_redirect_alt', host: '%alt_host%', methods: ['GET', 'POST'], priority: 1)]
     public function redirectHome(): Response
     {
         throw new NotFoundHttpException();
     }
 
     #[Route('/{token}', name: 'app_redirect_shorturl', host: '%shorturl_host%', methods: ['GET', 'POST'], priority: 1)]
+    #[Route('/{token}', name: 'app_redirect_shorturl_alt', host: '%alt_host%', methods: ['GET', 'POST'], priority: 1)]
     public function shortUrl(RedirectRepository $redirectRepository, Request $request, RouterInterface $router, string $token = null): Response
     {
         $redirect = $redirectRepository->findOneBy(['token' => $token]);
