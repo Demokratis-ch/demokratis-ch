@@ -181,19 +181,25 @@
                     {% if statement.intro is defined and statement.intro is not null %}
                         <h3 class="text-md md:-mt-8 pt-4 pb-2 md:pt-0 text-gray-400 font-light">
                             Intro
-                            <small><a href="{{ path('app_statement_intro_add', { 'uuid': statement.uuid }) }}" class="underline hover:no-underline">Ändern</a></small>
+                            {% if app.user %}{% if is_granted('own', statement) %}
+                                <small><a href="{{ path('app_statement_intro_add', { 'uuid': statement.uuid }) }}" class="underline hover:no-underline">Ändern</a></small>
+                            {% endif %}{% endif %}
                         </h3>
                         <div class="opacity-75 p-3 mb-8 bg-white border shadow-sm text-sm md:text-md text-gray-600 rounded-md" id="intro">
                             <p class="prose lg:prose-xl">{{ statement.intro|markdown_to_html }}</p>
                         </div>
                     {% else %}
-                        <div class="md:-mt-6 pt-4 pb-4 md:pt-0">
-                            <a href="{{ path('app_statement_intro_add', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-gray-50 border border-gray-300 hover:border-gray-400 rounded-md">
-                                <i class="fa-solid fa-pencil hidden md:inline-block"></i>
-                                <span class="ml-1">Intro Text hinzufügen</span>
-                            </a>
-                            {{ block('step3', 'tutorials/statement_show.tutorial.html.twig') }}
-                        </div>
+                        {% if app.user %}
+                            {% if is_granted('own', statement) %}
+                                <div class="md:-mt-6 pt-4 pb-4 md:pt-0">
+                                    <a href="{{ path('app_statement_intro_add', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-gray-50 border border-gray-300 hover:border-gray-400 rounded-md">
+                                        <i class="fa-solid fa-pencil hidden md:inline-block"></i>
+                                        <span class="ml-1">Intro Text hinzufügen</span>
+                                    </a>
+                                    {{ block('step3', 'tutorials/statement_show.tutorial.html.twig') }}
+                                </div>
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
 
                     {% for i, paragraphContainer in paragraphs %}
