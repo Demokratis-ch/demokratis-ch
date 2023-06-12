@@ -83,6 +83,30 @@
                         <!-- Consultation grid -->
                         <div class="lg:col-span-3">
 
+                            {% if app.user and organisations|length > 0 %}
+                                <div class="lg:hidden">
+                                    <h3 class="mb-3 text-gray-300 text-sm text-semibold">Organisationen mit privaten Vernehmlassungen</h3>
+
+                                    <ul role="list" class="space-y-2 border-b border-gray-200 pb-6 text-sm text-gray-500">
+                                        {% for organisation in organisations %}
+                                            {% if currentOrganisation is not null %}
+                                                <li>
+                                                    <a href="{{ path('app_consultation', { 'filter': filter, 't': app.request.get('t') }) }}" class="mr-2 pb-2 underline hover:no-underline text-gray-400 text-xs">Auswahl aufheben</a>
+                                                </li>
+                                            {% endif %}
+
+                                            <li>
+                                                <a href="{{ path('app_consultation', { 'filter': filter, 'cp': organisation.slug, 't': app.request.get('t') }) }}" class="{% if currentOrganisation is not null and organisation.id == currentOrganisation.id == 'all' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ organisation.name }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+
+                            <div class="mt-6 mb-6 lg:hidden">
+                                <h3 class="mb-3 text-gray-300 text-sm text-semibold">Öffentliche Vernehmlassungen</h3>
+                            </div>
+
                             <div class="divide-y sm:p-4 divide-gray-200 overflow-hidden sm:bg-gray-50 sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0">
 
                                 {% for consultation in consultations %}
