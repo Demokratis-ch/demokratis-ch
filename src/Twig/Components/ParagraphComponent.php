@@ -63,7 +63,7 @@ class ParagraphComponent extends AbstractController
     }
 
     #[LiveAction]
-    public function selectModification(#[LiveArg] int $modificationId): void
+    public function selectModification(#[LiveArg] int|null $modificationId = null): void
     {
         $this->selectedModificationId = $modificationId;
     }

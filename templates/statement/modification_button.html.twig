@@ -1,4 +1,4 @@
-<div class="modification-button relative {% if selected|default(false)%}border-2 border-blue-400 m-[-1px]{% endif %} p-2 border bg-white hover:bg-gray-50 rounded-lg text-sm text-gray-500">
+<div class="modification-button col-span-4 md:col-span-2 relative {% if selected|default(false)%}border-2 border-blue-400 m-[-1px]{% endif %} p-2 border bg-white hover:bg-gray-50 rounded-lg text-sm text-gray-500">
     <a class="cursor-pointer after:absolute after:inset-0" data-action="click->live#action" data-action-name="selectModification(modificationId={{ modification.id }})">
         <div class="flex flex-row flex-nowrap">
             <div class="flex-grow overflow-ellipsis overflow-hidden whitespace-nowrap">

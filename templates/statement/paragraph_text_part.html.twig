@@ -37,16 +37,18 @@
                     Änderung vorschlagen <i class="fa-solid fa-edit"></i>
                 </a>
 
-                {% if hasChosen and not this.isNonChosenModificationSelected() %}
+                {% if hasChosen and not this.isNonChosenModificationSelected() and app.user and is_granted('own', statement) %}
                     <a data-action="live#action" data-action-name="resetParagraph()" class="md:opacity-30 group-hover:opacity-100 cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
                         Original wiederherstellen <i class="fa-solid fa-undo"></i>
                     </a>
                 {% endif %}
 
-                {% if this.isNonChosenModificationSelected() %}
-                    <a data-action="live#action" data-action-name="acceptSelectedModification()" class="md:opacity-30 group-hover:opacity-100 cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
-                        Diese Änderung akzeptieren <i class="fa-solid fa-circle-check"></i>
-                    </a>
+                {% if app.user and is_granted('own', statement) %}
+                    {% if this.isNonChosenModificationSelected() %}
+                        <a data-action="live#action" data-action-name="acceptSelectedModification()" class="md:opacity-30 group-hover:opacity-100 cursor-pointer flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                            Diese Änderung akzeptieren <i class="fa-solid fa-circle-check"></i>
+                        </a>
+                    {% endif %}
                 {% endif %}
             {% endif %}
         </div>
@@ -70,12 +72,24 @@
                 {% set firstRowModifications = paragraphContainer.openModifications|slice(0, 4 - hasChosen) %}
                 {% set hiddenModifications = paragraphContainer.openModifications|slice(firstRowModifications|length) %}
                 {% if hasOpenModifications %}
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-2">
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2 mb-2">
+
+
 
                         {# Currently chosen #}
                         {% if hasChosen %}
                             {% include 'statement/modification_button.html.twig' with { modification: paragraphContainer.chosenModification.modification, statement, chosen: true, selected: this.isSelectedModification(paragraphContainer.chosenModification.modification) } only %}
                             {% set itemsDisplayed = itemsDisplayed + 1 %}
+                        {% else %}
+                            <div class="relative col-span-2 md:col-span-1 p-2 border bg-white hover:bg-gray-50 col-span-1 text-center rounded-lg text-sm text-gray-300 hover:text-gray-400">
+                                <a class="cursor-pointer after:absolute after:inset-0" data-action="click->live#action" data-action-name="selectModification()">
+                                    <div class="flex flex-row flex-nowrap">
+                                        <div class="flex-grow pt-2 overflow-ellipsis overflow-hidden whitespace-nowrap">
+                                            Original
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
                         {% endif %}
 
                         {# Proposed modifications #}
