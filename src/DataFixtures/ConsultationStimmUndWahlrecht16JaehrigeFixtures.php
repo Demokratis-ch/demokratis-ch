@@ -409,7 +409,7 @@ TEXT
         $freeText1->setStatement($statement);
         $freeText1->setParagraph($paragraph1);
         $freeText1->setPosition('before');
-        $freeText1->setText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat nibh ex, nec suscipit ligula mollis at. Curabitur tincidunt tincidunt mi, vel tincidunt magna elementum ut.');
+        $freeText1->setText('Wir als Verein "Freunde des demokratischen Hedonismus" finden es wichtig, neben den Pflichten auch auf die Freuden demokratischer Teilhabe hinzuweisen. Weiter sehen wir es als essentiell an, diese Freuden möglichst früh erlebbar zu machen:');
         $manager->persist($freeText1);
 
         $freeText2 = new FreeText();

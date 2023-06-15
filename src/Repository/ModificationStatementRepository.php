@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\ChosenModification;
+use App\Entity\Modification;
 use App\Entity\ModificationStatement;
 use App\Entity\Statement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -42,16 +42,16 @@ class ModificationStatementRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param ChosenModification[] $chosenModifications
+     * @param Modification[] $modifications
      *
      * @return array<int, ModificationStatement[]>
      */
-    public function findPeers(Statement $statement, array $chosenModifications): array
+    public function findPeers(Statement $statement, array $modifications): array
     {
         $query = $this->createQueryBuilder('m')
             ->addSelect('s')
             ->andWhere('m.modification in (:modification)')
-            ->setParameter('modification', array_map(fn (ChosenModification $chosen) => $chosen->getModification(), $chosenModifications))
+            ->setParameter('modification', $modifications)
             ->andWhere('m.statement != :statement')
             ->setParameter('statement', $statement)
             ->leftJoin('m.statement', 's')

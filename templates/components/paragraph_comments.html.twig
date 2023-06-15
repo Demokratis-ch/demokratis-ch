@@ -1,6 +1,15 @@
 <div{{ attributes }} class="h-full z-50">
     <div class="h-full cursor-pointer opacity-80 hover:opacity-100" data-action="click->live#action" data-action-name="setOverlayOpen(open=1)" onclick="document.body.style.overflowY = 'hidden';">
-        <button class="text-xs text-gray-400 font-medium">Kommentare ({{ this.thread is not null ? this.thread.getComments()|length : 0 }})</button>
+        {% if this.thread is not null  %}
+        <button class="text-xs text-gray-400 font-medium">
+                Kommentare ({{ this.thread is not null ? this.thread.getComments()|length : 0 }})
+        </button>
+        {% else %}
+            <button class="flex flex-row flex-nowrap items-center gap-2 opacity-60 hover:opacity-100 m-1 p-1.5 bg-gray-50 hover:bg-gray-100 border border-solid border-gray-300 text-gray-400 text-xs rounded-md">
+                <i class="fa-solid fa-comment"></i> Kommentieren
+            </button>
+        {% endif %}
+
 
         {% if this.thread is not null %}
             {% include "comment/paragraph_comments_preview.html.twig" with {thread: this.thread} only %}
@@ -11,11 +20,11 @@
         <div class="fixed top-0 left-0 right-0 bottom-0 bg-black/75 flex z-50">
             <div class="hidden md:block w-2/3 z-20 overflow-y-scroll">
                 <p class="m-20 mb-30 p-6 bg-white border shadow text-md text-gray-600">
-                    {% for diff in this.getDiff() %}
-                        <span class="{% if diff[0] == -1 %}bg-red-100 line-through text-red-800{% elseif diff[0] == 1 %}bg-green-100 text-green-800{% endif %}">
-                            {{ diff[1]|nl2br }}
-                        </span>
-                    {% endfor %}
+                    {% if this.modification is defined and this.modification is not null %}
+                        {{ wordDiff(paragraph.text, this.modification.getText()) }}
+                    {% else %}
+                        {{ paragraph.text|nl2br }}
+                    {% endif %}
                 </p>
             </div>
 
