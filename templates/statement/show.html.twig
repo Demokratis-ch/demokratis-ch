@@ -74,15 +74,15 @@
                         {% if is_granted('own', statement) %}
                             <div class="mt-2 flex gap-2 md:mb-2" id="actions">
                                 {# Export in the .odt format #}
-                                <a href="{{ path('app_word_export', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
+                                <a href="{{ path('app_word_export', { 'uuid': statement.uuid }) }}" class="text-xs text-center md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
                                     <i class="fa-solid fa-file-export"></i>
                                     <span class="hidden lg:inline-block ml-1">Stellungnahme exportieren</span>
-                                    <span class="lg:hidden ml-1">Exportieren</span>
+                                    <span class="lg:hidden ml-1">Export</span>
                                 </a>
 
                                 {# Approve? #}
                                 {% if not approved %}
-                                    <a href="{{ path('app_statement_approve', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
+                                    <a href="{{ path('app_statement_approve', { 'uuid': statement.uuid }) }}" class="text-center text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
                                         <i class="fa-solid fa-square-check"></i>
                                         <span class="hidden lg:inline-block ml-1">Stellungnahme als fertig markieren</span>
                                         <span class="lg:hidden ml-1">Fertig</span>
@@ -91,13 +91,13 @@
 
                                 {# Publish #}
                                 {% if not statement.public %}
-                                    <a href="{{ path('app_statement_publish', { 'uuid': statement.uuid }) }}" class="group text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
+                                    <a href="{{ path('app_statement_publish', { 'uuid': statement.uuid }) }}" class="group text-center text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
                                         <i class="fa-solid fa-lock-open"></i>
                                         <span class="hidden lg:inline-block ml-1">Stellungnahme veröffentlichen</span>
                                         <span class="lg:hidden ml-1">Veröffentlichen</span>
                                     </a>
                                 {% else %}
-                                    <a href="{{ path('app_statement_retract', { 'uuid': statement.uuid }) }}" class="group text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
+                                    <a href="{{ path('app_statement_retract', { 'uuid': statement.uuid }) }}" class="group text-center text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
                                         <i class="fa-solid fa-lock"></i>
                                         <span class="hidden lg:inline-block ml-1">Stellungnahme verstecken</span>
                                         <span class="lg:hidden ml-1">Verstecken</span>
@@ -106,16 +106,16 @@
 
                                     {# Make editable #}
                                     {% if not statement.editable %}
-                                        <a href="{{ path('app_statement_accept_edits', { 'uuid': statement.uuid }) }}" class="group text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
+                                        <a href="{{ path('app_statement_accept_edits', { 'uuid': statement.uuid }) }}" class="group text-center text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
                                             <i class="fa-solid fa-user-pen"></i>
                                             <span class="hidden lg:inline-block ml-1">Für Beiträge Dritter öffnen</span>
-                                            <span class="lg:hidden ml-1">Dritten öffnen</span>
+                                            <span class="lg:hidden ml-1">Öffnen</span>
                                         </a>
                                     {% else %}
-                                        <a href="{{ path('app_statement_prevent_edits', { 'uuid': statement.uuid }) }}" class="group text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
+                                        <a href="{{ path('app_statement_prevent_edits', { 'uuid': statement.uuid }) }}" class="group text-center text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-white border border-gray-300 hover:border-gray-400 shadow-sm rounded-md">
                                             <i class="fa-solid fa-ban"></i>
                                             <span class="hidden lg:inline-block ml-1">Keine Beiträge Dritter akzeptieren</span>
-                                            <span class="lg:hidden ml-1">Dritten schliessen</span>
+                                            <span class="lg:hidden ml-1">Schliessen</span>
                                         </a>
                                     {% endif %}
 
@@ -191,7 +191,7 @@
                     {% else %}
                         {% if app.user %}
                             {% if is_granted('own', statement) %}
-                                <div class="md:-mt-6 pt-4 pb-4 md:pt-0">
+                                <div class="md:-mt-6 pt-4 pb-4 text-center opacity-50 hover:opacity-100 md:pt-0">
                                     <a href="{{ path('app_statement_intro_add', { 'uuid': statement.uuid }) }}" class="text-xs md:text-sm text-gray-400 hover:text-gray-500 p-2 bg-gray-50 border border-gray-300 hover:border-gray-400 rounded-md">
                                         <i class="fa-solid fa-pencil hidden md:inline-block"></i>
                                         <span class="ml-1">Intro Text hinzufügen</span>
