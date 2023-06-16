@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  symfony:
+    image: kibatic/symfony:7.3
+    restart: always
+    volumes:
+      - www-data:/var/www:rw
+
+volumes:
+  www-data:
