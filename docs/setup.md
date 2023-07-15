@@ -8,7 +8,11 @@ symfony server:start -d
 Website `https://localhost:8000`
 Database `root:root@localhost:3307`
 
-# Run Tailwind with Webpack Encore
+# Nodejs & Tailwind Frontend
+
+```npm install```
+
+Then run Tailwind with Webpack Encore
 
 ```npm run watch```
 
