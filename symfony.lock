@@ -118,18 +118,6 @@
             "config/packages/nelmio_cors.yaml"
         ]
     },
-    "php-http/discovery": {
-        "version": "1.18",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "1.18",
-            "ref": "f45b5dd173a27873ab19f5e3180b2f661c21de02"
-        },
-        "files": [
-            "config/packages/http_discovery.yaml"
-        ]
-    },
     "phpstan/phpstan": {
         "version": "1.10",
         "recipe": {
@@ -154,18 +142,6 @@
             ".env.test",
             "phpunit.xml.dist",
             "tests/bootstrap.php"
-        ]
-    },
-    "sentry/sentry-symfony": {
-        "version": "4.5",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "main",
-            "version": "4.0",
-            "ref": "9ac202e84b6fb3c276cb3d7846006e0df65272d0"
-        },
-        "files": [
-            "config/packages/sentry.yaml"
         ]
     },
     "stof/doctrine-extensions-bundle": {
