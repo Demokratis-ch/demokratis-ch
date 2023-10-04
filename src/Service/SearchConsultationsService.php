@@ -6,7 +6,8 @@ use App\Entity\Consultation;
 use App\Repository\ConsultationRepository;
 use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Persistence\ManagerRegistry;
-use whatwedo\SearchBundle\Repository\IndexRepository;
+use araise\SearchBundle\Repository\IndexRepository;
+use araise\SearchBundle\Extension\Doctrine\Query\Mysql\MatchAgainst;
 
 class SearchConsultationsService
 {
@@ -32,9 +33,6 @@ class SearchConsultationsService
         if (!$query) {
             $query = '\n';
         }
-
-        // search all entity classes and map them to their object
-        $allIds = $this->indexRepository->searchEntities($query);
 
         $consultationIds = $this->indexRepository->search($query, Consultation::class);
 
