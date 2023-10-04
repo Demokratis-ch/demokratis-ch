@@ -1,5 +1,31 @@
 {
     "controllers": {
+        "@araise/core-bundle": {
+            "select": {
+                "enabled": true,
+                "fetch": "eager"
+            },
+            "datetime": {
+                "enabled": true,
+                "fetch": "eager"
+            },
+            "dropdown": {
+                "enabled": true,
+                "fetch": "eager"
+            },
+            "modal-form": {
+                "enabled": true,
+                "fetch": "eager"
+            },
+            "reload-content": {
+                "enabled": true,
+                "fetch": "eager"
+            },
+            "modal": {
+                "enabled": true,
+                "fetch": "eager"
+            }
+        },
         "@symfony/ux-autocomplete": {
             "autocomplete": {
                 "enabled": true,
@@ -26,32 +52,6 @@
                 "autoimport": {
                     "@symfony/ux-live-component/styles/live.css": true
                 }
-            }
-        },
-        "@whatwedo/core-bundle": {
-            "select": {
-                "enabled": true,
-                "fetch": "eager"
-            },
-            "datetime": {
-                "enabled": true,
-                "fetch": "eager"
-            },
-            "dropdown": {
-                "enabled": true,
-                "fetch": "eager"
-            },
-            "modal-form": {
-                "enabled": true,
-                "fetch": "eager"
-            },
-            "reload-content": {
-                "enabled": true,
-                "fetch": "eager"
-            },
-            "modal": {
-                "enabled": true,
-                "fetch": "eager"
             }
         }
     },

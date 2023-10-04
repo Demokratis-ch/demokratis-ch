@@ -17,7 +17,7 @@ doctrine:
                 alias: App
         dql:
             string_functions:
-                MATCH_AGAINST: whatwedo\SearchBundle\Extension\Doctrine\Query\Mysql\MatchAgainst
+                MATCH_AGAINST: araise\SearchBundle\Extension\Doctrine\Query\Mysql\MatchAgainst
 
 when@test:
     doctrine:

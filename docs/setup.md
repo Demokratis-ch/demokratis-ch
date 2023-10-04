@@ -27,7 +27,7 @@ Psalm ```./vendor/bin/psalm```, if needed with ```--no-cache```
 TwigCS ```php vendor/bin/twigcs templates```
 
 # Populate the search index
-```php bin/console whatwedo:search:populate```
+```php bin/console araise:search:populate```
 
 # Production logs
 Access the logs on platform.sh with

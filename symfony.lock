@@ -13,6 +13,12 @@
             "src/Entity/.gitignore"
         ]
     },
+    "araise/core-bundle": {
+        "version": "v1.0.1"
+    },
+    "araise/search-bundle": {
+        "version": "v3.0.1"
+    },
     "dama/doctrine-test-bundle": {
         "version": "7.2",
         "recipe": {
@@ -122,6 +128,18 @@
         },
         "files": [
             "config/packages/http_discovery.yaml"
+        ]
+    },
+    "phpstan/phpstan": {
+        "version": "1.10",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "f10b8054de1a94a3b9e8806a6453fd5c98491c44"
+        },
+        "files": [
+            "phpstan.dist.neon"
         ]
     },
     "phpunit/phpunit": {
@@ -464,12 +482,6 @@
     },
     "twig/extra-bundle": {
         "version": "v3.4.0"
-    },
-    "whatwedo/core-bundle": {
-        "version": "dev-1.0-dev"
-    },
-    "whatwedo/search-bundle": {
-        "version": "dev-3.0-dev"
     },
     "whatwedo/twig-bootstrap-icons": {
         "version": "v1.1.1"
