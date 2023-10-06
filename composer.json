@@ -12,7 +12,7 @@
         "doctrine/doctrine-bundle": "^2.9",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.14",
-        "easycorp/easyadmin-bundle": "^4.6",
+        "easycorp/easyadmin-bundle": "^4.7",
         "easyrdf/easyrdf": "^1.1",
         "knplabs/knp-menu-bundle": "^3.2",
         "knplabs/knp-time-bundle": "^1.20",
