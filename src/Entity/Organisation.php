@@ -69,6 +69,9 @@ class Organisation
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $type = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $lastImportAt = null;
+
     public function __construct()
     {
         $this->externalStatements = new ArrayCollection();
@@ -406,6 +409,18 @@ class Organisation
     public function setType(?string $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getLastImportAt(): ?\DateTimeImmutable
+    {
+        return $this->lastImportAt;
+    }
+
+    public function setLastImportAt(?\DateTimeImmutable $lastImportAt): static
+    {
+        $this->lastImportAt = $lastImportAt;
 
         return $this;
     }
