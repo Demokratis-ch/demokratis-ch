@@ -66,7 +66,7 @@ class Consultation
     #[ORM\OneToMany(mappedBy: 'consultation', targetEntity: Statement::class)]
     private Collection $statements;
 
-    #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'consultations')]
+    #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'consultations', cascade: ['persist'])]
     private Collection $tags;
 
     #[ORM\OneToMany(mappedBy: 'consultation', targetEntity: Media::class)]
@@ -87,6 +87,9 @@ class Consultation
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Statement $singleStatement = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $foreignId = null;
 
     public function __toString(): string
     {
@@ -485,6 +488,18 @@ class Consultation
     public function setSingleStatement(?Statement $singleStatement): self
     {
         $this->singleStatement = $singleStatement;
+
+        return $this;
+    }
+
+    public function getForeignId(): ?string
+    {
+        return $this->foreignId;
+    }
+
+    public function setForeignId(?string $foreignId): static
+    {
+        $this->foreignId = $foreignId;
 
         return $this;
     }
