@@ -26,6 +26,10 @@ class ConsultationVoter extends Voter
             return true;
         }
 
+        if ($consultation->getOrganisation()->getType() === 'canton') {
+            return true;
+        }
+
         $user = $token->getUser();
 
         if (!$user instanceof User) {
