@@ -3,8 +3,10 @@
 namespace App\Command;
 
 use App\Entity\Consultation;
+use App\Entity\Document;
 use App\Enums\Cantons;
 use App\Repository\ConsultationRepository;
+use App\Repository\DocumentRepository;
 use App\Repository\OrganisationRepository;
 use App\Service\FetchCantonalConsultation;
 use App\Service\TaggingService;
@@ -23,7 +25,8 @@ class PullCantonalConsultationsCommand extends Command
         private FetchCantonalConsultation $cantonal,
         private OrganisationRepository $organisationRepository,
         private ConsultationRepository $consultationRepository,
-        private TaggingService $taggingService
+        private TaggingService $taggingService,
+        private DocumentRepository $documentRepository,
     ) {
         parent::__construct();
     }
@@ -171,8 +174,31 @@ class PullCantonalConsultationsCommand extends Command
                 $this->entityManager->persist($consultation[$identifier]);
 
                 $output[] = '#'.$key.' <info>'.$consultation['affair_title_de'].'</info>';
-            } else {
 
+                // TODO Add documents
+                if (isset($consultation['affair_documents'])) {
+                    foreach ($consultation['affair_documents'] as $i => $fetchedDocument) {
+                        if (!$this->documentRepository->findOneBy(['consultation' => $consultation[$identifier], 'originalUri' => $fetchedDocument['doc_link']])) {
+                            $document[$i] = new Document();
+                            $document[$i]->setTitle(substr($fetchedDocument['doc_name'], 0, 255));
+                            $document[$i]->setConsultation($consultation[$identifier]);
+                            $document[$i]->setType('document');
+                            $document[$i]->setImported('fetched');
+                            $document[$i]->setOriginalUri($fetchedDocument['doc_link']);
+
+                            if (isset($fetchedDocument['doc_content'])) {
+                                $document[$i]->setContent($fetchedDocument['doc_content']);
+                            }
+
+                            $this->entityManager->persist($document[$i]);
+
+                            $output[] = 'Added <info>'.$fetchedDocument['doc_name'].'</info>';
+                        } else {
+                            $output[] = '<comment>"'.$fetchedDocument['doc_name'].'"</comment> was already imported for <comment>'.$consultation[$identifier].'</comment>';
+                        }
+                    }
+                }
+            } else {
                 // TODO: Update existing consultation
 
                 $output[] = 'Existing "'.$consultation['affair_title_de'].'"';
