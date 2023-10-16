@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Consultation;
 use App\Entity\LegalText;
 use App\Entity\Statement;
+use App\Enums\Cantons;
 use App\Repository\ConsultationRepository;
 use App\Repository\DiscussionRepository;
 use App\Repository\DocumentRepository;
@@ -51,17 +52,18 @@ class ConsultationController extends AbstractController
         $organisation = $organisationRepository->findOneBy(['slug' => $organisationSlug]);
 
         if ($organisation !== null) {
-            $this->denyAccessUnlessGranted(OrganisationVoter::MEMBER, $organisation);
+            $this->denyAccessUnlessGranted(OrganisationVoter::VIEW, $organisation);
         }
 
         $offset = max(0, $request->query->getInt('offset', 0));
         $paginator = $consultationRepository->getPaginator($offset, $filter, $tag, $organisation);
         $steps = ConsultationRepository::PAGINATOR_PER_PAGE;
 
-        $counts = $consultationRepository->countByStatus();
+        $counts = $consultationRepository->countByStatus($organisation);
 
         return $this->render('consultation/index.html.twig', [
             'consultations' => $paginator,
+            'cantons' => Cantons::cases(),
             'tags' => $tagRepository->findBy(['approved' => true]),
             'currentTag' => $tag,
             'currentOrganisation' => $organisation,

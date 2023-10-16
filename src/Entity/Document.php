@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Traits\TimestampedEntityTrait;
 use App\Repository\DocumentRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
@@ -48,9 +49,26 @@ class Document
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $localFilename = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $originalUri = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $content = null;
+
     public function __toString(): string
     {
         return strval($this->getId().'-'.$this->getType().'-'.$this->getLocalFilename());
+    }
+
+    public function getPdf(): string|null
+    {
+        if ($this->getOriginalUri()) {
+            return $this->getOriginalUri();
+        } elseif ($this->getLocalFilename()) {
+            return 'uploads/proposals/'.$this->getLocalFilename();
+        } else {
+            return null;
+        }
     }
 
     public function getId(): ?int
@@ -192,6 +210,30 @@ class Document
     public function setLocalFilename(?string $localFilename): self
     {
         $this->localFilename = $localFilename;
+
+        return $this;
+    }
+
+    public function getOriginalUri(): ?string
+    {
+        return $this->originalUri;
+    }
+
+    public function setOriginalUri(?string $originalUri): static
+    {
+        $this->originalUri = $originalUri;
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(?string $content): static
+    {
+        $this->content = $content;
 
         return $this;
     }

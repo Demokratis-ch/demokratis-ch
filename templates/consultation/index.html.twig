@@ -30,20 +30,36 @@
                             <h3 class="sr-only">Categories</h3>
                             <ul role="list" class="space-y-4 border-b border-gray-200 pb-6 text-sm text-gray-500">
                                 <li>
-                                    <a href="{{ path('app_consultation') }}" class="{% if filter == 'all' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.all'|trans }}</a>
+                                    <a href="{{ path('app_consultation') }}" class="{% if filter == 'all' %}text-blue-600 font-semibold{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.all'|trans }}</a>
                                 </li>
 
                                 <li>
-                                    <a href="{{ path('app_consultation', { 'filter': 'planned', 't': app.request.get('t'), 'cp': app.request.get('cp') }) }}" class="{% if filter == 'planned' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.planned'|trans }} <span class="ml-1 {% if filter == 'planned' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ plannedCount }}</a>
+                                    <a href="{{ path('app_consultation', { 'filter': 'planned', 't': app.request.get('t'), 'cp': app.request.get('cp') }) }}" class="{% if filter == 'planned' %}text-blue-600 font-semibold{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.planned'|trans }} <span class="ml-1 {% if filter == 'planned' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ plannedCount }}</a>
                                 </li>
 
                                 <li>
-                                    <a href="{{ path('app_consultation', { 'filter': 'ongoing', 't': app.request.get('t'), 'cp': app.request.get('cp') }) }}" class="{% if filter == 'ongoing' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.ongoing'|trans }} <span class="ml-1 {% if filter == 'ongoing' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ ongoingCount }}</span></a>
+                                    <a href="{{ path('app_consultation', { 'filter': 'ongoing', 't': app.request.get('t'), 'cp': app.request.get('cp') }) }}" class="{% if filter == 'ongoing' %}text-blue-600 font-semibold{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.ongoing'|trans }} <span class="ml-1 {% if filter == 'ongoing' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ ongoingCount }}</span></a>
                                 </li>
 
                                 <li>
-                                    <a href="{{ path('app_consultation', { 'filter': 'done', 't': app.request.get('t'), 'cp': app.request.get('cp') }) }}" class="{% if filter == 'done' %}text-blue-600{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.done'|trans }} <span class="ml-1 {% if filter == 'done' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ doneCount }}</a>
+                                    <a href="{{ path('app_consultation', { 'filter': 'done', 't': app.request.get('t'), 'cp': app.request.get('cp') }) }}" class="{% if filter == 'done' %}text-blue-600 font-semibold{% else %} hover:text-gray-900{% endif %}">{{ 'consultation.status.done'|trans }} <span class="ml-1 {% if filter == 'done' %}bg-blue-100 text-blue-400{% else %}bg-gray-100 text-gray-400{% endif %} rounded text-xs p-1">{{ doneCount }}</a>
                                 </li>
+                            </ul>
+
+                            <ul role="list" class="mt-4 space-y-1 border-b border-gray-200 pb-6 text-sm text-gray-500">
+                                <li>
+                                    <a href="{{ path('app_consultation', { 'filter': filter }) }}" class="{% if app.request.get('cp') is null %}text-blue-600 font-semibold{% else %} hover:text-gray-900{% endif %}">Alle</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ path('app_consultation', { 'cp': 'CH', 'filter': filter }) }}" class="{% if app.request.get('cp') is same as 'CH' %}text-blue-600 font-semibold{% else %} hover:text-gray-900{% endif %}">Eidgenössisch</a>
+                                </li>
+
+                                {% for canton in cantons %}
+                                    <li>
+                                        <a href="{{ path('app_consultation', { 'cp': canton.name, 'filter': filter }) }}" class="{% if app.request.get('cp') is same as canton.name %}text-blue-600 font-semibold{% else %} hover:text-gray-900{% endif %}">{{ canton.value }}</a>
+                                    </li>
+                                {% endfor %}
                             </ul>
 
                             <div class="border-b border-gray-200 py-4 text-sm text-gray-600">

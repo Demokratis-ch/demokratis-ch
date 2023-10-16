@@ -9,6 +9,7 @@ parameters:
     default_host: '%env(DEFAULT_HOST)%'
     shorturl_host: '%env(SHORTURL_HOST)%'
     alt_host: '%env(ALTERNATIVE_HOST)%'
+    scrape_host: '%env(SCRAPE_HOST)%'
 
 services:
     # default configuration for services in *this* file

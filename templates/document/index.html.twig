@@ -45,13 +45,14 @@
                 <div class="col-span-2 lg:col-span-1 flex flex-col">
                     <h2 class="text-xl text-gray-400 font-medium flex-initial">{{ 'import.original'|trans }}</h2>
 
-                    <iframe
-                            class="mt-2 p-4 bg-white text-gray-700 shadow w-full flex-1"
-                            src="{{ asset('uploads/proposals/'~document.localFilename) }}"
-                            loading="lazy"
-                    >
-
-                    </iframe>
+                    {% if document.getPdf is defined and document.getPdf is not null %}
+                        <iframe
+                                class="mt-2 p-4 bg-white text-gray-700 shadow w-full flex-1"
+                                src="{{ asset(document.getPdf) }}"
+                                loading="lazy"
+                        >
+                        </iframe>
+                    {% endif %}
 
                 </div>
             </div>

@@ -25,7 +25,7 @@ class Tag
     #[ORM\ManyToOne(inversedBy: 'tags')]
     private ?User $createdBy = null;
 
-    #[ORM\ManyToMany(targetEntity: Consultation::class, inversedBy: 'tags')]
+    #[ORM\ManyToMany(targetEntity: Consultation::class, inversedBy: 'tags', cascade: ['persist'])]
     private Collection $consultations;
 
     #[ORM\Column(length: 255)]

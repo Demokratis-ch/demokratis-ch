@@ -39,10 +39,16 @@ class DocumentController extends AbstractController
         if (!$document->getLegalText()) {
             $legalText = new LegalText();
 
-            $dir = $params->get('file_directory').'/proposals/';
-            $text = $this->legalTextParser->getParagraphs($dir.$document->getLocalfilename());
-            $legalText->setText($text);
-            $document->setImported('parsed');
+            if (!$document->getContent()) {
+                $dir = $params->get('file_directory').'/proposals/';
+                $text = $this->legalTextParser->getParagraphs($dir.$document->getLocalfilename());
+                $legalText->setText($text);
+                $document->setImported('parsed');
+            } else {
+                $legalText->setText($document->getContent());
+                $document->setImported('parsed');
+                $text = $document->getContent();
+            }
         } else {
             $legalText = $document->getLegalText();
             $text = $document->getLegalText()->getText();
@@ -78,10 +84,13 @@ class DocumentController extends AbstractController
             }
 
             $document->setImported('paragraphed');
+            $document->setType('proposal');
 
-            // Remove the file
-            $fileSystem = new Filesystem();
-            $fileSystem->remove($dir.$document->getLocalfilename());
+            if ($document->getLocalfilename()) {
+                // Remove the file
+                $fileSystem = new Filesystem();
+                $fileSystem->remove($dir.$document->getLocalfilename());
+            }
 
             $entityManager->flush();
 
