@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Enums\Cantons;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -19,16 +18,9 @@ class FetchCantonalConsultation
         $this->scrapeHost = $scrapeHost;
     }
 
-    public function getAllCantonalConsultations()
-    {
-        foreach (Cantons::cases() as $canton) {
-            $this->getConsultations($canton->value);
-        }
-    }
-
     public function getConsultations(
         string $canton,
-    ) {
+    ): array {
         $response = $this->client->request(
             'GET',
             $this->scrapeHost.$canton.'.json'

@@ -12,6 +12,7 @@ use App\Repository\OrganisationRepository;
 use App\Service\FetchCantonalConsultation;
 use App\Service\TaggingService;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -28,6 +29,7 @@ class PullCantonalConsultationsCommand extends Command
         private ConsultationRepository $consultationRepository,
         private TaggingService $taggingService,
         private DocumentRepository $documentRepository,
+        private LoggerInterface $logger,
     ) {
         parent::__construct();
     }
@@ -76,7 +78,7 @@ class PullCantonalConsultationsCommand extends Command
         return Command::FAILURE;
     }
 
-    protected function fetchConsultations(Organisation $organisation)
+    protected function fetchConsultations(Organisation $organisation): array
     {
         $content = $this->cantonal->getConsultations($organisation->getSlug());
 
@@ -97,7 +99,7 @@ class PullCantonalConsultationsCommand extends Command
                     $consultation[$identifier]->setStartDate($startDate);
                 }
 
-                // TODO Detect institutions
+                // Set the office
                 $consultation[$identifier]->setOffice($consultation['affair_author_name']);
 
                 // Add Tags
@@ -136,14 +138,14 @@ class PullCantonalConsultationsCommand extends Command
                         };
 
                         if (!$tag) {
-                            // TODO: Log missing tags
+                            $this->logger->info('Missing Tag for '.$topic['topic_code'].' in '.$consultation['affair_title_de']);
                         } else {
                             $consultation[$identifier]->addTag($tag);
                         }
                     }
                 }
 
-                // TODO Set correct deadlines and status
+                // Deadlines and status
                 if (isset($consultation['affair_events'])) {
                     foreach ($consultation['affair_events'] as $event) {
                         if (isset($event['event_text_de'])) {
@@ -174,7 +176,7 @@ class PullCantonalConsultationsCommand extends Command
 
                 $output[] = '#'.$key.' <info>'.$consultation['affair_title_de'].'</info>';
 
-                // TODO Add documents
+                // Add documents
                 if (isset($consultation['affair_documents'])) {
                     foreach ($consultation['affair_documents'] as $i => $fetchedDocument) {
                         if (!$this->documentRepository->findOneBy(['consultation' => $consultation[$identifier], 'originalUri' => $fetchedDocument['doc_link']])) {
@@ -198,8 +200,7 @@ class PullCantonalConsultationsCommand extends Command
                     }
                 }
             } else {
-                // TODO: Update existing consultation
-
+                // Existing consultation
                 $output[] = 'Existing "'.$consultation['affair_title_de'].'"';
             }
         }
