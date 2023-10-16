@@ -134,6 +134,13 @@ class PullCantonalConsultationsCommand extends Command
                             '243' => $this->taggingService->getTagEntity('migration'),
                             '268' => $this->taggingService->getTagEntity('raumplanung'),
                             '265' => $this->taggingService->getTagEntity('diplomatie'),
+                            '1' => $this->taggingService->getTagEntity('soziales'),
+                            '11' => $this->taggingService->getTagEntity('soziales'),
+                            '41' => $this->taggingService->getTagEntity('soziales'),
+                            '43' => $this->taggingService->getTagEntity('soziales'),
+                            '46' => $this->taggingService->getTagEntity('soziales'),
+                            '244' => $this->taggingService->getTagEntity('soziales'),
+                            '470' => $this->taggingService->getTagEntity('soziales'),
                             default => null,
                         };
 

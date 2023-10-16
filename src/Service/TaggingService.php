@@ -28,6 +28,7 @@ class TaggingService
         'versicherung',
         'raumordnung',
         'diplomatie',
+        'soziales',
     ];
 
     private TagRepository $tagRepository;
