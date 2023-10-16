@@ -48,7 +48,11 @@
 
                             <ul role="list" class="mt-4 space-y-1 border-b border-gray-200 pb-6 text-sm text-gray-500">
                                 <li>
-                                    <a href="{{ path('app_consultation', { 'filter': filter }) }}" class="{% if app.request.get('cp') is null %}text-blue-600 font-semibold{% else %} hover:text-gray-900{% endif %}">Eidgenössisch</a>
+                                    <a href="{{ path('app_consultation', { 'filter': filter }) }}" class="{% if app.request.get('cp') is null %}text-blue-600 font-semibold{% else %} hover:text-gray-900{% endif %}">Alle</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ path('app_consultation', { 'cp': 'CH', 'filter': filter }) }}" class="{% if app.request.get('cp') is same as 'CH' %}text-blue-600 font-semibold{% else %} hover:text-gray-900{% endif %}">Eidgenössisch</a>
                                 </li>
 
                                 {% for canton in cantons %}
