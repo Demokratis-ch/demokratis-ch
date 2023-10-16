@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\Consultation;
 use App\Entity\Document;
+use App\Entity\Organisation;
 use App\Enums\Cantons;
 use App\Repository\ConsultationRepository;
 use App\Repository\DocumentRepository;
@@ -49,7 +50,7 @@ class PullCantonalConsultationsCommand extends Command
                 $organisation = $this->organisationRepository->findOneBy(['slug' => $canton->name]);
 
                 if ($organisation) {
-                    $message = $this->fetchConsultations($canton->name);
+                    $message = $this->fetchConsultations($organisation);
 
                     $output->writeln($message);
                 } else {
@@ -75,16 +76,14 @@ class PullCantonalConsultationsCommand extends Command
         return Command::FAILURE;
     }
 
-    protected function fetchConsultations(string $canton)
+    protected function fetchConsultations(Organisation $organisation)
     {
-        $organisation = $this->organisationRepository->findOneBy(['slug' => $canton]);
+        $content = $this->cantonal->getConsultations($organisation->getSlug());
 
-        $content = $this->cantonal->getConsultations($canton);
-
-        $output[] = 'Import for Canton <info>'.$canton.'</info>';
+        $output[] = 'Import for Canton <info>'.$organisation->getSlug().'</info>';
 
         foreach ($content['data'] as $key => $consultation) {
-            $identifier = $canton.'-'.$consultation['affair_politmonitor_id'];
+            $identifier = $organisation->getSlug().'-'.$consultation['affair_politmonitor_id'];
             $existingConsultation = $this->consultationRepository->findOneBy(['foreignId' => $identifier]);
 
             if (!$existingConsultation) {
