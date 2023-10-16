@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\Consultation;
 use App\Entity\UnknownInstitution;
 use App\Repository\ConsultationRepository;
+use App\Repository\OrganisationRepository;
 use App\Service\SparqlService;
 use App\Service\TaggingService;
 use Doctrine\ORM\EntityManagerInterface;
