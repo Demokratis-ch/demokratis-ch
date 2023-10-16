@@ -13,10 +13,6 @@
         </ignoreFiles>
     </projectFiles>
 
-    <extraFiles>
-        <directory name="var/cache/dev/Symfony/Config" /> <!-- https://github.com/psalm/psalm-plugin-symfony/issues/201 -->
-    </extraFiles>
-
     <fileExtensions>
         <extension name=".php" />
         <extension name=".twig" checker="./vendor/psalm/plugin-symfony/src/Twig/TemplateFileAnalyzer.php"/>
