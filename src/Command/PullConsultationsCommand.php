@@ -21,6 +21,7 @@ class PullConsultationsCommand extends Command
         private EntityManagerInterface $entityManager,
         private ConsultationRepository $consultationRepository,
         private TaggingService $taggingService,
+        private OrganisationRepository $organisationRepository,
     ) {
         parent::__construct();
     }
@@ -68,8 +69,17 @@ class PullConsultationsCommand extends Command
                 default => 'unknown',
             };
 
+            $federal = $this->organisationRepository->findOneBy(['slug' => 'CH']);
+
+            if (!$federal) {
+                $output->writeln('Could not find the federal organization. Please create it.');
+
+                return Command::FAILURE;
+            }
+
             if (!$existingConsultation) {
                 $consultation[$i] = new Consultation();
+                $consultation[$i]->setOrganisation($federal);
                 $consultation[$i]->setFedlexId($fetchedConsultation->id);
                 $consultation[$i]->setDescription($fetchedConsultation->desc);
                 $consultation[$i]->setTitle($fetchedConsultation->title);
