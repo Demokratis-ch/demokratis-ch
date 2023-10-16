@@ -38,3 +38,7 @@ public/styles.css
 
 # Task
 Taskfile.yml
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

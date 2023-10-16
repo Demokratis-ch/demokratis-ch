@@ -3,9 +3,11 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Organisation;
+use App\Enums\Organisations;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
@@ -29,6 +31,7 @@ class OrganisationCrudController extends AbstractCrudController
             UrlField::new('url'),
             ImageField::new('logo')->setBasePath('/uploads/')->setUploadDir('public/uploads/'),
             BooleanField::new('public'),
+            ChoiceField::new('type')->setChoices(Organisations::cases()),
             BooleanField::new('isPersonalOrganisation'),
             AssociationField::new('tags'),
             AssociationField::new('users')->setFormTypeOption('by_reference', false),

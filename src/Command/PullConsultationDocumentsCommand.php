@@ -51,43 +51,47 @@ class PullConsultationDocumentsCommand extends Command
         $sparql = new SparqlService();
 
         foreach ($consultations as $i => $consultation) {
-            $proposals = $sparql->getConsultationDocuments($consultation->getFedlexId(), true);
-            $documents = $sparql->getConsultationDocuments($consultation->getFedlexId());
+            if ($consultation->getFedlexId()) {
+                $proposals = $sparql->getConsultationDocuments($consultation->getFedlexId(), true);
+                $documents = $sparql->getConsultationDocuments($consultation->getFedlexId());
 
-            foreach ($proposals as $j => $proposal) {
-                if (!$this->documentRepository->findOneBy(['consultation' => $consultation, 'title' => $proposal->documentTitle->getValue()])) {
-                    $document[$j] = new Document();
-                    $document[$j]->setTitle($proposal->documentTitle->getValue());
-                    $document[$j]->setConsultation($consultation);
-                    $document[$j]->setType('proposal');
-                    $document[$j]->setImported('fetched');
-                    $document[$j]->setFedlexUri($proposal->document->getUri());
-                    $document[$j]->setFilename(substr($proposal->document->getUri(), strrpos($proposal->document->getUri(), '/') + 1));
+                foreach ($proposals as $j => $proposal) {
+                    if (!$this->documentRepository->findOneBy(['consultation' => $consultation, 'title' => $proposal->documentTitle->getValue()])) {
+                        $document[$j] = new Document();
+                        $document[$j]->setTitle($proposal->documentTitle->getValue());
+                        $document[$j]->setConsultation($consultation);
+                        $document[$j]->setType('proposal');
+                        $document[$j]->setImported('fetched');
+                        $document[$j]->setFedlexUri($proposal->document->getUri());
+                        $document[$j]->setFilename(substr($proposal->document->getUri(), strrpos($proposal->document->getUri(), '/') + 1));
 
-                    $this->entityManager->persist($document[$j]);
+                        $this->entityManager->persist($document[$j]);
 
-                    $output->writeln('Saved <info>"'.$proposal->documentTitle->getValue().'"</info> ('.$consultation->getFedlexId().')');
-                } else {
-                    $output->writeln('<comment>"'.$proposal->documentTitle->getValue().'"</comment> was already imported for <comment>'.$consultation->getFedlexId().'</comment>');
+                        $output->writeln('Saved <info>"'.$proposal->documentTitle->getValue().'"</info> ('.$consultation->getFedlexId().')');
+                    } else {
+                        $output->writeln('<comment>"'.$proposal->documentTitle->getValue().'"</comment> was already imported for <comment>'.$consultation->getFedlexId().'</comment>');
+                    }
                 }
-            }
 
-            foreach ($documents as $j => $importedDocument) {
-                if (!$this->documentRepository->findOneBy(['consultation' => $consultation, 'title' => $importedDocument->documentTitle->getValue()])) {
-                    $document[$j] = new Document();
-                    $document[$j]->setTitle($importedDocument->documentTitle->getValue());
-                    $document[$j]->setConsultation($consultation);
-                    $document[$j]->setType('document');
-                    $document[$j]->setImported('fetched');
-                    $document[$j]->setFedlexUri($importedDocument->document->getUri());
-                    $document[$j]->setFilename(substr($importedDocument->document->getUri(), strrpos($importedDocument->document->getUri(), '/') + 1));
+                foreach ($documents as $j => $importedDocument) {
+                    if (!$this->documentRepository->findOneBy(['consultation' => $consultation, 'title' => $importedDocument->documentTitle->getValue()])) {
+                        $document[$j] = new Document();
+                        $document[$j]->setTitle($importedDocument->documentTitle->getValue());
+                        $document[$j]->setConsultation($consultation);
+                        $document[$j]->setType('document');
+                        $document[$j]->setImported('fetched');
+                        $document[$j]->setFedlexUri($importedDocument->document->getUri());
+                        $document[$j]->setFilename(substr($importedDocument->document->getUri(), strrpos($importedDocument->document->getUri(), '/') + 1));
 
-                    $this->entityManager->persist($document[$j]);
+                        $this->entityManager->persist($document[$j]);
 
-                    $output->writeln('Saved <info>"'.$importedDocument->documentTitle->getValue().'"</info> ('.$consultation->getFedlexId().')');
-                } else {
-                    $output->writeln('<comment>"'.$importedDocument->documentTitle->getValue().'"</comment> was already imported for <comment>'.$consultation->getFedlexId().'</comment>');
+                        $output->writeln('Saved <info>"'.$importedDocument->documentTitle->getValue().'"</info> ('.$consultation->getFedlexId().')');
+                    } else {
+                        $output->writeln('<comment>"'.$importedDocument->documentTitle->getValue().'"</comment> was already imported for <comment>'.$consultation->getFedlexId().'</comment>');
+                    }
                 }
+            } else {
+                $output->writeln('<comment>"'.$consultation->getTitle().' is not a federal consultation</comment>');
             }
         }
 
