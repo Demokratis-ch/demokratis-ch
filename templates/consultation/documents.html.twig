@@ -35,6 +35,7 @@
                         <div id="documents" class="mt-2 p-4 bg-white text-gray-700 shadow">
                             {% for document in documents %}
                                 <p class="mt-2">
+                                    {% if is_granted('ROLE_ADMIN') %}<a href="{{ path('app_consultation_import_legal', { 'uuid': document.uuid }) }}" class="underline hover:no-underline">Import as LegalText</a> |{% endif %}
                                     <a href="
                                         {% if document.fedlexUri is defined and document.fedlexUri is not null %}{{ document.fedlexFilePath }}
                                         {% elseif document.originalUri is defined and document.originalUri is not null %}{{ document.originalUri }}{% endif %}

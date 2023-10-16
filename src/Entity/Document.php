@@ -60,6 +60,17 @@ class Document
         return strval($this->getId().'-'.$this->getType().'-'.$this->getLocalFilename());
     }
 
+    public function getPdf(): string|null
+    {
+        if ($this->getOriginalUri()) {
+            return $this->getOriginalUri();
+        } elseif ($this->getLocalFilename()) {
+            return 'uploads/proposals/'.$this->getLocalFilename();
+        } else {
+            return null;
+        }
+    }
+
     public function getId(): ?int
     {
         return $this->id;
