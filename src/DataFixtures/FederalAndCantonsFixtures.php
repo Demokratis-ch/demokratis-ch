@@ -20,7 +20,6 @@ class FederalAndCantonsFixtures extends Fixture implements FixtureGroupInterface
 
     public function load(ObjectManager $manager): void
     {
-
         $confederation = new Organisation();
         $confederation->setName('Schweizerische Eidgenossenschaft');
         $confederation->setSlug('CH');

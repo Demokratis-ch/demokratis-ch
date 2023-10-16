@@ -52,5 +52,4 @@ class MenuBuilder
 
         return $menu;
     }
-
 }

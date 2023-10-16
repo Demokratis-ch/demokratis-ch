@@ -62,7 +62,6 @@ class ParagraphAggregate
 
     /**
      * @param Modification[] $haystack
-     * @param Modification $needle
      */
     private function removeModificationFromList(array &$haystack, Modification $needle): void
     {

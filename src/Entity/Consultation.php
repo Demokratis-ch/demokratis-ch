@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Traits\TimestampedEntityTrait;
 use App\Repository\ConsultationRepository;
+use araise\SearchBundle\Annotation\Index;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -11,7 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Uid\Uuid;
-use araise\SearchBundle\Annotation\Index;
 
 #[ORM\Entity(repositoryClass: ConsultationRepository::class)]
 #[UniqueEntity('fedlexId')]

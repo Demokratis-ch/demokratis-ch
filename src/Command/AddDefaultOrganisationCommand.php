@@ -35,7 +35,7 @@ class AddDefaultOrganisationCommand extends Command
     {
         $confederation = $this->organisationRepository->findOneBy(['slug' => 'CH']);
 
-        if(!$confederation) {
+        if (!$confederation) {
             $output->writeln('<comment>Could not find the federal organisation. Please add it with the Slug "CH" before proceeding.</comment>');
 
             return Command::FAILURE;
@@ -44,7 +44,7 @@ class AddDefaultOrganisationCommand extends Command
         $consultations = $this->consultationRepository->findBy(['organisation' => null]);
 
         foreach ($consultations as $consultation) {
-            if(!$consultation->getOrganisation()) {
+            if (!$consultation->getOrganisation()) {
                 $consultation->setOrganisation($confederation);
                 $this->entityManager->persist($consultation);
 

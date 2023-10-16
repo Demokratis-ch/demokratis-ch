@@ -4,10 +4,9 @@ namespace App\Service;
 
 use App\Entity\Consultation;
 use App\Repository\ConsultationRepository;
+use araise\SearchBundle\Repository\IndexRepository;
 use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Persistence\ManagerRegistry;
-use araise\SearchBundle\Repository\IndexRepository;
-use araise\SearchBundle\Extension\Doctrine\Query\Mysql\MatchAgainst;
 
 class SearchConsultationsService
 {

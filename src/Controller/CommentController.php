@@ -35,7 +35,7 @@ class CommentController extends AbstractController
         EntityManagerInterface $entityManager,
         Request $request,
         string $identifier,
-        ?int $parentId = null
+        int $parentId = null
     ): Response {
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');
