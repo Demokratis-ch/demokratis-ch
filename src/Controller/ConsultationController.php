@@ -59,7 +59,7 @@ class ConsultationController extends AbstractController
         $paginator = $consultationRepository->getPaginator($offset, $filter, $tag, $organisation);
         $steps = ConsultationRepository::PAGINATOR_PER_PAGE;
 
-        $counts = $consultationRepository->countByStatus();
+        $counts = $consultationRepository->countByStatus($organisation);
 
         return $this->render('consultation/index.html.twig', [
             'consultations' => $paginator,

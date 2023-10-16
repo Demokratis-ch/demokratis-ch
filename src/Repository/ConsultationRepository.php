@@ -64,33 +64,27 @@ class ConsultationRepository extends ServiceEntityRepository
             $query->andWhere('c.organisation = :organisation')
                 ->setParameter('organisation', $organisation);
         } else {
-            $query->andWhere('c.organisation IS NULL');
+            $query->leftJoin('c.organisation', 'o')
+                ->andWhere($query->expr()->in('o.type', ['federal', 'canton']));
         }
 
         return new Paginator($query->getQuery());
     }
 
-    public function count($status = null)
+    public function countByStatus($organisation = null): array
     {
         $query = $this->createQueryBuilder('c')
-            ->where('c.organisation IS NULL');
+            ->select('c.status, count(c.status) as count');
 
-        if ($status !== null) {
-            $query->andWhere('c.status = :status')
-                ->setParameter('status', $status)
-            ;
+        if ($organisation) {
+            $query->andWhere('c.organisation = :organisation')
+                ->setParameter('organisation', $organisation);
+        } else {
+            $query->leftJoin('c.organisation', 'o')
+                ->andWhere($query->expr()->in('o.type', ['federal', 'canton']));
         }
 
-        return $query->select('count(c.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    public function countByStatus(): array
-    {
-        $result = $this->createQueryBuilder('c')
-            ->select('c.status, count(c.status) as count')
-            ->andWhere('c.organisation IS NULL')
+        $result = $query
             ->groupBy('c.status')
             ->getQuery()
             ->getArrayResult();
