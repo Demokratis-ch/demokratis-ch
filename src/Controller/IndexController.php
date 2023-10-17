@@ -71,9 +71,9 @@ class IndexController extends AbstractController
 
         return $this->render('index/test.html.twig', [
             'consultations' => $consultations,
-            'count' => $consultationRepository->count(),
-            'ongoing' => $consultationRepository->count('ongoing'),
-            'planned' => $consultationRepository->count('planned'),
+            'count' => $consultationRepository->countByStatus(),
+            'ongoing' => $consultationRepository->countByStatus(),
+            'planned' => $consultationRepository->countByStatus(),
             'tags' => $tagRepository->findBy(['approved' => true]),
             'form' => $form,
         ]);
