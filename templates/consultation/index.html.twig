@@ -52,12 +52,12 @@
                                 </li>
 
                                 <li>
-                                    <a href="{{ path('app_consultation', { 'cp': 'CH', 'filter': filter }) }}" class="{% if app.request.get('cp') is same as 'CH' %}text-blue-600 font-semibold{% else %} hover:text-gray-900{% endif %}">Eidgenössisch</a>
+                                    <a href="{{ path('app_consultation', { 'cp': 'CH', 'filter': filter, 't': app.request.get('t') }) }}" class="{% if app.request.get('cp') is same as 'CH' %}text-blue-600 font-semibold{% else %} hover:text-gray-900{% endif %}">Eidgenössisch</a>
                                 </li>
 
                                 {% for canton in cantons %}
                                     <li>
-                                        <a href="{{ path('app_consultation', { 'cp': canton.name, 'filter': filter }) }}" class="{% if app.request.get('cp') is same as canton.name %}text-blue-600 font-semibold{% else %} hover:text-gray-900{% endif %}">{{ canton.value }}</a>
+                                        <a href="{{ path('app_consultation', { 'cp': canton.name, 'filter': filter, 't': app.request.get('t') }) }}" class="{% if app.request.get('cp') is same as canton.name %}text-blue-600 font-semibold{% else %} hover:text-gray-900{% endif %}">{{ canton.value }}</a>
                                     </li>
                                 {% endfor %}
                             </ul>
