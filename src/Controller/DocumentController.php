@@ -38,16 +38,19 @@ class DocumentController extends AbstractController
     {
         if (!$document->getLegalText()) {
             $legalText = new LegalText();
+            $text = null;
 
-            if (!$document->getContent()) {
-                $dir = $params->get('file_directory').'/proposals/';
-                $text = $this->legalTextParser->getParagraphs($dir.$document->getLocalfilename());
-                $legalText->setText($text);
-                $document->setImported('parsed');
-            } else {
+            if ($document->getContent()) {
                 $legalText->setText($document->getContent());
                 $document->setImported('parsed');
                 $text = $document->getContent();
+            } elseif ($document->getLocalfilename()) {
+                if (substr($document->getLocalfilename(), -3) === 'pdf') {
+                    $dir = $params->get('file_directory').'/proposals/';
+                    $text = $this->legalTextParser->getParagraphs($dir.$document->getLocalfilename());
+                    $legalText->setText($text);
+                    $document->setImported('parsed');
+                }
             }
         } else {
             $legalText = $document->getLegalText();

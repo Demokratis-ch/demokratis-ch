@@ -45,13 +45,24 @@
                 <div class="col-span-2 lg:col-span-1 flex flex-col">
                     <h2 class="text-xl text-gray-400 font-medium flex-initial">{{ 'import.original'|trans }}</h2>
 
-                    {% if document.getPdf is defined and document.getPdf is not null %}
+                    {% if document.getOriginalUri is defined and document.getOriginalUri is not null and (document.getOriginalUri| split('.') | last) is same as 'pdf' %}
                         <iframe
                                 class="mt-2 p-4 bg-white text-gray-700 shadow w-full flex-1"
-                                src="{{ asset(document.getPdf) }}"
+                                src="{{ document.getOriginalUri }}"
                                 loading="lazy"
                         >
                         </iframe>
+                    {% elseif document.getLocalFilename is defined and document.getLocalFilename is not null  %}
+                        <iframe
+                                class="mt-2 p-4 bg-white text-gray-700 shadow w-full flex-1"
+                                src="{{ asset('uploads/proposals/'~document.localFilename) }}"
+                                loading="lazy"
+                        >
+                        </iframe>
+                    {% else %}
+                        <div class="mt-2 p-4 bg-white text-gray-700 shadow w-full flex-1">
+                            <p class="text-sm text-gray-400">Can not retrieve document</p>
+                        </div>
                     {% endif %}
 
                 </div>
