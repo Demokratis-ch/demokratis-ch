@@ -19,6 +19,7 @@ tasks:
     cmds:
       - 'php bin/console doctrine:schema:drop --force --full-database'
       - 'php bin/console doctrine:schema:create'
+      - task: fake_migrations
       - 'php bin/console doctrine:fixtures:load --append'
 
   install:

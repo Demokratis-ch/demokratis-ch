@@ -69,4 +69,16 @@ class ModificationStatementRepository extends ServiceEntityRepository
 
         return $results;
     }
+
+    public function getOrCreate(Statement $statement, Modification $modification): ModificationStatement
+    {
+        $ms = $this->findOneBy(['statement' => $statement, 'modification' => $modification]);
+        if ($ms === null) {
+            $ms = ModificationStatement::create($statement, $modification);
+            $this->getEntityManager()->persist($ms);
+            $this->getEntityManager()->flush();
+        }
+
+        return $ms;
+    }
 }

@@ -71,7 +71,7 @@ class ConsultationRepository extends ServiceEntityRepository
         return new Paginator($query->getQuery());
     }
 
-    public function countByStatus(string|null $organisation = null): array
+    public function countByStatus(string $organisation = null): array
     {
         $query = $this->createQueryBuilder('c')
             ->select('c.status, count(c.status) as count');

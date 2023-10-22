@@ -27,8 +27,7 @@ class Discussion
     #[ORM\JoinColumn(nullable: false)]
     private ?Consultation $consultation = null;
 
-    #[ORM\OneToOne(inversedBy: 'discussion', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Thread $thread = null;
 
     public function getId(): ?int

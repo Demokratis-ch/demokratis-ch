@@ -23,17 +23,6 @@ class Thread
     #[ORM\OneToMany(mappedBy: 'thread', targetEntity: Comment::class)]
     protected Collection $comments;
 
-    #[ORM\Column(length: 255)]
-    private ?string $identifier = null;
-
-    #[ORM\OneToOne(mappedBy: 'thread', cascade: ['persist', 'remove'])]
-    private ?Discussion $discussion = null;
-
-    public function __toString(): string
-    {
-        return $this->identifier;
-    }
-
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -115,34 +104,5 @@ class Thread
         usort($array, fn (Comment $a, Comment $b) => $b->getVoteScore() <=> $a->getVoteScore());
 
         return new ArrayCollection(array_slice($array, 0, 10));
-    }
-
-    public function getIdentifier(): ?string
-    {
-        return $this->identifier;
-    }
-
-    public function setIdentifier(string $identifier): self
-    {
-        $this->identifier = $identifier;
-
-        return $this;
-    }
-
-    public function getDiscussion(): ?Discussion
-    {
-        return $this->discussion;
-    }
-
-    public function setDiscussion(Discussion $discussion): self
-    {
-        // set the owning side of the relation if necessary
-        if ($discussion->getThread() !== $this) {
-            $discussion->setThread($this);
-        }
-
-        $this->discussion = $discussion;
-
-        return $this;
     }
 }

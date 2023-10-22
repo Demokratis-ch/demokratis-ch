@@ -27,7 +27,7 @@ class CommentComponent extends AbstractController
     protected RequestStack $requestStack;
 
     #[LiveProp(writable: false)]
-    public string $identifier;
+    public Thread $thread;
 
     #[LiveProp(writable: false)]
     public Statement|null $statement = null;
@@ -82,11 +82,6 @@ class CommentComponent extends AbstractController
         $this->requestStack = $requestStack;
     }
 
-    public function getThread(): Thread|null
-    {
-        return $this->threadRepository->findOneBy(['identifier' => $this->identifier]);
-    }
-
     public function getComments(?Thread $thread): array
     {
         return $this->commentRepository->findBy(['thread' => $thread, 'parent' => null, 'deletedAt' => null]);
@@ -95,7 +90,7 @@ class CommentComponent extends AbstractController
     protected function instantiateForm(): FormInterface
     {
         return $this->createForm(CommentType::class, null, [
-            'action' => $this->generateUrl('app_comment_add', ['identifier' => $this->identifier, 'parentId' => $this->parent]),
+            'action' => $this->generateUrl('app_comment_add', ['id' => $this->thread->getId(), 'parentId' => $this->parent]),
             'r' => serialize([
                 'route' => $this->requestStack->getCurrentRequest()->get('_route'),
                 'params' => $this->requestStack->getCurrentRequest()->get('_route_params'),

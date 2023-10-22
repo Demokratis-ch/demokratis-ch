@@ -28,27 +28,17 @@ class CommentController extends AbstractController
         ]);
     }
 
-    #[Route('/add/{identifier}/{parentId}', name: 'app_comment_add', methods: ['GET', 'POST'])]
+    #[Route('/add/{id}/{parentId}', name: 'app_comment_add', methods: ['GET', 'POST'])]
     public function add(
         CommentRepository $commentRepository,
-        ThreadRepository $threadRepository,
         EntityManagerInterface $entityManager,
         Request $request,
-        string $identifier,
+        Thread $thread,
         int $parentId = null
     ): Response {
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
-
-        $thread = $threadRepository->findOneBy(['identifier' => $identifier]);
-
-        if (!$thread) {
-            $thread = new Thread();
-            $thread->setIdentifier($identifier);
-            $entityManager->persist($thread);
-        }
-
         $parentComment = $commentRepository->findOneBy(['id' => $parentId]);
 
         $comment = new Comment();
