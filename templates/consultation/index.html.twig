@@ -19,6 +19,13 @@
                     {{ block('step2', 'tutorials/consultations_index.tutorial.html.twig') }}
                 </div>
 
+                {# Display additional information for the chosen canton #}
+                {% if currentOrganisation is defined and currentOrganisation is not null %}
+                    {% if currentOrganisation.type is same as 'canton' %}
+                        {% include 'consultation/canton/'~currentOrganisation.slug~'.html.twig' ignore missing %}
+                    {% endif %}
+                {% endif %}
+
 
                 {# Filter #}
                 <section aria-labelledby="products-heading" class="pt-6 pb-24">
