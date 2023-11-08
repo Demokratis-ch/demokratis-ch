@@ -64,7 +64,7 @@ class RedirectController extends AbstractController
 
             return isset($statement_route) ? $this->redirect($statement_route) : $this->redirect($consultation_route);
 
-            // return
+        // return
         } else {
             throw new NotFoundHttpException('Not found');
         }

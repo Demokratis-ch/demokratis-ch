@@ -10,6 +10,9 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * @extends Voter<Statement, string>
+ */
 class StatementVoter extends Voter
 {
     // these strings are just invented: you can use anything
