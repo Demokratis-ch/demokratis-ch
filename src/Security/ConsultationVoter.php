@@ -29,7 +29,9 @@ class ConsultationVoter extends Voter
             return true;
         }
 
-        if ($consultation->getOrganisation()->getType() === 'canton') {
+        $organisationType = $consultation->getOrganisation()->getType();
+
+        if ($organisationType === 'canton' || $organisationType === 'federal') {
             return true;
         }
 
