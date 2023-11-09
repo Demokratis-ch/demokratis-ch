@@ -13,6 +13,8 @@ use Doctrine\Persistence\ObjectManager;
 
 class FederalAndCantonsFixtures extends Fixture implements FixtureGroupInterface
 {
+    public const CONFEDERATION = 'confederation';
+
     public static function getGroups(): array
     {
         return ['dummy', 'cantons'];
@@ -43,5 +45,7 @@ class FederalAndCantonsFixtures extends Fixture implements FixtureGroupInterface
         }
 
         $manager->flush();
+
+        $this->addReference(self::CONFEDERATION, $confederation);
     }
 }
