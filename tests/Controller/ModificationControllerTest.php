@@ -36,7 +36,6 @@ class ModificationControllerTest extends WebTestCase
         $commentsInSidebar = $crawler->filter('.comments')->first()->filter('.comment');
         self::assertCount(6, $commentsInSidebar);
 
-    /* Expects a new page, not the case anymore now
         // Create new modification proposal
         $crawler = $client->click($crawler->filter('.paragraph')->first()->selectLink('Änderung vorschlagen')->link());
         $this->assertResponseIsSuccessful();
@@ -46,7 +45,6 @@ class ModificationControllerTest extends WebTestCase
         $form['modification[text]'] = 'Hallihallo';
         $form['modification[justification]'] = 'Einfach so';
         $crawler = $client->submit($form);
-
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Meine Meinung');
@@ -109,6 +107,5 @@ class ModificationControllerTest extends WebTestCase
 
         $refusedPart = $crawler->filter('.modifications')->first()->filter('.refused');
         self::assertCount(0, $refusedPart);
-    */
     }
 }
