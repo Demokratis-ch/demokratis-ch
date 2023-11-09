@@ -37,6 +37,7 @@ class ConsultationStimmUndWahlrecht16JaehrigeFixtures extends Fixture implements
     {
         return [
             BasicFixtures::class,
+            FederalAndCantonsFixtures::class,
         ];
     }
 
