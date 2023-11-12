@@ -27,7 +27,7 @@ class LegalText
     #[ORM\ManyToOne(inversedBy: 'legalTexts')]
     private ?User $createdBy = null;
 
-    #[ORM\OneToMany(mappedBy: 'legalText', targetEntity: Paragraph::class)]
+    #[ORM\OneToMany(mappedBy: 'legalText', targetEntity: Paragraph::class, cascade: ['persist', 'remove'])]
     private Collection $paragraphs;
 
     #[ORM\ManyToOne(inversedBy: 'legalTexts')]
@@ -53,6 +53,20 @@ class LegalText
     public function __construct()
     {
         $this->paragraphs = new ArrayCollection();
+    }
+
+    public static function create(
+        Consultation $consultation,
+        Document $importedFrom,
+        string $title,
+        string $text,
+    ): self {
+        $self = new self();
+        $self->setConsultation($consultation);
+        $self->setImportedFrom($importedFrom);
+        $self->setTitle($title);
+        $self->setText($text);
+        return $self;
     }
 
     public function getId(): ?int

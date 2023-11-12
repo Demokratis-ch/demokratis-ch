@@ -43,6 +43,7 @@ tasks:
     cmds:
       - 'php bin/console app:consultations:pull'
       - 'php bin/console app:consultations:documents'
+      - 'php bin/console app:consultations:files'
 
   csfixer:
     desc: Formats all php code using csfixer

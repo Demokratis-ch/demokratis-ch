@@ -51,10 +51,12 @@ class ConsultationStimmUndWahlrecht16JaehrigeFixtures extends Fixture implements
         $user3 = $this->getReference(BasicFixtures::USER3);
         /** @var Organisation $organisation */
         $organisation = $this->getReference(BasicFixtures::ORGA1);
+        /** @var Organisation $chFederationOrg */
+        $chFederationOrg = $this->getReference(FederalAndCantonsFixtures::CONFEDERATION);
 
         $consultation = new Consultation();
         $consultation->setTitle('Pa.Iv. Aktives Stimm- und Wahlrecht für 16-Jährige');
-        $consultation->setOrganisation($this->getReference(FederalAndCantonsFixtures::CONFEDERATION));
+        $consultation->setOrganisation($chFederationOrg);
         $consultation->setDescription('Die Kommission schlägt vor, die Bundesverfassung so zu ändern, dass das aktive Stimm- und Wahlrechtsalter von 18 auf 16 Jahre gesenkt wird. Das Mindestalter für die Wählbarkeit in politische Ämter und an das Bundesgericht soll bei 18 Altersjahren belassen werden.');
         $consultation->setStatus('ongoing');
         $consultation->setFedlexId('proj/2022/59/cons_1');
