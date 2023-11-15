@@ -66,6 +66,7 @@ class LegalText
         $self->setImportedFrom($importedFrom);
         $self->setTitle($title);
         $self->setText($text);
+
         return $self;
     }
 

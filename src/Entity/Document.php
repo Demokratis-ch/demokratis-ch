@@ -70,6 +70,7 @@ class Document
         $self->setFedlexUri($fedlexUri);
         $self->setFilename($filename);
         $self->setImported($imported);
+
         return $self;
     }
 

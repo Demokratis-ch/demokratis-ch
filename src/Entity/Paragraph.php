@@ -63,6 +63,7 @@ class Paragraph
         $self->setLegalText($legalText);
         $self->setPosition($position);
         $self->setText($text);
+
         return $self;
     }
 

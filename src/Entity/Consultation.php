@@ -126,6 +126,7 @@ class Consultation
         $self->setStartDate($startDate);
         $self->setEndDate($endDate);
         $self->setOffice($office);
+
         return $self;
     }
 
