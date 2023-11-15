@@ -29,7 +29,7 @@ class VerordnungUberDieKrankenversicherungFixtures extends Fixture implements Fi
         ];
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         /** @var Organisation $chFederationOrg */
         $chFederationOrg = $this->getReference(FederalAndCantonsFixtures::CONFEDERATION);
