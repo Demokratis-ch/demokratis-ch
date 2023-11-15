@@ -107,6 +107,29 @@ class Consultation
         $this->externalStatements = new ArrayCollection();
     }
 
+    public static function create(
+        string $title,
+        Organisation $organisation,
+        string $description,
+        string $status,
+        string $fedlexId,
+        ?\DateTimeImmutable $startDate,
+        ?\DateTimeImmutable $endDate,
+        string $office,
+    ): self {
+        $self = new self();
+        $self->setTitle($title);
+        $self->setOrganisation($organisation);
+        $self->setDescription($description);
+        $self->setStatus($status);
+        $self->setFedlexId($fedlexId);
+        $self->setStartDate($startDate);
+        $self->setEndDate($endDate);
+        $self->setOffice($office);
+
+        return $self;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

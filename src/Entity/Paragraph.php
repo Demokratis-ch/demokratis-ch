@@ -54,6 +54,19 @@ class Paragraph
         $this->freeTexts = new ArrayCollection();
     }
 
+    public static function create(
+        LegalText $legalText,
+        int $position,
+        string $text,
+    ): self {
+        $self = new self();
+        $self->setLegalText($legalText);
+        $self->setPosition($position);
+        $self->setText($text);
+
+        return $self;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

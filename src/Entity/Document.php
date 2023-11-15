@@ -55,6 +55,25 @@ class Document
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $content = null;
 
+    public static function create(
+        Consultation $consultation,
+        string $title,
+        string $type,
+        string $fedlexUri,
+        string $filename,
+        string $imported,
+    ): self {
+        $self = new self();
+        $self->setConsultation($consultation);
+        $self->setTitle($title);
+        $self->setType($type);
+        $self->setFedlexUri($fedlexUri);
+        $self->setFilename($filename);
+        $self->setImported($imported);
+
+        return $self;
+    }
+
     public function __toString(): string
     {
         return strval($this->getId().'-'.$this->getType().'-'.$this->getLocalFilename());
