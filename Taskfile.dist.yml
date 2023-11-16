@@ -72,3 +72,31 @@ tasks:
     cmds:
       - 'php bin/console doctrine:migrations:sync-metadata-storage'
       - 'php bin/console doctrine:migrations:version --add --all --no-interaction'
+
+  generate_schema_diagram:
+    desc: Generate the db schema diagram mermaid code
+    cmds:
+      - |
+        docker run \
+         --mount type=bind,source="$(pwd)",target=/home/schcrwlr/share \
+         --network demokratis_default \
+         --rm -it \
+         schemacrawler/schemacrawler \
+         /opt/schemacrawler/bin/schemacrawler.sh \
+         --server mysql \
+         --host database \
+         --port 3306 \
+         --database app \
+         --schemas app \
+         --user root \
+         --password root \
+         --info-level standard \
+         --command script \
+         --parents 1 \
+         --script-language python \
+         --script mermaid.py \
+         --output-file share/sc.mmd
+      - echo -e "#demokratis database schema diagram\n\n\`\`\`mermaid" > db_schema.md
+      - cat sc.mmd >> db_schema.md
+      - echo -e "\`\`\`" >> db_schema.md
+      - rm sc.mmd
