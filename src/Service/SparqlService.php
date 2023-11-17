@@ -45,13 +45,13 @@ class SparqlService
             
               # Language code and language
               VALUES (?languageCode ?language) { ("de" <http://publications.europa.eu/resource/authority/language/DEU>) }
-              ?s a jolux:Consultation.
-              ?s jolux:eventId ?id.
-              ?s jolux:eventDescription ?desc.
-              ?s jolux:eventTitle ?title.
-              ?s jolux:consultationStatus ?status.
+              ?consultation a jolux:Consultation.
+              ?consultation jolux:eventId ?id.
+              ?consultation jolux:eventDescription ?desc.
+              ?consultation jolux:eventTitle ?title.
+              ?consultation jolux:consultationStatus ?status.
               ?status skos:prefLabel ?statLabel.
-              ?s jolux:hasSubTask ?subTask.
+              ?consultation jolux:hasSubTask ?subTask.
               ?subTask rdf:type ?subTaskType
               OPTIONAL {?subTask jolux:eventStartDate ?startDate.}
               OPTIONAL {?subTask jolux:eventEndDate ?endDate.}
