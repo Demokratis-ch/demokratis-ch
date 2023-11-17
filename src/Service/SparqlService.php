@@ -36,6 +36,8 @@ class SparqlService
             PREFIX f:<https://fedlex.data.admin.ch/eli/dl/proj/6014/115/>
             PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
             PREFIX status: <https://fedlex.data.admin.ch/vocabulary/consultation-status/>
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>  
             
             select *
             
