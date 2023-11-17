@@ -42,6 +42,9 @@ class SparqlService
             select *
             
             WHERE {
+            
+              # Language code and language
+              VALUES (?languageCode ?language) { ("de" <http://publications.europa.eu/resource/authority/language/DEU>) }
               ?s a jolux:Consultation.
               ?s jolux:eventId ?id.
               ?s jolux:eventDescription ?desc.
@@ -68,11 +71,11 @@ class SparqlService
                 (status:5 "Abgeschlossen" jolux:ConsultationPhase)
               }
                           
-              FILTER (lang(?desc) = "de")
-              FILTER (lang(?title) = "de")
-              FILTER (lang(?statLabel) = "de")
-              FILTER (lang(?officeLabel) = "de")
-              FILTER (lang(?institutionLabel) = "de")
+              FILTER (lang(?desc) = ?languageCode)
+              FILTER (lang(?title) = ?languageCode)
+              FILTER (lang(?statLabel) = ?languageCode)
+              FILTER (lang(?officeLabel) = ?languageCode)
+              FILTER (lang(?institutionLabel) = ?languageCode)
               FILTER (?subTaskType NOT IN (jolux:Event, jolux:LegislativeTask, jolux:ConsultationTask))
               '.$prefix.'Filter (STRSTARTS(?myStatusLabel, "'.$filter.'"))
             
