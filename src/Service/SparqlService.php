@@ -48,8 +48,11 @@ class SparqlService
               ?consultation a jolux:Consultation.
               ?consultation jolux:eventId ?id.
               ?consultation jolux:eventDescription ?desc.
+              OPTIONAL { ?consultation jolux:eventDescription ?desc.
+                FILTER (lang(?desc) = ?languageCode)
+              }
               ?consultation jolux:eventTitle ?title.
-              ?consultation jolux:consultationStatus ?status.
+              OPTIONAL { ?consultation jolux:consultationStatus ?status.}
               ?status skos:prefLabel ?statLabel.
               ?consultation jolux:hasSubTask ?subTask.
               ?subTask rdf:type ?subTaskType
@@ -71,7 +74,6 @@ class SparqlService
                 (status:5 "Abgeschlossen" jolux:ConsultationPhase)
               }
                           
-              FILTER (lang(?desc) = ?languageCode)
               FILTER (lang(?title) = ?languageCode)
               FILTER (lang(?statLabel) = ?languageCode)
               FILTER (lang(?officeLabel) = ?languageCode)
