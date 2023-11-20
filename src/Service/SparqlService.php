@@ -46,7 +46,7 @@ class SparqlService
               # Language code and language
               VALUES (?languageCode ?language) { ("de" <http://publications.europa.eu/resource/authority/language/DEU>) }
               ?consultation a jolux:Consultation.
-              ?consultation jolux:eventId ?id.
+              OPTIONAL { ?consultation jolux:eventId ?eventId.}
               ?consultation jolux:eventDescription ?desc.
               OPTIONAL { ?consultation jolux:eventDescription ?desc.
                 FILTER (lang(?desc) = ?languageCode)
