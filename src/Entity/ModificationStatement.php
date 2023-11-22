@@ -38,9 +38,23 @@ class ModificationStatement
     #[ORM\OneToOne(mappedBy: 'modificationStatement', cascade: ['persist', 'remove'])]
     private ?ChosenModification $chosen = null;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Thread $thread = null;
+
     public function __toString(): string
     {
         return strval($this->getId());
+    }
+
+    public static function create(
+        Statement $statement,
+        Modification $modification,
+    ): self {
+        $self = new self();
+        $self->setStatement($statement);
+        $self->setModification($modification);
+
+        return $self;
     }
 
     public function getId(): ?int
@@ -121,5 +135,19 @@ class ModificationStatement
         $this->chosen = $chosen;
 
         return $this;
+    }
+
+    public function getThreadOrCreate(): Thread
+    {
+        if ($this->thread === null) {
+            $this->thread = new Thread();
+        }
+
+        return $this->thread;
+    }
+
+    public function setThread(?Thread $thread): void
+    {
+        $this->thread = $thread;
     }
 }

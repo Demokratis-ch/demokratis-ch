@@ -14,6 +14,7 @@ use App\Entity\Modification;
 use App\Entity\ModificationStatement;
 use App\Entity\Organisation;
 use App\Entity\Paragraph;
+use App\Entity\ParagraphStatement;
 use App\Entity\Statement;
 use App\Entity\Thread;
 use App\Entity\User;
@@ -21,7 +22,6 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Uid\Uuid;
 
 class ConsultationStimmUndWahlrecht16JaehrigeFixtures extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {
@@ -87,7 +87,6 @@ class ConsultationStimmUndWahlrecht16JaehrigeFixtures extends Fixture implements
         $manager->persist($document2);
 
         $discussionThread = new Thread();
-        $discussionThread->setIdentifier('consultation-'.$consultation->getId().'-discussion-'.Uuid::v4());
 
         $manager->persist($discussionThread);
 
@@ -240,11 +239,15 @@ TEXT
         $modification->setJustification('Ich finde das so besser, da es inklusiver und schwammiger formuliert ist.');
         $manager->persist($modification);
 
+        $thread = new Thread();
+        $manager->persist($thread);
+
         $modificationStatement1 = new ModificationStatement();
         $modificationStatement1->setStatement($statement);
         $modificationStatement1->setModification($modification);
         $modificationStatement1->setRefused(false);
         $modificationStatement1->setDecisionReason('');
+        $modificationStatement1->setThread($thread);
         $manager->persist($modificationStatement1);
 
         // modification is also part of another statement
@@ -335,11 +338,6 @@ TEXT
         $manager->persist($paragraph1);
         $manager->flush();
 
-        $thread = new Thread();
-        $thread->setIdentifier('statement-'.$statement->getId().'-modification-'.$modification->getId());
-        $manager->persist($thread);
-        $manager->flush();
-
         $comment = new Comment();
         $comment->setAuthor($user);
         $comment->setText('Das ist ein Testkommentar.');
@@ -386,8 +384,9 @@ TEXT
         $manager->persist($comment5);
 
         $thread2 = new Thread();
-        $thread2->setIdentifier('statement-'.$statement->getId().'-paragraph-'.$paragraph2->getId());
-        $manager->persist($thread2);
+        $paragraph2Statement = ParagraphStatement::create($statement, $paragraph2, $thread2);
+        $manager->persist($paragraph2Statement);
+        $manager->flush();
 
         $comment6 = new Comment();
         $comment6->setAuthor($user);
@@ -397,8 +396,9 @@ TEXT
         $manager->persist($comment6);
 
         $paragraph1Thread = new Thread();
-        $paragraph1Thread->setIdentifier('statement-'.$statement->getId().'-paragraph-'.$paragraph1->getId());
-        $manager->persist($paragraph1Thread);
+        $paragraph1Statement = ParagraphStatement::create($statement, $paragraph1, $paragraph1Thread);
+        $manager->persist($paragraph1Statement);
+        $manager->flush();
 
         $comment11 = new Comment();
         $comment11->setAuthor($user);

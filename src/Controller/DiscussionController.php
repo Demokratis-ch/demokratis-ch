@@ -12,7 +12,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Uid\Uuid;
 
 #[Route('/discussion')]
 class DiscussionController extends AbstractController
@@ -33,10 +32,6 @@ class DiscussionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $thread = new Thread();
-
-            $uuid = Uuid::v4();
-            $thread->setIdentifier('consultation-'.$consultation->getId().'-discussion-'.$uuid);
-            $entityManager->persist($thread);
 
             $discussion = $form->getData();
             $discussion->setConsultation($consultation);

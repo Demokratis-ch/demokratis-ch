@@ -125,7 +125,7 @@ class ExportController extends AbstractController
                     $textRun->addText('</w:t><w:br/><w:t xml:space="preserve">');
 
                     if ($comments !== 1) {
-                        $thread[$i] = $threadRepository->findOneBy(['identifier' => 'statement-'.$statement->getId().'-modification-'.$paragraphs[$i]['chosen']['modification']->getId()]);
+                        $thread[$i] = $threadRepository->findOneBy(['statement' => $statement, 'modification' => $paragraphs[$i]['chosen']['modification']]);
 
                         foreach ($thread[$i]->getComments() as $j => $comment) {
                             if ($comments === 2) {
