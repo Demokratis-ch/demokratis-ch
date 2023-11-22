@@ -31,7 +31,7 @@ class ParagraphAggregate
         public array $peers, // statements where this modification has been chosen
     ) {
     }
-    
+
     /**
      * updates the paragraphContainer after accepting a modification, so we don't have to reload everything from the db.
      */
