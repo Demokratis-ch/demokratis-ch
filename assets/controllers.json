@@ -50,7 +50,7 @@
                 "enabled": true,
                 "fetch": "eager",
                 "autoimport": {
-                    "@symfony/ux-live-component/dist/live.min.css": true
+                    "@symfony/ux-live-component/styles/live.css": true
                 }
             }
         }
