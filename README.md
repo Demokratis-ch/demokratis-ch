@@ -41,6 +41,8 @@ The code of the platform is open source - take a look at our open issues, contri
 
 The current UI is very basic and we are very open for inputs and help to improve it.
 
+Have a look at our [database schema diagram](db_schema.md).
+
 ### Content
 Want to help us out with content? We are most interested in contributions that
 * document the platform and its usage;
