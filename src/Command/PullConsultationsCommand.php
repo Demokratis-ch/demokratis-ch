@@ -82,7 +82,7 @@ class PullConsultationsCommand extends Command
                 $consultation[$i] = new Consultation();
                 $consultation[$i]->setOrganisation($federal);
                 $consultation[$i]->setFedlexId($fetchedConsultation->id);
-                $consultation[$i]->setDescription($fetchedConsultation->desc);
+                $consultation[$i]->setDescription($fetchedConsultation->desc ?? null);
                 $consultation[$i]->setTitle($fetchedConsultation->title);
                 $consultation[$i]->setStatus($fetchedStatus);
                 if (isset($fetchedConsultation->startDate)) {
