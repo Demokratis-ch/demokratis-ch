@@ -50,7 +50,7 @@
         "symfony/twig-bundle": "6.4.*",
         "symfony/ux-autocomplete": "^2.13",
         "symfony/ux-dropzone": "^2.13",
-        "symfony/ux-live-component": "2.13.*",
+        "symfony/ux-live-component": "v2.7.1",
         "symfony/validator": "6.4.*",
         "symfony/web-link": "6.4.*",
         "symfony/webpack-encore-bundle": "^2.1",
