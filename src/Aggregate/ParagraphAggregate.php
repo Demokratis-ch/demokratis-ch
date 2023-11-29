@@ -32,11 +32,6 @@ class ParagraphAggregate
     ) {
     }
 
-    public function getAllModifications(): array
-    {
-        return [...$this->openModifications, ...$this->refusedModifications, ...$this->foreignModifications];
-    }
-
     /**
      * updates the paragraphContainer after accepting a modification, so we don't have to reload everything from the db.
      */
